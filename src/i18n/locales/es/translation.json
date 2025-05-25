@@ -1,0 +1,358 @@
+{
+  "about": {
+    "title": "PinPointd",
+    "subtitle": "PinPoint Tus Recuerdos",
+    "founded": "Fundado 2024",
+    "global_community": "Comunidad Global",
+    "what_is_pinpointd": "¿Qué es PinPointd?",
+    "how_it_works": "Cómo Funciona",
+    "how_it_works_desc": "Comparte tus ubicaciones favoritas",
+    "how_it_works_desc2": "Nuestra plataforma combina tecnología de geolocalización con características de redes sociales, permitiéndote conectar con amigos, descubrir nuevos lugares, y construir una colección visual de tus lugares favoritos alrededor del mundo.",
+    "technology": "Tecnología",
+    "technology_desc": "Construido con tecnologías web modernas incluyendo React, Firebase, y mapas Leaflet, PinPointd ofrece una experiencia fluida en todos los dispositivos. Nuestra plataforma soporta múltiples idiomas y proporciona actualizaciones en tiempo real para una experiencia social atractiva.",
+    "key_benefits": "Beneficios Clave",
+    "benefit1": "Crear y compartir marcadores de ubicación personalizados con amigos",
+    "benefit2": "Descubrir nuevos lugares a través de tu red social",
+    "benefit3": "Construir un mapa visual de tus viajes y lugares favoritos",
+    "benefit4": "Conectar con amigos a través de intereses de ubicación compartidos",
+    "benefit5": "Acceder a tus marcadores desde cualquier dispositivo con nuestro soporte multiplataforma",
+    "getting_started": "Comenzar",
+    "getting_started_desc": "Regístrate para obtener una cuenta gratuita y comienza a crear tus propios marcadores, conectar con amigos, y explorar el mundo a través de PinPointd. Nuestra interfaz intuitiva hace que sea fácil comenzar en minutos.",
+    "key_features": "Características Clave",
+    "features": {
+      "chat": {
+        "title": "Chat sin problemas",
+        "desc": "Chat en tiempo real fácil con amigos, familia y comunidad"
+      },
+      "friends": {
+        "title": "Añadir amigos",
+        "desc": "Fácil de encontrar amigos usando PinPoints alrededor del mapa"
+      },
+      "security": {
+        "title": "Seguridad",
+        "desc": "Fuertemente asegurado, todos los datos están encriptados y protegidos"
+      },
+      "easy_use": {
+        "title": "Fácil de usar",
+        "desc": "Interfaz simple con una experiencia de usuario ágil"
+      },
+      "geolocation": {
+        "title": "Publicaciones basadas en geolocalización",
+        "desc": "PinPoint todos tus lugares favoritos y compártelos con tus amigos"
+      },
+      "map": {
+        "title": "Un mapa con actualizaciones en tiempo real",
+        "desc": "Nuestro mapa se actualiza constantemente con la información más reciente"
+      }
+    },
+    "our_story": {
+      "title": "¿Cuál es nuestro comienzo?",
+      "paragraph1": "PinPointd comenzó como un proyecto de pasión a principios de 2024, nacido de la idea de que los lugares que visitamos dan forma a nuestras experiencias y conexiones. Nuestro fundador, Dumitrescu Darius - Ioan, estaba viajando al extranjero y se dio cuenta de que no había una manera fácil de compartir ubicaciones significativas con amigos y familia más allá de simples check-ins o recomendaciones genéricas.",
+      "paragraph2": "Lo que comenzó como una simple herramienta para compartir mapas rápidamente evolucionó en una plataforma social integral que conecta a las personas a través de su amor compartido por los lugares. Ya sea un café oculto en París, un sendero escénico en Colorado, o una acogedora librería en Tokio, PinPointd ayuda a los usuarios a descubrir, compartir y discutir ubicaciones que son importantes para ellos.",
+      "paragraph3": "Hoy, nuestra creciente comunidad abarca el globo, con usuarios marcando ubicaciones en seis continentes. Estamos comprometidos a mejorar continuamente la plataforma con nuevas características mientras mantenemos nuestros valores fundamentales de privacidad, autenticidad y conexión significativa."
+    },
+    "team": {
+      "title": "Conoce a Nuestro Equipo",
+      "member1": {
+        "name": "Dumitrescu Darius - Ioan",
+        "role": "Creador de PinPointd",
+        "bio": "Siempre me ha encantado el desarrollo y crear cosas nuevas, así que decidí crear PinPointd para compartir mi amor por viajar y explorar nuevos lugares con mis amigos y familia."
+      }
+    }
+  },
+  "navigation": {
+    "map": "Mapa",
+    "chat": "Chat",
+    "friends": "Amigos",
+    "about": "Acerca de",
+    "tokens": "Tokens",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "username": "Nombre de Usuario",
+    "change_account_settings": "Cambiar Configuración de Cuenta",
+    "logout": "Cerrar Sesión",
+    "language": "Idioma",
+    "change_language": "Cambiar Idioma",
+    "navigation": "Navegación"
+  },
+  "home": {
+    "hero": {
+      "title": "Descubre y Comparte Tu Mundo",
+      "subtitle": "PinPoint tus lugares favoritos, conéctate con amigos y explora el mundo juntos",
+      "get_started": "Comenzar",
+      "register": "Registrarse",
+      "learn_more": "Saber Más",
+      "explore_world": "Explora el mundo"
+    },
+    "features": {
+      "pin_locations": "Marca Tus Lugares",
+      "pin_desc": "Marca tus lugares favoritos en el mapa y compártelos con amigos",
+      "connect": "Conéctate con Amigos",
+      "connect_desc": "Encuentra y conéctate con amigos que comparten tus intereses",
+      "chat": "Chat en Tiempo Real",
+      "chat_desc": "Chatea con amigos sobre tus lugares favoritos en tiempo real"
+    },
+    "testimonials": {
+      "title": "Lo Que Dicen Nuestros Usuarios",
+      "testimonial_1": "PinPointd ha transformado cómo comparto mis experiencias de viaje. Es como tener un diario de viaje personal que me conecta con amigos de todo el mundo.",
+      "testimonial_2": "Me encanta lo fácil que es descubrir nuevos lugares a través de los pins de mis amigos. ¡Es como tener una comunidad global de guías de viaje!",
+      "testimonial_3": "La función de chat en tiempo real hace que sea tan fácil planificar encuentros con amigos en nuestros lugares favoritos. Se ha convertido en una parte esencial de mi vida social."
+    },
+    "featured_locations": {
+      "title": "Lugares Destacados",
+      "eiffel_tower": "Torre Eiffel",
+      "eiffel_tower_desc": "Torre icónica de celosía de hierro en el Campo de Marte en París",
+      "taj_mahal": "Taj Mahal",
+      "taj_mahal_desc": "Mausoleo de mármol blanco marfil en Agra, India",
+      "great_wall": "Gran Muralla China",
+      "great_wall_desc": "Serie de fortificaciones construidas a lo largo de las fronteras del norte de China",
+      "view_all": "Ver Todos los Lugares"
+    }
+  },
+  "footer": {
+    "copyright": "PinPointd™ creación original de Dumitrescu Darius - Ioan",
+    "separator": "•",
+    "privacy_policy": "Política de Privacidad",
+    "terms_of_service": "Términos y Condiciones"
+  },
+  "terms_of_service": {
+    "title": "Términos y Condiciones",
+    "intro": "Al acceder y utilizar esta aplicación, aceptas y acuerdas estar sujeto a los términos y disposiciones de este acuerdo.",
+    "acceptance": {
+      "title": "1. Aceptación de Términos",
+      "content": "Al acceder y utilizar esta aplicación, aceptas y acuerdas estar sujeto a los términos y disposiciones de este acuerdo. Estos términos se aplican a todos los usuarios de la aplicación."
+    },
+    "account": {
+      "title": "2. Cuenta de Usuario",
+      "content": "Eres responsable de mantener la confidencialidad de tu cuenta y contraseña. Aceptas asumir la responsabilidad de todas las actividades que ocurran bajo tu cuenta. Debes notificarnos inmediatamente sobre cualquier uso no autorizado de tu cuenta."
+    },
+    "conduct": {
+      "title": "3. Conducta del Usuario",
+      "content": "Aceptas no utilizar la aplicación para ningún propósito ilegal o de ninguna manera que pueda dañar, deshabilitar, sobrecargar o perjudicar la aplicación. Debes respetar a otros usuarios y su privacidad en todo momento."
+    },
+    "privacy": {
+      "title": "4. Política de Privacidad",
+      "content": "El uso de la aplicación también está regido por nuestra Política de Privacidad. Por favor, revisa nuestra Política de Privacidad, que también rige la aplicación e informa a los usuarios sobre nuestras prácticas de recopilación de datos."
+    },
+    "modifications": {
+      "title": "5. Modificaciones a los Términos",
+      "content": "Nos reservamos el derecho de modificar estos términos en cualquier momento. Notificaremos a los usuarios sobre cualquier cambio actualizando la fecha en la parte superior de estos términos. Tu uso continuado de la aplicación después de dichas modificaciones constituye tu aceptación de los nuevos términos."
+    },
+    "contact": {
+      "title": "6. Información de Contacto",
+      "content": "Si tienes alguna pregunta sobre estos Términos y Condiciones, por favor contáctanos en dumitrescu.darius.ioan@gmail.com"
+    }
+  },
+  "map": {
+    "search_placeholder": "Buscar ubicaciones",
+    "location_found": "Te hemos localizado en el mapa",
+    "unable_to_access_location": "No se puede acceder a tu ubicación.",
+    "enable_location_services": "Por favor, activa los servicios de ubicación en tu navegador.",
+    "location_unavailable": "La información de ubicación no está disponible.",
+    "location_timeout": "Se agotó el tiempo de espera para la ubicación.",
+    "unknown_error": "Ha ocurrido un error desconocido.",
+    "link_copied": "¡Enlace copiado al portapapeles!",
+    "failed_to_copy_link": "No se pudo copiar el enlace",
+    "additional_filters": "Filtros Adicionales",
+    "business_post": "Publicación de Negocio",
+    "tokens": "Tokens",
+    "business_post_featured": "Las publicaciones de negocio consumirán 1 token y se destacarán en el mapa.",
+    "need_tokens": "Necesitas tokens para crear publicaciones de negocio.",
+    "buy_tokens": "Comprar Tokens",
+    "back_to_map": "Volver al Mapa",
+    "no_location_selected": "No hay ubicación seleccionada. Por favor, selecciona primero una ubicación en el mapa.",
+    "add_new_pinpoint": "Añadir Nuevo PinPoint",
+    "failed_to_get_directions": "No se pudieron obtener las direcciones",
+    "enable_location_for_navigation": "Por favor, activa los servicios de ubicación para la navegación",
+    "posts_in_area": "Publicaciones en tu área (100km)",
+    "posted_last_24h": "Publicado en las últimas 24 horas",
+    "made_by_friends": "Hecho por amigos",
+    "made_by_you": "Hecho por ti",
+    "no_posts_match_filters": "Ninguna publicación coincide con tus filtros",
+    "add_new_location": "Añadir Nueva Ubicación",
+    "location_name": "Nombre de la Ubicación",
+    "description": "Descripción",
+    "describe_location": "Describe esta ubicación...",
+    "tags": "Etiquetas",
+    "add_tags": "Añadir etiquetas",
+    "photos": "Fotos",
+    "add_photos": "Añadir Fotos",
+    "max_photos": "Máximo 4 fotos",
+    "social_sharing": "Compartir Social",
+    "make_visible": "Hacer visible para todos",
+    "share_note": "Nota para compartir (opcional)",
+    "note_placeholder": "Añade una nota a tu publicación...",
+    "cancel": "Cancelar",
+    "uploading": "Subiendo...",
+    "save_location": "Guardar Ubicación",
+    "title": "Título",
+    "enter_title": "Introduce un título para esta ubicación...",
+    "enter_description": "Describe esta ubicación...",
+    "saving": "Guardando...",
+    "save_pinpoint": "Guardar PinPoint",
+    "make_public": "Hacer público",
+    "add_pinpoint": {
+      "title": "Añadir Nuevo Pin",
+      "location_details": "Detalles de Ubicación",
+      "select_location": "Seleccionar Ubicación",
+      "click_map": "Haz clic en el mapa para seleccionar una ubicación",
+      "location_selected": "Ubicación seleccionada",
+      "category": "Categoría",
+      "select_category": "Selecciona una categoría",
+      "visibility": "Visibilidad",
+      "public": "Público - Todos pueden ver",
+      "private": "Privado - Solo tú puedes ver",
+      "friends": "Amigos - Solo tus amigos pueden ver",
+      "add_media": "Añadir Multimedia",
+      "drag_drop": "Arrastra y suelta archivos o haz clic para subir",
+      "submit": "Crear Pin",
+      "submitting": "Creando...",
+      "success": "¡Pin creado con éxito!",
+      "error": "Error al crear el pin"
+    }
+  },
+  "privacy_policy": {
+    "title": "Política de Privacidad",
+    "intro": "En PinPointd, nos tomamos en serio tu privacidad. Esta Política de Privacidad explica cómo recopilamos, usamos, divulgamos y protegemos tu información cuando utilizas nuestra aplicación.",
+    "information_collection": {
+      "title": "Información que Recopilamos",
+      "content": "Recopilamos la información que nos proporcionas directamente, incluyendo tu nombre, dirección de correo electrónico, información de perfil y datos de ubicación cuando utilizas nuestra aplicación. También recopilamos información sobre tu dispositivo y cómo utilizas nuestra aplicación."
+    },
+    "usage": {
+      "title": "Cómo Utilizamos tu Información",
+      "content": "Utilizamos la información que recopilamos para proporcionar, mantener y mejorar nuestros servicios, comunicarnos contigo y garantizar la seguridad de nuestra aplicación. Tus datos de ubicación se utilizan para proporcionar funciones basadas en la ubicación y mejorar tu experiencia."
+    },
+    "sharing": {
+      "title": "Cómo Compartimos tu Información",
+      "content": "No vendemos tu información personal. Podemos compartir tu información con proveedores de servicios externos que nos ayudan a operar nuestra aplicación, realizar nuestro negocio o servir a nuestros usuarios."
+    },
+    "cookies": {
+      "title": "Cookies y Tecnologías de Seguimiento",
+      "content": "Utilizamos cookies y tecnologías de seguimiento similares para rastrear la actividad en nuestra aplicación y mantener cierta información. Puedes configurar tu navegador para que rechace todas las cookies o para que indique cuándo se está enviando una cookie."
+    },
+    "security": {
+      "title": "Seguridad de Datos",
+      "content": "Utilizamos medidas técnicas y organizativas apropiadas para proteger tu información personal. Sin embargo, ningún método de transmisión por Internet es 100% seguro."
+    },
+    "retention": {
+      "title": "Retención de Datos",
+      "content": "Conservamos tu información personal durante el tiempo necesario para cumplir con los propósitos descritos en esta Política de Privacidad, a menos que la ley requiera un período de retención más largo."
+    },
+    "children": {
+      "title": "Privacidad de los Niños",
+      "content": "Nuestra aplicación no está destinada a niños menores de 13 años. No recopilamos conscientemente información personal de niños menores de 13 años."
+    },
+    "rights": {
+      "title": "Tus Derechos y Opciones",
+      "content": "Tienes derecho a acceder, actualizar o eliminar tu información personal. También puedes elegir limitar la información que compartes y controlar tu configuración de privacidad dentro de la aplicación."
+    },
+    "changes": {
+      "title": "Cambios en esta Política",
+      "content": "Podemos actualizar nuestra Política de Privacidad de vez en cuando. Te notificaremos cualquier cambio publicando la nueva Política de Privacidad en esta página y actualizando la fecha de vigencia."
+    },
+    "contact": {
+      "title": "Contáctanos",
+      "content": "Si tienes alguna pregunta sobre esta Política de Privacidad, por favor contáctanos en dumitrescu.darius.ioan@gmail.com"
+    }
+  },
+  "social": {
+    "chats": "Chats",
+    "friends": "Amigos",
+    "typing": "Escribiendo...",
+    "start_conversation": "Iniciar una conversación",
+    "create_group": "Crear Grupo",
+    "friend_requests": "Solicitudes de Amistad",
+    "selected": "seleccionado",
+    "read_aloud": "Leer en Voz Alta",
+    "delete": "Eliminar",
+    "ai_assistant": "Asistente IA",
+    "send_first_message": "¡Envía tu primer mensaje!",
+    "unread_messages": "Mensajes No Leídos",
+    "attach_file": "Adjuntar archivo",
+    "voice_input": "Entrada de voz",
+    "listening": "Escuchando...",
+    "select_chat": "Selecciona un chat para comenzar a mensajear",
+    "online": "En línea",
+    "offline": "Desconectado",
+    "message_friends": "Mensajea a tus amigos, o incluso añade algunos",
+    "failed_to_load_chats": "Error al cargar los chats.",
+    "failed_to_initialize_chat": "Error al inicializar el sistema de chat.",
+    "failed_to_load_user_data": "Error al cargar datos del usuario.",
+    "failed_to_send_message": "Error al enviar mensaje",
+    "generating_response": "Generando respuesta...",
+    "connection_error": "Estoy teniendo problemas para conectarme. Por favor, inténtalo más tarde.",
+    "failed_to_get_response": "Error al obtener respuesta del asistente.",
+    "search_failed": "Error en la búsqueda.",
+    "friend_request_sent": "¡Solicitud de amistad enviada con éxito!",
+    "group_created_successfully": "¡Grupo creado con éxito!",
+    "failed_to_send_request": "Error al enviar solicitud",
+    "failed_to_accept_request": "Error al aceptar solicitud",
+    "failed_to_reject_request": "Error al rechazar solicitud",
+    "failed_to_remove_friend": "Error al eliminar amigo",
+    "failed_to_block_user": "Error al bloquear usuario",
+    "failed_to_upload_file": "Error al subir archivo",
+    "messages_deleted_successfully": "Mensajes eliminados con éxito",
+    "failed_to_delete_messages": "Error al eliminar mensajes",
+    "chat_deleted_successfully": "Chat eliminado con éxito",
+    "failed_to_delete_chat": "Error al eliminar chat",
+    "message_deleted": "Mensaje eliminado",
+    "failed_to_delete_message": "Error al eliminar mensaje",
+    "text_to_speech_not_supported": "Texto a voz no soportado",
+    "text_to_speech_error": "Error en texto a voz",
+    "speech_recognition_not_supported": "Reconocimiento de voz no soportado",
+    "speech_recognition_error": "Error en reconocimiento de voz",
+    "microphone_permission_error": "No se pudo acceder al micrófono",
+    "speech_synthesis_error": "No se pudo detener la síntesis de voz",
+    "group_created_message": "¡Grupo {{name}} creado con éxito!",
+    "group_chat": "Chat Grupal",
+    "failed_to_send_voice_message": "Error al enviar mensaje de voz",
+    "microphone_access_error": "No se pudo acceder al micrófono. Por favor, verifica los permisos.",
+    "voice_recording_not_supported": "La grabación de voz no está soportada en este navegador.",
+    "voice_message": "Mensaje de voz",
+    "type_a_message": "Escribe un mensaje",
+    "copy": "Copiar",
+    "speak_aloud": "Leer en voz alta",
+    "select": "Seleccionar",
+    "insert_emoji": "Insertar emoji",
+    "send_message": "Enviar mensaje",
+    "remove_friend": "Eliminar amigo",
+    "block_user": "Bloquear usuario",
+    "switch_to_light_mode": "Cambiar a modo claro",
+    "switch_to_dark_mode": "Cambiar a modo oscuro",
+    "text_copied": "Texto copiado al portapapeles"
+  },
+  "auth": {
+    "go_to_login": "Ir a Iniciar Sesión",
+    "create_account": "Crear Cuenta",
+    "join_today": "Únete a PinPointd hoy",
+    "creating_account": "Creando Cuenta...",
+    "already_have_account": "¿Ya tienes una cuenta?",
+    "sign_in": "Iniciar Sesión",
+    "registration_complete": "Registro Completado",
+    "we_ve_sent_a_verification_link_to": "Hemos enviado un enlace de verificación a:",
+    "please_check_your_inbox_and_click_the_verification_link_to_activate_your_account": "Por favor, revisa tu bandeja de entrada y haz clic en el enlace de verificación para activar tu cuenta."
+  },
+  "profile": {
+    "locations": "Ubicaciones",
+    "posts": "Publicaciones",
+    "view_details": "Ver Detalles",
+    "no_locations": "Aún no hay ubicaciones",
+    "start_adding_pins": "¡Comienza a añadir pins a tu mapa!",
+    "no_locations_other_user": "Este usuario aún no ha añadido ubicaciones.",
+    "go_to_map": "Ir al Mapa",
+    "view_on_map": "Ver en el Mapa",
+    "no_posts": "Aún no hay publicaciones",
+    "share_locations": "¡Comparte tus ubicaciones para crear publicaciones!",
+    "no_posts_other_user": "Este usuario aún no ha compartido publicaciones.",
+    "pins": "Pins",
+    "friends": "Amigos",
+    "likes": "Me gusta",
+    "member_since": "Miembro desde",
+    "no_bio": "Sin biografía",
+    "user_not_found": "Usuario no encontrado",
+    "add_friend": "Añadir Amigo",
+    "cancel_request": "Cancelar Solicitud",
+    "accept_request": "Aceptar Solicitud",
+    "remove_friend": "Eliminar Amigo"
+  }
+} 

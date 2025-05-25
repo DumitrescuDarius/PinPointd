@@ -9,17 +9,25 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   getRedirectResult,
-  signInWithRedirect
+  signInWithRedirect,
+  sendPasswordResetEmail as firebaseSendPasswordResetEmail,
+  getAuth,
+  signOut as firebaseSignOut
 } from 'firebase/auth';
-import { auth, googleProvider } from '../config/firebase';
+import { auth, googleProvider, app } from '../config/firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../config/firebase';
 
 interface AuthContextType {
   currentUser: User | null;
   loading: boolean;
   signupWithEmail: (email: string, password: string) => Promise<void>;
-  loginWithEmail: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
+  registerWithEmail: (email: string, password: string) => Promise<void>;
+  sendPasswordReset: (email: string) => Promise<void>;
+  checkEmailVerification: (userId: string) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -35,6 +43,7 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const auth = getAuth(app);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -53,14 +62,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     return unsubscribe;
-  }, []);
+  }, [auth]);
 
   const signupWithEmail = async (email: string, password: string) => {
     const result = await createUserWithEmailAndPassword(auth, email, password);
     await sendEmailVerification(result.user);
   };
 
-  const loginWithEmail = async (email: string, password: string) => {
+  const login = async (email: string, password: string) => {
     await signInWithEmailAndPassword(auth, email, password);
   };
 
@@ -111,16 +120,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = async () => {
-    await signOut(auth);
+    await firebaseSignOut(auth);
+  };
+
+  const sendPasswordReset = async (email: string) => {
+    await firebaseSendPasswordResetEmail(auth, email);
+  };
+
+  // New function to check if a user's email is verified in Firestore
+  const checkEmailVerification = async (userId: string): Promise<boolean> => {
+    try {
+      const userDoc = await getDoc(doc(db, 'users', userId));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        return userData.emailVerified === true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error checking email verification:', error);
+      return false;
+    }
   };
 
   const value = {
     currentUser,
     loading,
     signupWithEmail,
-    loginWithEmail,
+    login,
     loginWithGoogle,
     logout,
+    registerWithEmail: signupWithEmail,
+    sendPasswordReset,
+    checkEmailVerification,
   };
 
   return (

@@ -1,5 +1,5 @@
 specVersion: "v1"
-serviceId: "lithium"
+serviceId: "pinpointd"
 location: "us-central1"
 schema:
   source: "./schema"
@@ -7,6 +7,6 @@ schema:
     postgresql:
       database: "fdcdb"
       cloudSql:
-        instanceId: "lithium-fdc"
+        instanceId: "pinpointd-fdc"
       # schemaValidation: "COMPATIBLE"
 connectorDirs: ["./connector"]

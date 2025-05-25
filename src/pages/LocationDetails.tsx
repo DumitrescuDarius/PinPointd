@@ -17,6 +17,7 @@ import {
 } from '@mui/material'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import PersonIcon from '@mui/icons-material/Person'
+import { useTranslation } from 'react-i18next'
 
 // This would typically come from your backend
 const mockLocation = {
@@ -46,6 +47,7 @@ const mockLocation = {
 
 const LocationDetails = () => {
   const { id } = useParams()
+  const { t } = useTranslation()
   const [newReview, setNewReview] = useState({
     rating: 0,
     comment: '',
@@ -88,14 +90,14 @@ const LocationDetails = () => {
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
           <LocationOnIcon sx={{ mr: 1 }} />
           <Typography variant="body2">
-            Coordinates: {mockLocation.coordinates[0]}, {mockLocation.coordinates[1]}
+            {t('location.coordinates')}: {mockLocation.coordinates[0]}, {mockLocation.coordinates[1]}
           </Typography>
         </Box>
 
         <Divider sx={{ my: 4 }} />
 
         <Typography variant="h5" gutterBottom>
-          Reviews
+          {t('location.reviews')}
         </Typography>
         <List>
           {mockLocation.reviews.map(review => (
@@ -132,7 +134,7 @@ const LocationDetails = () => {
         <Divider sx={{ my: 4 }} />
 
         <Typography variant="h5" gutterBottom>
-          Write a Review
+          {t('location.write_review')}
         </Typography>
         <Box component="form" onSubmit={handleSubmitReview}>
           <Rating
@@ -144,13 +146,13 @@ const LocationDetails = () => {
             fullWidth
             multiline
             rows={4}
-            label="Your Review"
+            label={t('location.your_review')}
             value={newReview.comment}
             onChange={e => setNewReview(prev => ({ ...prev, comment: e.target.value }))}
             sx={{ mb: 2 }}
           />
           <Button type="submit" variant="contained" color="primary">
-            Submit Review
+            {t('location.submit_review')}
           </Button>
         </Box>
       </Paper>

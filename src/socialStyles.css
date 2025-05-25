@@ -1,0 +1,554 @@
+/* Modern Social page styles */
+body.hide-footer footer {
+  display: none !important;
+}
+
+/* Ensure the app container takes full height without scrolling */
+body.hide-footer {
+  overflow: hidden !important;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  width: 100%;
+}
+
+/* Make sure the main container doesn't cause scrolling */
+body.hide-footer #root {
+  height: 100vh;
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
+
+/* Prevent the main app container from scrolling */
+body.hide-footer .MuiContainer-root {
+  overflow: hidden;
+  height: calc(100vh - 80px);
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0 24px;
+}
+
+/* Only allow scrolling in designated chat areas */
+.chat-messages-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1rem;
+  scroll-behavior: auto !important;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 2rem;
+}
+
+/* Modern scrollbar for chat */
+.chat-messages-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-messages-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.chat-messages-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(134, 150, 160, 0.5);
+}
+
+/* Adjust main content area when footer is hidden */
+body.hide-footer #root > div {
+  min-height: 100vh;
+}
+
+.message-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.message-item {
+  max-width: 80%;
+  min-width: 100px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+/* Glass effect for message bubbles */
+.message-bubble {
+  position: relative;
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 70%;
+  margin: 4px 0;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  word-break: break-word;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* User's messages (right side) */
+.message-bubble[style*="margin-left: auto"] {
+  margin-left: auto;
+  border-radius: 12px 12px 2px 12px;
+}
+
+/* Other user's messages (left side) */
+.message-bubble:not([style*="margin-left: auto"]) {
+  margin-right: auto;
+  border-radius: 12px 12px 12px 2px;
+}
+
+/* Message bubble themes with directional arrows */
+.light-theme .message-bubble {
+  background-color: var(--light-message-in);
+  color: var(--light-text-primary);
+}
+
+.light-theme .message-bubble[style*="margin-left: auto"] {
+  background-color: var(--light-message-out);
+}
+
+.light-theme .message-bubble[style*="margin-left: auto"]::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: -8px;
+  width: 12px;
+  height: 12px;
+  background-color: var(--light-message-out);
+  clip-path: polygon(0 0, 0 100%, 100% 100%);
+}
+
+.light-theme .message-bubble:not([style*="margin-left: auto"])::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -8px;
+  width: 12px;
+  height: 12px;
+  background-color: var(--light-message-in);
+  clip-path: polygon(0 100%, 100% 100%, 100% 0);
+}
+
+.dark-theme .message-bubble {
+  background-color: var(--dark-message-in);
+  color: var(--dark-text-primary);
+}
+
+.dark-theme .message-bubble[style*="margin-left: auto"] {
+  background-color: var(--dark-message-out);
+}
+
+.dark-theme .message-bubble[style*="margin-left: auto"]::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: -8px;
+  width: 12px;
+  height: 12px;
+  background-color: var(--dark-message-out);
+  clip-path: polygon(0 0, 0 100%, 100% 100%);
+}
+
+.dark-theme .message-bubble:not([style*="margin-left: auto"])::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -8px;
+  width: 12px;
+  height: 12px;
+  background-color: var(--dark-message-in);
+  clip-path: polygon(0 100%, 100% 100%, 100% 0);
+}
+
+/* Enhanced hover effects */
+.message-bubble:hover {
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+}
+
+.light-theme .message-bubble:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.dark-theme .message-bubble:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Message meta information (timestamp, status) */
+.message-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  font-size: 0.75rem;
+  margin-top: 2px;
+  opacity: 0.7;
+}
+
+.light-theme .message-meta {
+  color: var(--light-text-secondary);
+}
+
+.dark-theme .message-meta {
+  color: var(--dark-text-secondary);
+}
+
+/* Status indicators for sent messages */
+.message-status {
+  display: flex;
+  align-items: center;
+  margin-left: 4px;
+}
+
+.message-status svg {
+  font-size: 1rem;
+}
+
+/* Read receipt colors */
+.light-theme .message-status .read {
+  color: #34B7F1;
+}
+
+.dark-theme .message-status .read {
+  color: #00A884;
+}
+
+/* Animation for sending messages from right side (current user) */
+@keyframes sendMessageRight {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  40% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Animation for sending messages from left side (other users) */
+@keyframes sendMessageLeft {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  40% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Legacy animation name for backward compatibility */
+@keyframes sendMessage {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  40% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.message-sending-animation {
+  animation: sendMessageRight 0.4s cubic-bezier(0.2, 0.6, 0.35, 1) forwards;
+  transform-origin: bottom right;
+  will-change: transform, opacity;
+}
+
+/* Message status icon */
+.message-status-icon {
+  margin-left: 4px;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+}
+
+/* Chat list item hover effects */
+.chat-list-item {
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.chat-list-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Typing animation */
+@keyframes typingPulse {
+  0% { opacity: 0.4; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.typing-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #3f51b5;
+  animation: typingPulse 1.5s infinite;
+}
+
+.typing-dot-1 { animation-delay: 0s; }
+.typing-dot-2 { animation-delay: 0.2s; }
+.typing-dot-3 { animation-delay: 0.4s; }
+
+/* Chat input field animation */
+.message-input-field .MuiInputBase-root {
+  transition: all 0.3s ease;
+}
+
+.message-input-field .MuiInputBase-root:focus-within {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Voice recording animation */
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(233, 30, 99, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(233, 30, 99, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(233, 30, 99, 0); }
+}
+
+.mic-active {
+  animation: pulse 1.5s infinite;
+}
+
+/* Image message styling */
+.image-message {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.image-message img {
+  transition: transform 0.3s ease;
+}
+
+.image-message:hover img {
+  transform: scale(1.02);
+}
+
+/* Voice message player */
+.voice-player {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  width: 200px;
+  transition: all 0.2s ease;
+}
+
+.voice-player:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.voice-player-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3f51b5;
+  color: white;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.voice-player-button:hover {
+  background-color: #303f9f;
+  transform: scale(1.05);
+}
+
+/* Chat info drawer */
+.chat-info-drawer {
+  width: 300px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Chat list loading skeletons */
+.chat-skeleton {
+  padding: 16px;
+  border-radius: 12px;
+  background-color: rgba(0, 0, 0, 0.03);
+  margin-bottom: 8px;
+  animation: skeletonPulse 1.5s infinite;
+}
+
+@keyframes skeletonPulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 0.7; }
+  100% { opacity: 0.5; }
+}
+
+/* Empty state styling */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  opacity: 0.7;
+  padding: 24px;
+}
+
+.empty-state-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  color: rgba(0, 0, 0, 0.2);
+}
+
+/* Transition animations for page elements */
+.fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.slide-up {
+  animation: slideUp 0.5s ease forwards;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .chat-container {
+    height: calc(100vh - 56px);
+  }
+  
+  .message-item {
+    max-width: 90%;
+  }
+  
+  .chat-info-drawer {
+    width: 100%;
+  }
+}
+
+/* Chat background pattern overlay */
+.chat-pattern-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.05;
+  pointer-events: none;
+  background-image: 
+    radial-gradient(circle, rgba(0,0,0,0.1) 1px, transparent 1px),
+    radial-gradient(circle, rgba(0,0,0,0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+}
+
+/* Theme variables */
+:root {
+  /* Dark theme */
+  --dark-bg: #0B141A;
+  --dark-secondary: #192229;
+  --dark-hover: #222E35;
+  --dark-border: #2E3B44;
+  --dark-text-primary: #E5E7E9;
+  --dark-text-secondary: #8696A0;
+  --dark-message-out: #00A884;  /* Vibrant green for user messages */
+  --dark-message-in: #1F2C34;   /* Dark slate for other messages */
+  
+  /* Light theme */
+  --light-bg: #F0F2F5;
+  --light-secondary: #FFFFFF;
+  --light-hover: #F5F6F7;
+  --light-border: #E4E4E4;
+  --light-text-primary: #111B21;
+  --light-text-secondary: #667781;
+  --light-message-out: #DCF8C6;  /* Light green for user messages */
+  --light-message-in: #FFFFFF;   /* White for other messages */
+}
+
+/* Chat container themes */
+.chat-container.light-theme {
+  background-color: var(--light-bg);
+  color: var(--light-text-primary);
+}
+
+.chat-container.dark-theme {
+  background-color: var(--dark-bg);
+  color: var(--dark-text-primary);
+}
+
+/* Input field themes */
+.light-theme .message-input-wrapper {
+  background-color: var(--light-secondary);
+  border: 1px solid var(--light-border);
+}
+
+.dark-theme .message-input-wrapper {
+  background-color: var(--dark-secondary);
+  border: 1px solid var(--dark-border);
+}
+
+.light-theme .message-input-field {
+  color: var(--light-text-primary);
+}
+
+.dark-theme .message-input-field {
+  color: var(--dark-text-primary);
+}
+
+/* Hover effects */
+.message-bubble {
+  transition: all 0.2s ease;
+}
+
+.message-bubble:hover {
+  transform: translateY(-1px);
+}
+
+.light-theme .message-bubble:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dark-theme .message-bubble:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+} 

@@ -1,18 +1,155 @@
+@import './styles/globalStyles.css';
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  color-scheme: light dark;
+
+  /* Light theme scrollbar colors */
+  --scrollbar-track-light: rgba(0, 0, 0, 0.05);
+  --scrollbar-thumb-light: rgba(0, 0, 0, 0.3);
+  --scrollbar-thumb-hover-light: rgba(0, 0, 0, 0.5);
+
+  /* Dark theme scrollbar colors */
+  --scrollbar-track-dark: rgba(0, 0, 0, 0.1);
+  --scrollbar-thumb-dark: rgba(144, 202, 249, 0.5);
+  --scrollbar-thumb-hover-dark: rgba(144, 202, 249, 0.8);
+
+  /* Default to dark theme */
+  --scrollbar-track: var(--scrollbar-track-dark);
+  --scrollbar-thumb: var(--scrollbar-thumb-dark);
+  --scrollbar-thumb-hover: var(--scrollbar-thumb-hover-dark);
+}
+
+/* Light theme */
+:root[data-theme="light"] {
+  --scrollbar-track: var(--scrollbar-track-light);
+  --scrollbar-thumb: var(--scrollbar-thumb-light);
+  --scrollbar-thumb-hover: var(--scrollbar-thumb-hover-light);
+}
+
+/* Dark theme */
+:root[data-theme="dark"] {
+  --scrollbar-track: var(--scrollbar-track-dark);
+  --scrollbar-thumb: var(--scrollbar-thumb-dark);
+  --scrollbar-thumb-hover: var(--scrollbar-thumb-hover-dark);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Ensure scrollbar is visible on all elements */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  display: block !important;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+html, body, #root {
+  height: 100%;
+  overflow: auto;
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #181a1b;
+  color: #f5f5f5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-y: auto !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #root {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.3s ease;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Remove hide-scrollbar class usage */
+.hide-scrollbar::-webkit-scrollbar {
+  display: block !important;
+  width: 8px;
+  height: 8px;
+}
+
+.hide-scrollbar {
+  scrollbar-width: thin !important;
+  -ms-overflow-style: auto !important;
+}
+
+/* Ensure all page transitions are smooth */
+.fade-transition {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Animate page enters */
+.page-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Ensure all inputs have consistent styling */
+input, textarea, select {
+  font-family: inherit;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Consistent focus style */
+*:focus-visible {
+  outline: 2px solid rgba(144, 202, 249, 0.6);
+  outline-offset: 2px;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
 
 .mapboxgl-map {
@@ -20,20 +157,50 @@ body {
   height: 100%;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+.language-selector {
+  color: #fff;
+  background: #23272a;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 1rem;
+  margin-left: 16px;
+  cursor: pointer;
 }
 
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
+/* Position zoom controls further from navbar */
+.leaflet-control-zoom {
+  margin-top: 80px !important;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Theme transitions */
+.theme-transition {
+  transition: all 0.3s ease;
+}
+
+/* Smooth page transitions */
+.page-transition {
+  animation: fadein 0.3s ease-in-out;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 } 
