@@ -1,0 +1,201 @@
+/* Global styles for consistent design across all pages */
+
+/* Smooth scrolling for all pages */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Add basic styling to body */
+body {
+  overflow-y: auto;
+  height: 100vh;
+  position: relative;
+}
+
+/* Consistent scrollbar styling across the site */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(144, 202, 249, 0.5);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(144, 202, 249, 0.8);
+}
+
+/* Apply scrollbar to all scrollable elements */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(144, 202, 249, 0.5) rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure all divs with overflow have scrollbars */
+div {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(144, 202, 249, 0.5) rgba(0, 0, 0, 0.1);
+}
+
+/* Consistent form elements */
+.MuiTextField-root {
+  margin-bottom: 16px !important;
+}
+
+/* Consistent search bar styling across all pages */
+.search-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  background-color: rgba(30, 32, 38, 0.85);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 0 auto;
+  z-index: 100;
+}
+
+.search-container:hover {
+  background-color: rgba(30, 32, 38, 0.9);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+}
+
+.search-input .MuiOutlinedInput-root {
+  border-radius: 12px;
+  background-color: transparent;
+}
+
+.search-input .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+  border-color: transparent;
+}
+
+.search-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.search-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.search-input .MuiInputBase-input {
+  color: #fff;
+}
+
+.search-input .MuiInputBase-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  opacity: 1;
+}
+
+/* Common card styling */
+.content-card {
+  background-color: rgba(35, 39, 42, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.content-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Standard transitions for interactive elements */
+.standard-transition {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Standard animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+}
+
+/* Make modal content scrollable */
+.MuiDialog-paper {
+  overflow-y: auto !important;
+  max-height: 90vh !important;
+}
+
+/* Fix user-select issues in modals */
+.MuiModal-root .MuiInputBase-input {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+}
+
+/* Consistent page container */
+.page-container {
+  min-height: calc(100vh - 68px); /* 100vh minus navbar(44px) and footer(24px) height */
+  padding-top: 44px; /* Exact navbar height */
+  padding-bottom: 24px; /* Exact footer height */
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Consistent content container */
+.content-container {
+  flex: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  overflow-y: auto;
+  padding-bottom: 24px; /* Exact footer height */
+}
+
+/* Fix navbar and footer positioning */
+.MuiAppBar-root {
+  z-index: 1300 !important; /* Ensure navbar is above other content */
+}
+
+footer, 
+.MuiBox-root[component="footer"] {
+  position: relative;
+  z-index: 1010;
+  margin-top: auto;
+  visibility: visible !important;
+  display: flex !important;
+}
+
+/* Ensure all pages have enough bottom space for footer */
+.container, 
+.MuiContainer-root {
+  margin-bottom: 24px !important; /* Match the footer height */
+  min-height: calc(100vh - 68px);
+} 

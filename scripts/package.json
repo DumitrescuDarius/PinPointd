@@ -1,0 +1,7 @@
+{
+  "name": "firebase-scripts",
+  "version": "1.0.0",
+  "description": "Scripts for Firebase database management",
+  "type": "module",
+  "private": true
+} 

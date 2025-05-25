@@ -1,0 +1,442 @@
+{
+  "about": {
+    "title": "About PinPointd",
+    "subtitle": "PinPoint Your Memories",
+    "founded": "Founded 2024",
+    "global_community": "Global Community",
+    "what_is_pinpointd": "What is PinPointd?",
+    "how_it_works": "How It Works",
+    "how_it_works_desc": "PinPointd allows you to create personalized pins on an interactive world map. Each pin represents a location that matters to you - whether it's a favorite restaurant, a memorable travel spot, or a hidden gem you want to share with friends.",
+    "how_it_works_desc2": "Our platform combines geolocation technology with social networking features, allowing you to connect with friends, discover new places, and build a visual collection of your favorite locations around the world.",
+    "technology": "Technology",
+    "technology_desc": "Built with modern web technologies including React, Firebase, and Leaflet maps, PinPointd offers a seamless experience across all devices. Our platform supports multiple languages and provides real-time updates for an engaging social experience.",
+    "key_benefits": "Key Benefits",
+    "benefit1": "Create and share personalized location pins with friends",
+    "benefit2": "Discover new places through your social network",
+    "benefit3": "Build a visual map of your travels and favorite places",
+    "benefit4": "Connect with friends through shared location interests",
+    "benefit5": "Access your pins from any device with our cross-platform support",
+    "getting_started": "Getting Started",
+    "getting_started_desc": "Sign up for a free account to start creating your own pins, connecting with friends, and exploring the world through PinPointd. Our intuitive interface makes it easy to get started in minutes.",
+    "key_features": "Key Features",
+    "features": {
+      "chat": {
+        "title": "Seamless Chatting",
+        "desc": "Easy realtime chat with friends, family, and community"
+      },
+      "friends": {
+        "title": "Add friends",
+        "desc": "Easy to find friends using PinPoints around the map"
+      },
+      "security": {
+        "title": "Security",
+        "desc": "Sturdly secured, all data is encrypted and protected"
+      },
+      "easy_use": {
+        "title": "Easy to use",
+        "desc": "Simple interface with a snappy user experience"
+      },
+      "geolocation": {
+        "title": "Geolocation based posts",
+        "desc": "PinPoint all of your favourite places and share them with your friends"
+      },
+      "map": {
+        "title": "A map with realtime updates",
+        "desc": "Our map is constantly updated with the latest information"
+      }
+    },
+    "our_story": {
+      "title": "What is our beginning?",
+      "paragraph1": "PinPointd began as a passion project in early 2024, born from the idea that the places we visit shape our experiences and connections. Our founder, Dumitrescu Darius - Ioan, was traveling abroad and realized there was no easy way to share meaningful locations with friends and family beyond simple check-ins or generic recommendations.",
+      "paragraph2": "What started as a simple map-sharing tool quickly evolved into a comprehensive social platform that connects people through their shared love of places. Whether it's a hidden cafe in Paris, a scenic hiking trail in Colorado, or a cozy bookstore in Tokyo, PinPointd helps users discover, share, and discuss locations that matter to them.",
+      "paragraph3": "Today, our growing community spans the globe, with users pinning locations across six continents. We're committed to continually improving the platform with new features while maintaining our core values of privacy, authenticity, and meaningful connection."
+    },
+    "team": {
+      "title": "Meet Our Team",
+      "member1": {
+        "name": "Dumitrescu Darius - Ioan",
+        "role": "Creator of PinPointd",
+        "bio": "I always loved development and creating new things, so I decided to create PinPointd to share my love for travelling and exploring new places with my friends and family."
+      }
+    }
+  },
+  "navigation": {
+    "map": "Map",
+    "chat": "Chat",
+    "friends": "Friends",
+    "about": "About",
+    "tokens": "Tokens",
+    "login": "Login",
+    "register": "Register",
+    "username": "Username",
+    "change_account_settings": "Change Account Settings",
+    "logout": "Logout",
+    "language": "Language",
+    "change_language": "Change Language",
+    "navigation": "Navigation"
+  },
+  "home": {
+    "hero": {
+      "title": "Discover and Share Your World",
+      "subtitle": "PinPoint your favorite places, connect with friends, and explore the world together",
+      "get_started": "Log In",
+      "register": "Register",
+      "explore_world": "Explore the World"
+
+    },
+    "features": {
+      "pin_locations": "Pin Your Locations",
+      "pin_desc": "Mark your favorite spots on the map and share them with friends",
+      "connect": "Connect with Friends",
+      "connect_desc": "Find and connect with friends who share your interests",
+      "chat": "Real-time Chat",
+      "chat_desc": "Chat with friends about your favorite places in real-time"
+    },
+    "testimonials": {
+      "title": "What Our Users Say",
+      "testimonial_1": "PinPointd has transformed how I share my travel experiences. It's like having a personal travel journal that connects me with friends worldwide.",
+      "testimonial_2": "I love how easy it is to discover new places through my friends' pins. It's like having a global community of travel guides!",
+      "testimonial_3": "The real-time chat feature makes it so easy to plan meetups with friends at our favorite spots. It's become an essential part of my social life."
+    },
+    "featured_locations": {
+      "title": "Featured Locations",
+      "eiffel_tower": "Eiffel Tower",
+      "eiffel_tower_desc": "Iconic iron lattice tower on the Champ de Mars in Paris",
+      "taj_mahal": "Taj Mahal",
+      "taj_mahal_desc": "Ivory-white marble mausoleum in Agra, India",
+      "great_wall": "Great Wall of China",
+      "great_wall_desc": "Series of fortifications built along the northern borders of China",
+      "view_all": "View All Locations"
+    }
+  },
+  "map": {
+    "search_placeholder": "Search locations",
+    "location_found": "Located you on the map",
+    "unable_to_access_location": "Unable to access your location.",
+    "enable_location_services": "Please enable location services in your browser settings.",
+    "location_unavailable": "Location information is unavailable.",
+    "location_timeout": "Location request timed out.",
+    "unknown_error": "An unknown error occurred.",
+    "link_copied": "Link copied to clipboard!",
+    "failed_to_copy_link": "Failed to copy link",
+    "additional_filters": "Additional Filters",
+    "business_post": "Business Post",
+    "tokens": "Tokens",
+    "business_post_featured": "Business posts will consume 1 token and will be featured prominently on the map.",
+    "need_tokens": "You need tokens to create business posts.",
+    "buy_tokens": "Buy Tokens",
+    "back_to_map": "Back to Map",
+    "no_location_selected": "No location selected. Please select a location on the map first.",
+    "add_new_pinpoint": "Add New Pinpoint",
+    "failed_to_get_directions": "Failed to get directions",
+    "enable_location_for_navigation": "Please enable location services for navigation",
+    "posts_in_area": "Posts in your area (100km)",
+    "posted_last_24h": "Posted in the last 24 hours",
+    "made_by_friends": "Made by friends",
+    "made_by_you": "Made by you",
+    "add_new_location": "Add New Location",
+    "location_name": "Location Name",
+    "description": "Description",
+    "describe_location": "Describe this location...",
+    "tags": "Tags",
+    "add_tags": "Add tags",
+    "photos": "Photos",
+    "add_photos": "Add Photos",
+    "max_photos": "Maximum 4 photos",
+    "social_sharing": "Social Sharing",
+    "make_visible": "Make visible to everyone",
+    "share_note": "Share Note (optional)",
+    "note_placeholder": "Add a note to your post...",
+    "cancel": "Cancel",
+    "uploading": "Uploading...",
+    "save_location": "Save Location",
+    "title": "Title",
+    "enter_title": "Enter a title for this location...",
+    "enter_description": "Describe this location...",
+    "saving": "Saving...",
+    "save_pinpoint": "Save Pinpoint",
+    "make_public": "Make this public",
+    "no_posts_match_filters": "No Posts Match Your Filters"
+  },
+  "social": {
+    "chats": "Chats",
+    "friends": "Friends",
+    "typing": "Typing...",
+    "start_conversation": "Start a conversation",
+    "create_group": "Create Group",
+    "friend_requests": "Friend Requests",
+    "selected": "selected",
+    "read_aloud": "Read Aloud",
+    "delete": "Delete",
+    "ai_assistant": "AI Assistant",
+    "send_first_message": "Send your first message!",
+    "unread_messages": "Unread Messages",
+    "attach_file": "Attach file",
+    "voice_input": "Voice input",
+    "listening": "Listening...",
+    "select_chat": "Select a chat to start messaging",
+    "online": "Online",
+    "offline": "Offline",
+    "message_friends": "Message your friends, or even add some",
+    "failed_to_load_chats": "Failed to load chats.",
+    "failed_to_initialize_chat": "Failed to initialize chat system.",
+    "failed_to_load_user_data": "Failed to load user data.",
+    "failed_to_send_message": "Failed to send message",
+    "generating_response": "Generating response...",
+    "connection_error": "I'm having trouble connecting. Please try again later.",
+    "failed_to_get_response": "Failed to get response from the assistant.",
+    "search_failed": "Search failed.",
+    "friend_request_sent": "Friend request sent successfully!",
+    "group_created_successfully": "Group created successfully!",
+    "failed_to_send_request": "Failed to send request",
+    "failed_to_accept_request": "Failed to accept request",
+    "failed_to_reject_request": "Failed to reject request",
+    "failed_to_remove_friend": "Failed to remove friend",
+    "failed_to_block_user": "Failed to block user",
+    "failed_to_upload_file": "Failed to upload file",
+    "messages_deleted_successfully": "Messages deleted successfully",
+    "failed_to_delete_messages": "Failed to delete messages",
+    "chat_deleted_successfully": "Chat deleted successfully",
+    "failed_to_delete_chat": "Failed to delete chat",
+    "message_deleted": "Message deleted",
+    "failed_to_delete_message": "Failed to delete message",
+    "text_to_speech_not_supported": "Text-to-speech not supported",
+    "text_to_speech_error": "Text-to-speech error occurred",
+    "speech_recognition_not_supported": "Speech recognition not supported",
+    "speech_recognition_error": "Speech recognition error occurred",
+    "microphone_permission_error": "Could not access microphone",
+    "speech_synthesis_error": "Could not stop speech synthesis",
+    "group_created_message": "Group {{name}} created successfully!",
+    "group_chat": "Group Chat",
+    "failed_to_send_voice_message": "Failed to send voice message",
+    "microphone_access_error": "Could not access microphone. Please check permissions.",
+    "voice_recording_not_supported": "Voice recording is not supported in this browser.",
+    "voice_message": "Voice message",
+    "type_a_message": "Type a message",
+    "copy": "Copy",
+    "speak_aloud": "Speak aloud",
+    "select": "Select",
+    "insert_emoji": "Insert emoji",
+    "send_message": "Send message",
+    "remove_friend": "Remove friend",
+    "block_user": "Block user",
+    "switch_to_light_mode": "Switch to light mode",
+    "switch_to_dark_mode": "Switch to dark mode",
+    "text_copied": "Text copied to clipboard"
+  },
+  "footer": {
+    "copyright": "PinPointd™ original creation of Dumitrescu Darius - Ioan",
+    "separator": "•",
+    "privacy_policy": "Privacy Policy",
+    "terms_of_service": "Terms of Service"
+  },
+  "terms_of_service": {
+    "title": "Terms of Service",
+    "intro": "By accessing and using this application, you accept and agree to be bound by the terms and provisions of this agreement.",
+    "acceptance": {
+      "title": "1. Acceptance of Terms",
+      "content": "By accessing and using this application, you accept and agree to be bound by the terms and provisions of this agreement. These terms apply to all users of the application."
+    },
+    "account": {
+      "title": "2. User Account",
+      "content": "You are responsible for maintaining the confidentiality of your account and password. You agree to accept responsibility for all activities that occur under your account. You must immediately notify us of any unauthorized use of your account."
+    },
+    "conduct": {
+      "title": "3. User Conduct",
+      "content": "You agree not to use the application for any unlawful purpose or in any way that could damage, disable, overburden, or impair the application. You must respect other users and their privacy at all times."
+    },
+    "privacy": {
+      "title": "4. Privacy Policy",
+      "content": "Your use of the application is also governed by our Privacy Policy. Please review our Privacy Policy, which also governs the application and informs users of our data collection practices."
+    },
+    "modifications": {
+      "title": "5. Modifications to Terms",
+      "content": "We reserve the right to modify these terms at any time. We will notify users of any changes by updating the date at the top of these terms. Your continued use of the application after such modifications constitutes your acceptance of the new terms."
+    },
+    "contact": {
+      "title": "6. Contact Information",
+      "content": "If you have any questions about these Terms of Service, please contact us at dumitrescu.darius.ioan@gmail.com"
+    }
+  },
+  "privacy_policy": {
+    "title": "Privacy Policy",
+    "intro": "At PinPointd, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our application.",
+    "information_collection": {
+      "title": "Information We Collect",
+      "content": "We collect information that you provide directly to us, including your name, email address, profile information, and location data when you use our application. We also collect information about your device and how you use our application."
+    },
+    "usage": {
+      "title": "How We Use Your Information",
+      "content": "We use the information we collect to provide, maintain, and improve our services, communicate with you, and ensure the security of our application. Your location data is used to provide location-based features and enhance your experience."
+    },
+    "sharing": {
+      "title": "How We Share Your Information",
+      "content": "We do not sell your personal information. We may share your information with third-party service providers who assist us in operating our application, conducting our business, or serving our users."
+    },
+    "cookies": {
+      "title": "Cookies and Tracking Technologies",
+      "content": "We use cookies and similar tracking technologies to track activity on our application and hold certain information. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent."
+    },
+    "security": {
+      "title": "Data Security",
+      "content": "We use appropriate technical and organizational measures to protect your personal information. However, no method of transmission over the Internet is 100% secure."
+    },
+    "retention": {
+      "title": "Data Retention",
+      "content": "We retain your personal information for as long as necessary to fulfill the purposes outlined in this Privacy Policy, unless a longer retention period is required by law."
+    },
+    "children": {
+      "title": "Children's Privacy",
+      "content": "Our application is not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13."
+    },
+    "rights": {
+      "title": "Your Rights and Choices",
+      "content": "You have the right to access, update, or delete your personal information. You can also choose to limit the information you share and control your privacy settings within the application."
+    },
+    "changes": {
+      "title": "Changes to This Policy",
+      "content": "We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the effective date."
+    },
+    "contact": {
+      "title": "Contact Us",
+      "content": "If you have any questions about this Privacy Policy, please contact us at dumitrescu.darius.ioan@gmail.com"
+    }
+  },
+  "notifications": {
+    "liked_location": "{{user}} liked your location",
+    "commented_location": "{{user}} commented on your location",
+    "friend_request": "{{user}} sent you a friend request",
+    "friend_accept": "{{user}} accepted your friend request",
+    "new_pinpoint": "{{user}} shared a new location",
+    "new_message": "New message",
+    "title": "Notifications",
+    "no_notifications": "No notifications yet",
+    "mark_all_read": "Mark all as read",
+    "yesterday": "Yesterday"
+  },
+  "friends": {
+    "title": "Friends",
+    "my_friends": "My Friends",
+    "requests": "Friend Requests",
+    "search_placeholder": "Search friends by username",
+    "searching": "Searching...",
+    "press_enter": "Press Enter to search",
+    "wants_to_be_friends": "wants to be friends",
+    "add_friend": "Add Friend",
+    "accept": "Accept",
+    "reject": "Reject",
+    "remove_friend": "Remove Friend",
+    "block_user": "Block User",
+    "no_requests": "No friend requests",
+    "no_friends": "No friends yet",
+    "start_chat": "Start Chat",
+    "request_sent": "Friend request sent!",
+    "request_send_error": "Failed to send friend request.",
+    "request_accepted": "Friend request accepted!",
+    "request_accept_error": "Failed to accept friend request.",
+    "request_rejected": "Friend request rejected.",
+    "request_reject_error": "Failed to reject friend request.",
+    "friend_removed": "Friend removed.",
+    "friend_remove_error": "Failed to remove friend.",
+    "user_blocked": "User blocked.",
+    "user_block_error": "Failed to block user.",
+    "chat_start_error": "Failed to start chat.",
+    "load_error": "Failed to load friends. Please try again.",
+    "online": "Online",
+    "offline": "Offline",
+    "options": "Options",
+    "search_results": "Search Results"
+  },
+  "auth": {
+    "go_to_login": "Go to Login",
+    "create_account": "Create Account",
+    "join_today": "Join PinPointd today",
+    "creating_account": "Creating Account...",
+    "already_have_account": "Already have an account?",
+    "sign_in": "Sign In",
+    "registration_complete": "Registration Complete",
+    "we_ve_sent_a_verification_link_to": "We've sent a verification link to:",
+    "please_check_your_inbox_and_click_the_verification_link_to_activate_your_account": "Please check your inbox and click the verification link to activate your account.",
+    "email_verification": {
+      "title": "Email Verification Required",
+      "success": "Email verified successfully!",
+      "access_features": "You can now access all features of the application.",
+      "check_email": "Please check your email for a verification code and enter it below:",
+      "verification_code": "Verification Code",
+      "resend_code": "Resend verification code",
+      "code_sent": "Verification code sent! Please check your email.",
+      "attempts_remaining": "Attempts remaining",
+      "cancel": "Cancel",
+      "verify": "Verify",
+      "errors": {
+        "resend_failed": "Failed to resend verification email. Please try again.",
+        "invalid_code": "Please enter a valid 6-digit verification code",
+        "not_authenticated": "User not authenticated",
+        "user_not_found": "User data not found",
+        "too_many_attempts": "Too many failed attempts. Please request a new verification code.",
+        "invalid_code_retry": "Invalid verification code. Please try again.",
+        "general_error": "An error occurred. Please try again."
+      }
+    },
+    "password": {
+      "title": "Set Up Password",
+      "description": "Please set up a password for your account. This will allow you to sign in using email and password in the future.",
+      "password": "Password",
+      "confirm_password": "Confirm Password",
+      "set_password": "Set Password",
+      "errors": {
+        "min_length": "Password must be at least 6 characters",
+        "mismatch": "Passwords do not match",
+        "security_reason": "For security reasons, please sign in again before setting up your password.",
+        "setup_failed": "Failed to set up password. Please try again."
+      }
+    },
+    "username": {
+      "title": "Choose a Username",
+      "description": "Please choose a unique username to continue.",
+      "username": "Username",
+      "continue": "Continue",
+      "errors": {
+        "required": "Username is required",
+        "length": "Username must be between 3 and 20 characters",
+        "format": "Username can only contain lowercase letters, numbers, and \".\" or \"_\" between words",
+        "start_end": "Username cannot start or end with \".\" or \"_\"",
+        "consecutive": "Username cannot contain consecutive \".\" or \"_\" characters",
+        "taken": "This username is already taken",
+        "verify_failed": "Failed to verify username availability"
+      },
+      "checking": "Checking availability...",
+      "format_help": "Only lowercase letters, numbers, and \".\" or \"_\" between words"
+    }
+  },
+  "profile": {
+    "locations": "Locations",
+    "posts": "Posts",
+    "view_details": "View Details",
+    "no_locations": "No locations yet",
+    "start_adding_pins": "Start adding pins to your map!",
+    "no_locations_other_user": "This user hasn't added any locations yet.",
+    "go_to_map": "Go to Map",
+    "view_on_map": "View on Map",
+    "no_posts": "No posts yet",
+    "share_locations": "Share your locations to create posts!",
+    "no_posts_other_user": "This user hasn't shared any posts yet.",
+    "pins": "Pins",
+    "friends": "Friends",
+    "likes": "Likes",
+    "member_since": "Member Since",
+    "no_bio": "No bio provided",
+    "user_not_found": "User not found",
+    "add_friend": "Add Friend",
+    "cancel_request": "Cancel Request",
+    "accept_request": "Accept Request",
+    "remove_friend": "Remove Friend"
+  },
+  "location": {
+    "coordinates": "Coordinates",
+    "reviews": "Reviews",
+    "write_review": "Write a Review",
+    "your_review": "Your Review",
+    "submit_review": "Submit Review"
+  }
+} 

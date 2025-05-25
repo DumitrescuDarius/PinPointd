@@ -1,0 +1,358 @@
+{
+  "about": {
+    "title": "PinPointd",
+    "subtitle": "Marchează-ți Amintirile",
+    "founded": "Înființat 2024",
+    "global_community": "Comunitate Globală",
+    "what_is_pinpointd": "Ce este PinPointd?",
+    "how_it_works": "Cum Funcționează",
+    "how_it_works_desc": "PinPointd îți permite să creezi pinuri personalizate pe o hartă interactivă a lumii. Fiecare pin reprezintă o locație care contează pentru tine - fie că este un restaurant preferat, un loc memorabil de călătorie sau o bijuterie ascunsă pe care vrei să o împărtășești cu prietenii.",
+    "how_it_works_desc2": "Platforma noastră combină tehnologia de geolocalizare cu funcții de rețea socială, permițându-ți să te conectezi cu prietenii, să descoperi locuri noi și să construiești o colecție vizuală a locațiilor tale preferate din întreaga lume.",
+    "technology": "Tehnologie",
+    "technology_desc": "Construită cu tehnologii web moderne, inclusiv React, Firebase și hărți Leaflet, PinPointd oferă o experiență fluidă pe toate dispozitivele. Platforma noastră suportă mai multe limbi și oferă actualizări în timp real pentru o experiență socială captivantă.",
+    "key_benefits": "Beneficii Cheie",
+    "benefit1": "Creează și împărtășește pinuri de locație personalizate cu prietenii",
+    "benefit2": "Descoperă locuri noi prin rețeaua ta socială",
+    "benefit3": "Construiește o hartă vizuală a călătoriilor și locurilor tale preferate",
+    "benefit4": "Conectează-te cu prietenii prin interese comune de locație",
+    "benefit5": "Accesează pinurile tale de pe orice dispozitiv cu suportul nostru cross-platform",
+    "getting_started": "Începe Acum",
+    "getting_started_desc": "Înregistrează-te pentru un cont gratuit pentru a începe să creezi propriile pinuri, să te conectezi cu prietenii și să explorezi lumea prin PinPointd. Interfața noastră intuitivă face ușor să începi în câteva minute.",
+    "key_features": "Caracteristici Cheie",
+    "features": {
+      "chat": {
+        "title": "Chat Fără Probleme",
+        "desc": "Chat ușor în timp real cu prietenii, familia și comunitatea"
+      },
+      "friends": {
+        "title": "Adaugă prieteni",
+        "desc": "Ușor de găsit prieteni folosind PinPoints în jurul hărții"
+      },
+      "security": {
+        "title": "Securitate",
+        "desc": "Puternic securizat, toate datele sunt criptate și protejate"
+      },
+      "easy_use": {
+        "title": "Ușor de utilizat",
+        "desc": "Interfață simplă cu o experiență de utilizare rapidă"
+      },
+      "geolocation": {
+        "title": "Postări bazate pe geolocalizare",
+        "desc": "Marchează toate locurile tale preferate și împărtășește-le cu prietenii"
+      },
+      "map": {
+        "title": "O hartă cu actualizări în timp real",
+        "desc": "Harta noastră este actualizată constant cu cele mai recente informații"
+      }
+    },
+    "our_story": {
+      "title": "Care este începutul nostru?",
+      "paragraph1": "PinPointd a început ca un proiect de pasiune la începutul anului 2024, născut din ideea că locurile pe care le vizităm modelează experiențele și conexiunile noastre. Fondatorul nostru, Dumitrescu Darius - Ioan, călătorea în străinătate și și-a dat seama că nu exista o modalitate ușoară de a împărtăși locații semnificative cu prietenii și familia dincolo de simple check-in-uri sau recomandări generice.",
+      "paragraph2": "Ceea ce a început ca un simplu instrument de distribuire a hărților s-a transformat rapid într-o platformă socială complexă care conectează oamenii prin dragostea lor împărtășită pentru locuri. Fie că este o cafenea ascunsă din Paris, o potecă pitorească din Colorado sau o librărie confortabilă din Tokyo, PinPointd ajută utilizatorii să descopere, să împărtășească și să discute despre locațiile care contează pentru ei.",
+      "paragraph3": "Astăzi, comunitatea noastră în creștere se întinde pe glob, cu utilizatori care marchează locații pe șase continente. Suntem dedicați îmbunătățirii continue a platformei cu noi funcții, menținând în același timp valorile noastre de bază: confidențialitate, autenticitate și conexiune semnificativă."
+    },
+    "team": {
+      "title": "Cunoaște Echipa Noastră",
+      "member1": {
+        "name": "Dumitrescu Darius - Ioan",
+        "role": "Creatorul PinPointd",
+        "bio": "Întotdeauna am iubit dezvoltarea și crearea de lucruri noi, așa că am decis să creez PinPointd pentru a împărtăși dragostea mea pentru călătorii și explorarea locurilor noi cu prietenii și familia mea."
+      }
+    }
+  },
+  "navigation": {
+    "map": "Hartă",
+    "chat": "Chat",
+    "friends": "Prieteni",
+    "about": "Despre",
+    "tokens": "Tokeni",
+    "login": "Autentificare",
+    "register": "Înregistrare",
+    "username": "Nume utilizator",
+    "change_account_settings": "Schimbă Setările Contului",
+    "logout": "Deconectare",
+    "language": "Limbă",
+    "change_language": "Schimbă Limba",
+    "navigation": "Navigare"
+  },
+  "home": {
+    "hero": {
+      "title": "Marchează-ți amintirile",
+      "subtitle": "Marchează locurile tale preferate, conectează-te cu prietenii și explorează lumea împreună",
+      "get_started": "Începe Acum",
+      "register": "Înregistrare",
+      "learn_more": "Află Mai Multe",
+      "explore_world": "Explorează lumea"
+    },
+    "features": {
+      "pin_locations": "Marchează Locațiile Tale",
+      "pin_desc": "Marchează locurile tale preferate pe hartă și împărtășește-le cu prietenii",
+      "connect": "Conectează-te cu Prietenii",
+      "connect_desc": "Găsește și conectează-te cu prieteni care împărtășesc interesele tale",
+      "chat": "Chat în Timp Real",
+      "chat_desc": "Vorbește cu prietenii despre locurile tale preferate în timp real"
+    },
+    "testimonials": {
+      "title": "Ce Spun Utilizatorii Noștri",
+      "testimonial_1": "PinPointd a transformat modul în care îmi împărtășesc experiențele de călătorie. Este ca și cum ai avea un jurnal de călătorie personal care te conectează cu prieteni din întreaga lume.",
+      "testimonial_2": "Îmi place cât de ușor este să descoper locuri noi prin pinurile prietenilor mei. Este ca și cum ai avea o comunitate globală de ghiduri de călătorie!",
+      "testimonial_3": "Funcția de chat în timp real face atât de ușor să planific întâlniri cu prietenii la locurile noastre preferate. A devenit o parte esențială a vieții mele sociale."
+    },
+    "featured_locations": {
+      "title": "Locații Recomandate",
+      "eiffel_tower": "Turnul Eiffel",
+      "eiffel_tower_desc": "Turn iconic din zăbrele de fier de pe Champ de Mars din Paris",
+      "taj_mahal": "Taj Mahal",
+      "taj_mahal_desc": "Mausoleu din marmură albă fildeș din Agra, India",
+      "great_wall": "Marele Zid Chinezesc",
+      "great_wall_desc": "Serie de fortificații construite de-a lungul frontierelor nordice ale Chinei",
+      "view_all": "Vezi Toate Locațiile"
+    }
+  },
+  "map": {
+    "search_placeholder": "Caută locații",
+    "location_found": "Te-am localizat pe hartă",
+    "unable_to_access_location": "Nu se poate accesa locația ta.",
+    "enable_location_services": "Te rugăm să activezi serviciile de localizare în setările browserului.",
+    "location_unavailable": "Informațiile despre locație nu sunt disponibile.",
+    "location_timeout": "Timpul de așteptare pentru localizare a expirat.",
+    "unknown_error": "A apărut o eroare necunoscută.",
+    "link_copied": "Link copiat în clipboard!",
+    "failed_to_copy_link": "Nu s-a putut copia linkul",
+    "additional_filters": "Filtre Adiționale",
+    "business_post": "Postare Business",
+    "tokens": "Tokeni",
+    "business_post_featured": "Postările business vor consuma 1 token și vor fi evidențiate pe hartă.",
+    "need_tokens": "Ai nevoie de tokeni pentru a crea postări business.",
+    "buy_tokens": "Cumpără Tokeni",
+    "back_to_map": "Înapoi la Hartă",
+    "no_location_selected": "Nicio locație selectată. Te rugăm să selectezi mai întâi o locație pe hartă.",
+    "add_new_pinpoint": "Adaugă un Nou PinPoint",
+    "failed_to_get_directions": "Nu s-au putut obține indicațiile",
+    "enable_location_for_navigation": "Te rugăm să activezi serviciile de localizare pentru navigare",
+    "posts_in_area": "Postări în zona ta (100km)",
+    "posted_last_24h": "Postat în ultimele 24 de ore",
+    "made_by_friends": "Făcut de prieteni",
+    "made_by_you": "Făcut de tine",
+    "no_posts_match_filters": "Nicio postare nu se potrivește cu filtrele tale",
+    "add_new_location": "Adaugă o Nouă Locație",
+    "location_name": "Numele Locației",
+    "description": "Descriere",
+    "describe_location": "Descrie această locație...",
+    "tags": "Etichete",
+    "add_tags": "Adaugă etichete",
+    "photos": "Fotografii",
+    "add_photos": "Adaugă Fotografii",
+    "max_photos": "Maximum 4 fotografii",
+    "social_sharing": "Partajare Socială",
+    "make_visible": "Fă vizibil pentru toată lumea",
+    "share_note": "Notă de partajare (opțional)",
+    "note_placeholder": "Adaugă o notă la postarea ta...",
+    "cancel": "Anulează",
+    "uploading": "Se încarcă...",
+    "save_location": "Salvează Locația",
+    "title": "Titlu",
+    "enter_title": "Introdu un titlu pentru această locație...",
+    "enter_description": "Descrie această locație...",
+    "saving": "Se salvează...",
+    "save_pinpoint": "Salvează PinPoint",
+    "make_public": "Fă public",
+    "add_pinpoint": {
+      "title": "Adaugă un Pin Nou",
+      "location_details": "Detalii Locație",
+      "select_location": "Selectează o Locație",
+      "click_map": "Click pe hartă pentru a selecta o locație",
+      "location_selected": "Locație selectată",
+      "category": "Categorie",
+      "select_category": "Selectează o categorie",
+      "visibility": "Vizibilitate",
+      "public": "Public - Toată lumea poate vedea",
+      "private": "Privat - Doar tu poți vedea",
+      "friends": "Prieteni - Doar prietenii tăi pot vedea",
+      "add_media": "Adaugă Media",
+      "drag_drop": "Trage și plasează fișiere sau click pentru a încărca",
+      "submit": "Creează Pin",
+      "submitting": "Se creează...",
+      "success": "Pin creat cu succes!",
+      "error": "Eroare la crearea pinului"
+    }
+  },
+  "footer": {
+    "copyright": "PinPointd™ creație originală a lui Dumitrescu Darius - Ioan",
+    "separator": "•",
+    "privacy_policy": "Politica de Confidențialitate",
+    "terms_of_service": "Termeni și Condiții"
+  },
+  "terms_of_service": {
+    "title": "Termeni și Condiții",
+    "intro": "Prin accesarea și utilizarea acestei aplicații, acceptați și sunteți de acord să fiți obligat de termenii și prevederile acestui acord.",
+    "acceptance": {
+      "title": "1. Acceptarea Termenilor",
+      "content": "Prin accesarea și utilizarea acestei aplicații, acceptați și sunteți de acord să fiți obligat de termenii și prevederile acestui acord. Acești termeni se aplică tuturor utilizatorilor aplicației."
+    },
+    "account": {
+      "title": "2. Contul Utilizatorului",
+      "content": "Sunteți responsabil pentru menținerea confidențialității contului și parolei dvs. Sunteți de acord să acceptați responsabilitatea pentru toate activitățile care au loc sub contul dvs. Trebuie să ne notificați imediat despre orice utilizare neautorizată a contului dvs."
+    },
+    "conduct": {
+      "title": "3. Conduita Utilizatorului",
+      "content": "Sunteți de acord să nu utilizați aplicația în niciun scop ilegal sau în niciun mod care ar putea deteriora, dezactiva, supraîncărca sau afecta aplicația. Trebuie să respectați ceilalți utilizatori și confidențialitatea acestora în orice moment."
+    },
+    "privacy": {
+      "title": "4. Politica de Confidențialitate",
+      "content": "Utilizarea aplicației este de asemenea guvernată de Politica noastră de Confidențialitate. Vă rugăm să revizuiți Politica noastră de Confidențialitate, care guvernează de asemenea aplicația și informează utilizatorii despre practicile noastre de colectare a datelor."
+    },
+    "modifications": {
+      "title": "5. Modificări ale Termenilor",
+      "content": "Ne rezervăm dreptul de a modifica acești termeni în orice moment. Vom notifica utilizatorii despre orice modificări prin actualizarea datei din partea de sus a acestor termeni. Continuarea utilizării aplicației după astfel de modificări constituie acceptarea noilor termeni."
+    },
+    "contact": {
+      "title": "6. Informații de Contact",
+      "content": "Dacă aveți întrebări despre acești Termeni și Condiții, vă rugăm să ne contactați la dumitrescu.darius.ioan@gmail.com"
+    }
+  },
+  "privacy_policy": {
+    "title": "Politica de Confidențialitate",
+    "intro": "La PinPointd, luăm în serios confidențialitatea dumneavoastră. Această Politică de Confidențialitate explică modul în care colectăm, utilizăm, dezvăluim și protejăm informațiile dumneavoastră atunci când utilizați aplicația noastră.",
+    "information_collection": {
+      "title": "Informațiile pe Care le Colectăm",
+      "content": "Colectăm informațiile pe care ni le furnizați direct, inclusiv numele, adresa de email, informațiile de profil și datele de localizare atunci când utilizați aplicația noastră. De asemenea, colectăm informații despre dispozitivul dumneavoastră și modul în care utilizați aplicația noastră."
+    },
+    "usage": {
+      "title": "Cum Utilizăm Informațiile Dumneavoastră",
+      "content": "Utilizăm informațiile pe care le colectăm pentru a furniza, menține și îmbunătăți serviciile noastre, pentru a comunica cu dumneavoastră și pentru a asigura securitatea aplicației noastre. Datele dumneavoastră de localizare sunt utilizate pentru a furniza funcții bazate pe locație și pentru a îmbunătăți experiența dumneavoastră."
+    },
+    "sharing": {
+      "title": "Cum Partajăm Informațiile Dumneavoastră",
+      "content": "Nu vindem informațiile dumneavoastră personale. Este posibil să partajăm informațiile dumneavoastră cu furnizori de servicii terți care ne ajută în operarea aplicației noastre, desfășurarea activității noastre sau deservirea utilizatorilor noștri."
+    },
+    "cookies": {
+      "title": "Cookie-uri și Tehnologii de Urmărire",
+      "content": "Utilizăm cookie-uri și tehnologii similare de urmărire pentru a monitoriza activitatea în aplicația noastră și a păstra anumite informații. Puteți instrui browserul dumneavoastră să refuze toate cookie-urile sau să indice când este trimis un cookie."
+    },
+    "security": {
+      "title": "Securitatea Datelor",
+      "content": "Utilizăm măsuri tehnice și organizatorice adecvate pentru a vă proteja informațiile personale. Cu toate acestea, nicio metodă de transmitere prin Internet nu este 100% sigură."
+    },
+    "retention": {
+      "title": "Păstrarea Datelor",
+      "content": "Păstrăm informațiile dumneavoastră personale atât timp cât este necesar pentru a îndeplini scopurile prezentate în această Politică de Confidențialitate, cu excepția cazului în care o perioadă mai lungă de păstrare este cerută de lege."
+    },
+    "children": {
+      "title": "Confidențialitatea Copiilor",
+      "content": "Aplicația noastră nu este destinată copiilor sub 13 ani. Nu colectăm cu bună știință informații personale de la copii sub 13 ani."
+    },
+    "rights": {
+      "title": "Drepturile și Opțiunile Dumneavoastră",
+      "content": "Aveți dreptul de a accesa, actualiza sau șterge informațiile dumneavoastră personale. De asemenea, puteți alege să limitați informațiile pe care le partajați și să vă controlați setările de confidențialitate în cadrul aplicației."
+    },
+    "changes": {
+      "title": "Modificări ale Acestei Politici",
+      "content": "Este posibil să actualizăm Politica noastră de Confidențialitate din când în când. Vă vom notifica despre orice modificări prin postarea noii Politici de Confidențialitate pe această pagină și actualizarea datei efective."
+    },
+    "contact": {
+      "title": "Contactați-ne",
+      "content": "Dacă aveți întrebări despre această Politică de Confidențialitate, vă rugăm să ne contactați la dumitrescu.darius.ioan@gmail.com"
+    }
+  },
+  "social": {
+    "chats": "Conversații",
+    "friends": "Prieteni",
+    "typing": "Scrie...",
+    "start_conversation": "Începe o conversație",
+    "create_group": "Creează Grup",
+    "friend_requests": "Cereri de Prietenie",
+    "selected": "selectat",
+    "read_aloud": "Citește cu Voce Tare",
+    "delete": "Șterge",
+    "ai_assistant": "Asistent IA",
+    "send_first_message": "Trimite primul tău mesaj!",
+    "unread_messages": "Mesaje Necitite",
+    "attach_file": "Atașează fișier",
+    "voice_input": "Intrare vocală",
+    "listening": "Ascult...",
+    "select_chat": "Selectează o conversație pentru a începe să mesajezi",
+    "online": "Online",
+    "offline": "Offline",
+    "message_friends": "Trimite mesaje prietenilor tăi, sau chiar adaugă câțiva",
+    "failed_to_load_chats": "Eroare la încărcarea conversațiilor.",
+    "failed_to_initialize_chat": "Eroare la inițializarea sistemului de chat.",
+    "failed_to_load_user_data": "Eroare la încărcarea datelor utilizatorului.",
+    "failed_to_send_message": "Eroare la trimiterea mesajului",
+    "generating_response": "Se generează răspunsul...",
+    "connection_error": "Am probleme cu conexiunea. Vă rugăm să încercați mai târziu.",
+    "failed_to_get_response": "Eroare la obținerea răspunsului de la asistent.",
+    "search_failed": "Eroare la căutare.",
+    "friend_request_sent": "Cerere de prietenie trimisă cu succes!",
+    "group_created_successfully": "Grup creat cu succes!",
+    "failed_to_send_request": "Eroare la trimiterea cererii",
+    "failed_to_accept_request": "Eroare la acceptarea cererii",
+    "failed_to_reject_request": "Eroare la respingerea cererii",
+    "failed_to_remove_friend": "Eroare la eliminarea prietenului",
+    "failed_to_block_user": "Eroare la blocarea utilizatorului",
+    "failed_to_upload_file": "Eroare la încărcarea fișierului",
+    "messages_deleted_successfully": "Mesaje șterse cu succes",
+    "failed_to_delete_messages": "Eroare la ștergerea mesajelor",
+    "chat_deleted_successfully": "Conversație ștearsă cu succes",
+    "failed_to_delete_chat": "Eroare la ștergerea conversației",
+    "message_deleted": "Mesaj șters",
+    "failed_to_delete_message": "Eroare la ștergerea mesajului",
+    "text_to_speech_not_supported": "Text-to-speech nu este suportat",
+    "text_to_speech_error": "Eroare la text-to-speech",
+    "speech_recognition_not_supported": "Recunoașterea vocală nu este suportată",
+    "speech_recognition_error": "Eroare la recunoașterea vocală",
+    "microphone_permission_error": "Nu s-a putut accesa microfonul",
+    "speech_synthesis_error": "Nu s-a putut opri sinteza vocală",
+    "group_created_message": "Grupul {{name}} a fost creat cu succes!",
+    "group_chat": "Chat Grup",
+    "failed_to_send_voice_message": "Eroare la trimiterea mesajului vocal",
+    "microphone_access_error": "Nu s-a putut accesa microfonul. Vă rugăm să verificați permisiunile.",
+    "voice_recording_not_supported": "Înregistrarea vocală nu este suportată în acest browser.",
+    "voice_message": "Mesaj vocal",
+    "type_a_message": "Scrie un mesaj",
+    "copy": "Copiază",
+    "speak_aloud": "Citește cu voce tare",
+    "select": "Selectează",
+    "insert_emoji": "Inserează emoji",
+    "send_message": "Trimite mesajul",
+    "remove_friend": "Elimină prietenul",
+    "block_user": "Blochează utilizatorul",
+    "switch_to_light_mode": "Trece la modul luminos",
+    "switch_to_dark_mode": "Trece la modul întunecat",
+    "text_copied": "Text copiat în clipboard"
+  },
+  "auth": {
+    "go_to_login": "Mergi la Autentificare",
+    "create_account": "Creează Cont",
+    "join_today": "Alătură-te PinPointd astăzi",
+    "creating_account": "Se creează contul...",
+    "already_have_account": "Ai deja un cont?",
+    "sign_in": "Autentificare",
+    "registration_complete": "Înregistrare Completă",
+    "we_ve_sent_a_verification_link_to": "Am trimis un link de verificare la:",
+    "please_check_your_inbox_and_click_the_verification_link_to_activate_your_account": "Vă rugăm să verificați inbox-ul și să faceți clic pe link-ul de verificare pentru a activa contul."
+  },
+  "profile": {
+    "locations": "Locații",
+    "posts": "Postări",
+    "view_details": "Vezi Detalii",
+    "no_locations": "Nicio locație încă",
+    "start_adding_pins": "Începe să adaugi pinuri pe harta ta!",
+    "no_locations_other_user": "Acest utilizator nu a adăugat nicio locație încă.",
+    "go_to_map": "Mergi la Hartă",
+    "view_on_map": "Vezi pe Hartă",
+    "no_posts": "Nicio postare încă",
+    "share_locations": "Împărtășește locațiile tale pentru a crea postări!",
+    "no_posts_other_user": "Acest utilizator nu a împărtășit nicio postare încă.",
+    "pins": "Pinuri",
+    "friends": "Prieteni",
+    "likes": "Aprecieri",
+    "member_since": "Membru din",
+    "no_bio": "Fără biografie",
+    "user_not_found": "Utilizator negăsit",
+    "add_friend": "Adaugă Prieten",
+    "cancel_request": "Anulează Cererea",
+    "accept_request": "Acceptă Cererea",
+    "remove_friend": "Elimină Prieten"
+  }
+} 
