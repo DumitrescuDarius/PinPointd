@@ -74,6 +74,6 @@ PinPointd este o aplicație socială interactivă bazată pe localizare, ce perm
 2. Clonează repo-ul:
 ```bash
 git clone https://github.com/DumitrescuDarius/Infoeducatie_PinPointd.git
-cd pinpointd
+cd PinPointd
 npm install
 npm run dev
