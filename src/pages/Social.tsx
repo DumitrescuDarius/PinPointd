@@ -3914,7 +3914,7 @@ const Social = () => {
                   alignItems: 'center', 
                   gap: 2,
                   overflow: 'hidden', // Prevent content from expanding the box
-                  width: 'calc(100% - 200px)' // Increased space for the right side
+                  width: { xs: 'calc(100% - 90px)', sm: 'calc(100% - 160px)', md: 'calc(100% - 200px)' } // More space for name on mobile
                 }}>
                   {isMobile && !isSelectionMode && (
                     <IconButton onClick={handleBackToList} sx={{ mr: 1, flexShrink: 0 }}>
@@ -3939,6 +3939,7 @@ const Social = () => {
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     minWidth: 0,
+                    flexGrow: 1,
                     flexShrink: 1,
                   }}>
                     {isSelectionMode ? (
@@ -3946,29 +3947,55 @@ const Social = () => {
                         variant="subtitle1" 
                         sx={{ 
                           fontWeight: 500,
-                          whiteSpace: 'nowrap',
                           overflow: 'hidden',
-                          textOverflow: 'ellipsis'
+                          textOverflow: 'ellipsis',
+                          lineHeight: 1.3,
+                          fontSize: { xs: '0.9rem', sm: '1rem' }
                         }}
                       >
                         {selectedMessages.length} {selectedMessages.length === 1 ? 'message' : 'messages'} selected
                       </Typography>
                     ) : (
                       <>
-                        <Typography 
-                          variant="subtitle1" 
-                          sx={{ 
-                            fontWeight: 500, 
-                            whiteSpace: 'nowrap',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            lineHeight: 1.3
-                          }}
-                        >
-                          {activeChat.isBot 
-                            ? 'Pheobe' 
-                            : `${getUserDisplayName(activeChat.members.find((m: string) => m !== currentUser?.uid) || '')} (@${getUserUsername(activeChat.members.find((m: string) => m !== currentUser?.uid) || '')})`}
-                        </Typography>
+                        {/* Display name and username side by side */}
+                        <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 0, flexWrap: 'nowrap' }}>
+                          <Typography 
+                            variant="subtitle1" 
+                            noWrap={true}
+                            sx={{ 
+                              fontWeight: 500,
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              lineHeight: 1.3,
+                              fontSize: { xs: '0.9rem', sm: '1rem' },
+                              minWidth: 0,
+                              maxWidth: '100%'
+                            }}
+                          >
+                            {activeChat.isBot 
+                              ? 'Pheobe' 
+                              : getUserDisplayName(activeChat.members.find((m: string) => m !== currentUser?.uid) || '')}
+                          </Typography>
+                          {/* Username to the right of display name */}
+                          {!activeChat.isBot && (
+                            <Typography
+                              variant="caption"
+                              noWrap={true}
+                              sx={{
+                                color: 'text.secondary',
+                                fontSize: { xs: '0.65rem', sm: '0.7rem' },
+                                lineHeight: 1.1,
+                                wordBreak: 'break-all',
+                                display: 'inline-block',
+                                ml: 1,
+                                minWidth: 0,
+                                maxWidth: '60%'
+                              }}
+                            >
+                              @{getUserUsername(activeChat.members.find((m: string) => m !== currentUser?.uid) || '')}
+                            </Typography>
+                          )}
+                        </Box>
                         {!activeChat.isBot && (
                           <Typography 
                             variant="caption" 
@@ -3976,25 +4003,28 @@ const Social = () => {
                             sx={{ 
                               display: 'flex',
                               alignItems: 'center',
-                              gap: 0.5
+                              gap: 0.5,
+                              fontSize: { xs: '0.7rem', sm: '0.75rem' }
                             }}
                           >
-                            <Box
-                              component="span"
-                              sx={{
-                                width: 6,
-                                height: 6,
-                                borderRadius: '50%',
-                                bgcolor: onlineUsers[activeChat.members.find((m: string) => m !== currentUser?.uid) || ''] 
-                                  ? 'success.main' 
-                                  : 'text.disabled'
-                              }}
-                            />
+                            {!isMobile && (
+                              <Box
+                                component="span"
+                                sx={{
+                                  width: 6,
+                                  height: 6,
+                                  borderRadius: '50%',
+                                  bgcolor: onlineUsers[activeChat.members.find((m: string) => m !== currentUser?.uid) || ''] 
+                                    ? 'success.main' 
+                                    : 'text.disabled'
+                                }}
+                              />
+                            )}
                             {onlineUsers[activeChat.members.find((m: string) => m !== currentUser?.uid) || ''] 
                               ? t('social.online')
-                              : t('social.offline') + ' • ' + formatMessageTime(
+                              : t('social.offline') + (isMobile ? '' : ' • ' + formatMessageTime(
                                   friends.find(f => f.id === activeChat.members.find((m: string) => m !== currentUser?.uid))?.lastSeen
-                                )
+                                ))
                             }
                           </Typography>
                         )}
@@ -4006,7 +4036,7 @@ const Social = () => {
                   display: 'flex', 
                   alignItems: 'center',
                   flexShrink: 0,
-                  width: '200px', // Increased width for action buttons
+                  width: { xs: 70, sm: 140, md: 200 }, // Less width for actions on mobile
                   justifyContent: 'flex-end',
                   gap: 1
                 }}>
@@ -4035,9 +4065,28 @@ const Social = () => {
                   ) : (
                     <>
                       {/* Normal mode actions */}
-                      <IconButton onClick={handleChatHeaderMenuOpen}>
-                        <MoreVertIcon />
-                      </IconButton>
+                      <Tooltip title={chatTheme === 'dark' ? t('social.switch_to_light_mode' as any) : t('social.switch_to_dark_mode' as any)}>
+                        <IconButton
+                          onClick={() => {
+                            const newTheme = chatTheme === 'dark' ? 'light' : 'dark';
+                            setChatTheme(newTheme);
+                            localStorage.setItem('chatTheme', newTheme);
+                          }}
+                          sx={{ 
+                            color: theme => theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.7)',
+                            '&:hover': {
+                              color: theme => theme.palette.mode === 'dark' ? '#fff' : '#000',
+                            }
+                          }}
+                        >
+                          {chatTheme === 'dark' ? <Brightness7Icon /> : <DarkModeIcon />}
+                        </IconButton>
+                      </Tooltip>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <IconButton onClick={handleChatHeaderMenuOpen}>
+                          <MoreVertIcon />
+                        </IconButton>
+                      </Box>
 
                       {/* Add chat header menu */}
                       <Menu
@@ -4812,43 +4861,21 @@ const Social = () => {
         )}
       </Drawer>
 
-      {/* Theme toggle */}
-      <Tooltip 
-        title={chatTheme === 'dark' ? t('social.switch_to_light_mode' as any) : t('social.switch_to_dark_mode' as any)} 
-        placement="right"
-      >
-        <Box
-          sx={{
-            position: 'fixed',
-            bottom: 24,
-            left: 24,
-            zIndex: 1300,
-            bgcolor: theme => theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-            borderRadius: '50%',
-            p: 1,
-            transition: 'background-color 0.3s ease',
-            '&:hover': {
-              bgcolor: theme => theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)',
-            }
-          }}
-        >
-          <IconButton
-            onClick={() => {
-              const newTheme = chatTheme === 'dark' ? 'light' : 'dark';
-              setChatTheme(newTheme);
-              localStorage.setItem('chatTheme', newTheme);
-            }}
-            sx={{ 
-              color: theme => theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.7)',
-              '&:hover': {
-                color: theme => theme.palette.mode === 'dark' ? '#fff' : '#000',
-              }
-            }}
-          >
-            {chatTheme === 'dark' ? <Brightness7Icon /> : <DarkModeIcon />}
-          </IconButton>
-        </Box>
-      </Tooltip>
+      {/* Remove the fixed position theme toggle */}
+      <Box sx={{ 
+        display: 'flex', 
+        alignItems: 'center',
+        gap: 1
+      }}>
+        {!isSelectionMode && (
+          <>
+            {/* Normal mode actions */}
+            <IconButton onClick={handleChatHeaderMenuOpen}>
+              <MoreVertIcon />
+            </IconButton>
+          </>
+        )}
+      </Box>
     </Container>
     </ThemeProvider>
   )

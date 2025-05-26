@@ -135,7 +135,8 @@ export const createMessageNotification = async (
 
       notification.onclick = () => {
         window.focus();
-        // You can add navigation logic here if needed
+        // Navigate to the specific chat
+        window.location.href = `/chat?chatId=${chatId}`;
       };
     }
   } catch (error) {

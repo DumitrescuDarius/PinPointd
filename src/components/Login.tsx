@@ -6,8 +6,9 @@ import { FiMail, FiLock, FiLogIn, FiLoader } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
 import styles from './Login.module.css';
 import { getDoc, doc } from 'firebase/firestore';
-import { db } from '../config/firebase';
-import { auth } from '../config/firebase';
+import { db, auth } from '../config/firebase';
+import { useTranslation } from 'react-i18next';
+import ForgotPasswordDialog from './ForgotPasswordDialog';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -15,8 +16,10 @@ const Login: React.FC = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const { login, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -155,6 +158,17 @@ const Login: React.FC = () => {
           </motion.button>
         </form>
 
+        <div className={styles.forgotPassword}>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            onClick={() => setShowForgotPassword(true)}
+            className={styles.link}
+            disabled={isLoading}
+          >
+            Forgot Password?
+          </motion.button>
+        </div>
+
         <div className={styles.divider}>
           <span>or continue with</span>
         </div>
@@ -191,6 +205,11 @@ const Login: React.FC = () => {
           </motion.button>
         </div>
       </div>
+
+      <ForgotPasswordDialog
+        open={showForgotPassword}
+        onClose={() => setShowForgotPassword(false)}
+      />
     </div>
   );
 };

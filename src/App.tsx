@@ -553,11 +553,13 @@ function App() {
                 '& .MuiDrawer-paper': {
                   width: 280,
                   boxSizing: 'border-box',
-                  background: theme.palette.background.paper,
+                  background: 'linear-gradient(135deg, rgba(35, 39, 42, 0.5) 0%, rgba(45, 55, 72, 0.5) 100%)',
                   borderRight: `1px solid ${theme.palette.divider}`,
                   display: 'flex',
                   flexDirection: 'column',
                   paddingTop: '44px',
+                  backdropFilter: 'blur(10px)',
+                  boxShadow: '0 0 40px rgba(0, 0, 0, 0.5)',
                 },
               }}
             >

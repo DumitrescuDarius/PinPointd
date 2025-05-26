@@ -185,12 +185,12 @@ const MAX_ZOOM = 18;
 
 // Add these constants at the top of the file, after imports
 const GEO_OPTIONS = {
-  enableHighAccuracy: false,
-  maximumAge: 30000, // Cache position for 30 seconds
-  timeout: 10000 // 10 second timeout
+  enableHighAccuracy: true, // Enable high accuracy mode
+  maximumAge: 15000, // Cache position for 15 seconds (reduced from 30s)
+  timeout: 15000 // 15 second timeout (increased from 10s)
 };
 
-const GEO_ERROR_COOLDOWN = 60000; // Show error message once per minute maximum
+const GEO_ERROR_COOLDOWN = 120000; // Show error message once per 2 minutes maximum (increased from 1 minute)
 
 const SEARCH_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 const SEARCH_DEBOUNCE_DELAY = 300; // 300ms
@@ -707,6 +707,7 @@ const UserProfilePopup = ({
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error' | 'info'>('success');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const isOwnPost = currentUser?.uid === user.uid;
 
   useEffect(() => {
     const checkFriendship = async () => {
@@ -717,7 +718,9 @@ const UserProfilePopup = ({
         if (userDoc.exists()) {
           const userData = userDoc.data();
           const friendsList = userData.friends || [];
+          const sentRequests = userData.sentRequests || [];
           setIsFriend(friendsList.includes(user.uid));
+          setIsRequestSent(sentRequests.includes(user.uid));
         }
       } catch (error) {
         console.error('Error checking friendship:', error);
@@ -793,11 +796,15 @@ const UserProfilePopup = ({
             <Typography variant="subtitle1" sx={{ color: '#fff', fontWeight: 500 }}>
               {user.displayName || 'Anonymous'}
             </Typography>
-            {user.username && (
+            {isOwnPost ? (
+              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                Post by you
+              </Typography>
+            ) : user.username ? (
               <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                 @{user.username}
               </Typography>
-            )}
+            ) : null}
           </Box>
         </Box>
         
@@ -1108,11 +1115,14 @@ const MapPage = ({ darkMode }: MapPageProps) => {
     let watchId: number | undefined;
     let isInitialLoad = true;
     let lastErrorTime = 0;
+    let retryCount = 0;
+    const MAX_RETRIES = 3;
 
     const handleSuccess = (position: GeolocationPosition) => {
       const coords: [number, number] = [position.coords.latitude, position.coords.longitude];
       setCurrentPosition(coords);
       setIsLocating(false);
+      retryCount = 0; // Reset retry count on success
       
       if (!didCenter && mapRef.current) {
         mapRef.current.flyTo(coords, 15, {
@@ -1161,12 +1171,27 @@ const MapPage = ({ darkMode }: MapPageProps) => {
       }
       
       setGeoError(errorMessage);
+      
       // Only show snackbar on initial error or after cooldown
       if (isInitialLoad || now - lastErrorTime >= GEO_ERROR_COOLDOWN) {
         setSnackbarMessage(errorMessage);
         setSnackbarSeverity('error');
         setSnackbarOpen(true);
         lastErrorTime = now;
+        
+        // Implement retry logic
+        if (retryCount < MAX_RETRIES) {
+          retryCount++;
+          setTimeout(() => {
+            if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(
+                handleSuccess,
+                handleError,
+                { ...GEO_OPTIONS, enableHighAccuracy: retryCount === 1 } // Try high accuracy only on first retry
+              );
+            }
+          }, 5000);
+        }
       }
     };
 
@@ -1184,7 +1209,8 @@ const MapPage = ({ darkMode }: MapPageProps) => {
         handleError,
         {
           ...GEO_OPTIONS,
-          maximumAge: 60000 // Cache position for 1 minute for subsequent updates
+          maximumAge: 30000, // Cache position for 30 seconds for subsequent updates
+          enableHighAccuracy: false // Use lower accuracy for updates to save battery
         }
       );
     } else {
@@ -2101,6 +2127,11 @@ const MapPage = ({ darkMode }: MapPageProps) => {
     const [zoomOpen, setZoomOpen] = useState(false);
     const [loadingImages, setLoadingImages] = useState<Record<number, boolean>>({});
     const [profileAnchorEl, setProfileAnchorEl] = useState<HTMLElement | null>(null);
+    const [isRequestSent, setIsRequestSent] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error' | 'info'>('success');
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
 
     // Check if the post creator is in the user's friends list
     useEffect(() => {
@@ -2112,7 +2143,9 @@ const MapPage = ({ darkMode }: MapPageProps) => {
           if (userDoc.exists()) {
             const userData = userDoc.data();
             const friendsList = userData.friends || [];
+            const sentRequests = userData.sentRequests || [];
             setIsFriend(friendsList.includes(location.createdBy.uid));
+            setIsRequestSent(sentRequests.includes(location.createdBy.uid));
           }
         } catch (error) {
           console.error('Error checking friendship:', error);
@@ -2274,17 +2307,23 @@ const MapPage = ({ darkMode }: MapPageProps) => {
         overflow: 'hidden',
         flexDirection: 'column',
         p: {
-          xs: 0.5,     // Further reduced padding on mobile
-          sm: 0.75,    // Further reduced padding on tablets
-          md: 1,       // Further reduced padding on desktop
+          xs: 0.5,
+          sm: 0.75,
+          md: 1,
         },
         gap: {
-          xs: 0.5,     // Further reduced gaps on mobile
-          sm: 0.75,    // Further reduced gaps on tablets
-          md: 1,       // Further reduced gaps on desktop
+          xs: 0.5,
+          sm: 0.75,
+          md: 1,
         },
-        minWidth: 0,
       }}>
+        {/* Add UserProfilePopup */}
+        <UserProfilePopup
+          user={location.createdBy}
+          anchorEl={profileAnchorEl}
+          onClose={() => setProfileAnchorEl(null)}
+        />
+        
         {/* Photo section */}
         <Box sx={{ 
           position: 'relative', 
@@ -2420,8 +2459,8 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                   src={location.createdBy.photoURL || undefined} 
                   alt={location.createdBy.displayName || 'User'} 
                   sx={{ 
-                    width: 20, 
-                    height: 20, 
+                    width: 32, 
+                    height: 32, 
                     mr: 0.5,
                     cursor: 'pointer',
                     '&:hover': {
@@ -3726,41 +3765,87 @@ const MapPage = ({ darkMode }: MapPageProps) => {
       location.coordinates[1]
     ];
     
-    // Use a single smooth animation to both zoom and pan
-    map.flyTo(finalViewCenter, targetZoom, {
-      animate: true,
-      duration: duration,
-      easeLinearity: 0.35,
-      noMoveStart: true
-    }).once('moveend', () => {
-      // After animation ends, check if the marker is visible
-      const marker = markerRefs.current[location.id] as L.Marker;
-      if (marker) {
-        const markerLatLng = marker.getLatLng();
-        const isVisible = map.getBounds().contains(markerLatLng);
-        
-        if (!isVisible) {
-          // If marker is not visible, position it in the lower portion of the screen
-          const newBounds = map.getBounds();
-          const newLatSpan = newBounds.getNorthEast().lat - newBounds.getSouthWest().lat;
-          const newCenter: [number, number] = [
-            location.coordinates[0] + (newLatSpan * 0.25),
-            location.coordinates[1]
-          ];
+    // First zoom out slightly if we're already zoomed in
+    if (currentZoom > targetZoom) {
+      map.flyTo(finalViewCenter, targetZoom - 2, {
+        animate: true,
+        duration: duration * 0.5,
+        easeLinearity: 0.35,
+        noMoveStart: true
+      }).once('moveend', () => {
+        // Then zoom in to the final position
+        map.flyTo(finalViewCenter, targetZoom, {
+          animate: true,
+          duration: duration * 0.5,
+          easeLinearity: 0.35,
+          noMoveStart: true
+        }).once('moveend', () => {
+          // After animation ends, check if the marker is visible
+          const marker = markerRefs.current[location.id] as L.Marker;
+          if (marker) {
+            const markerLatLng = marker.getLatLng();
+            const isVisible = map.getBounds().contains(markerLatLng);
+            
+            if (!isVisible) {
+              // If marker is not visible, position it in the lower portion of the screen
+              const newBounds = map.getBounds();
+              const newLatSpan = newBounds.getNorthEast().lat - newBounds.getSouthWest().lat;
+              const newCenter: [number, number] = [
+                location.coordinates[0] + (newLatSpan * 0.25),
+                location.coordinates[1]
+              ];
+              
+              map.setView(newCenter, map.getZoom(), {
+                animate: true,
+                duration: 0.5,
+                easeLinearity: 0.35
+              });
+            }
+            
+            // Open the popup after ensuring visibility
+            if (!marker.isPopupOpen()) {
+              marker.openPopup();
+            }
+          }
+        });
+      });
+    } else {
+      // If we're already zoomed out, just zoom in directly
+      map.flyTo(finalViewCenter, targetZoom, {
+        animate: true,
+        duration: duration,
+        easeLinearity: 0.35,
+        noMoveStart: true
+      }).once('moveend', () => {
+        // After animation ends, check if the marker is visible
+        const marker = markerRefs.current[location.id] as L.Marker;
+        if (marker) {
+          const markerLatLng = marker.getLatLng();
+          const isVisible = map.getBounds().contains(markerLatLng);
           
-          map.setView(newCenter, map.getZoom(), {
-            animate: true,
-            duration: 0.5,
-            easeLinearity: 0.35
-          });
+          if (!isVisible) {
+            // If marker is not visible, position it in the lower portion of the screen
+            const newBounds = map.getBounds();
+            const newLatSpan = newBounds.getNorthEast().lat - newBounds.getSouthWest().lat;
+            const newCenter: [number, number] = [
+              location.coordinates[0] + (newLatSpan * 0.25),
+              location.coordinates[1]
+            ];
+            
+            map.setView(newCenter, map.getZoom(), {
+              animate: true,
+              duration: 0.5,
+              easeLinearity: 0.35
+            });
+          }
+          
+          // Open the popup after ensuring visibility
+          if (!marker.isPopupOpen()) {
+            marker.openPopup();
+          }
         }
-        
-        // Open the popup after ensuring visibility
-        if (!marker.isPopupOpen()) {
-          marker.openPopup();
-        }
-      }
-    });
+      });
+    }
   };
 
   // Update the Marker event handlers
@@ -3850,57 +3935,120 @@ const MapPage = ({ darkMode }: MapPageProps) => {
   return (
     <Box sx={{ position: 'relative', height: '100vh', width: '100%', overflow: 'hidden' }}>
       {/* Tag Search Bar with suggestions and trending tags */}
-      <Box sx={modernStyles.tagSearchContainer}>
-        <TextField
-          fullWidth
-          size="small"
-          placeholder="Search by tag..."
-          value={tagSearch}
-          onChange={(e) => setTagSearch(e.target.value)}
-          sx={{
-            p: { xs: 1, sm: 1.5 },
-            '& .MuiOutlinedInput-root': {
-              color: '#fff',
-              '& fieldset': {
-                borderColor: 'transparent',
-              },
-              '&:hover fieldset': {
-                borderColor: 'rgba(255, 255, 255, 0.1)',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: 'rgba(255, 255, 255, 0.2)',
-              },
-              '& .MuiInputBase-input': {
-                fontSize: { xs: '0.9rem', sm: '1rem' },
-                '&::placeholder': {
-                  color: 'rgba(255, 255, 255, 0.6)',
-                  opacity: 1,
+      <Box sx={{
+        ...modernStyles.tagSearchContainer,
+        width: { xs: 'calc(100vw - 8px)', sm: 400, md: 320 },
+        p: { xs: 0.5, sm: 1 },
+        top: { xs: 0, sm: 10, md: 16 },
+        minHeight: { xs: 44, sm: 'unset' },
+      }}>
+        {/* Row for search bar and buttons on mobile */}
+        <Box sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 0.5,
+          mb: { xs: 1, sm: 0 },
+        }}>
+          <TextField
+            fullWidth
+            size="small"
+            placeholder="Search by tag..."
+            value={tagSearch}
+            onChange={(e) => setTagSearch(e.target.value)}
+            sx={{
+              minWidth: 0,
+              flex: 1,
+              p: { xs: 0.5, sm: 1.5 },
+              '& .MuiOutlinedInput-root': {
+                color: '#fff',
+                fontSize: { xs: '0.8rem', sm: '1rem' },
+                height: { xs: 36, sm: 40 },
+                '& fieldset': {
+                  borderColor: 'transparent',
+                },
+                '&:hover fieldset': {
+                  borderColor: 'rgba(255, 255, 255, 0.1)',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'rgba(255, 255, 255, 0.2)',
+                },
+                '& .MuiInputBase-input': {
+                  fontSize: { xs: '0.8rem', sm: '1rem' },
+                  '&::placeholder': {
+                    color: 'rgba(255, 255, 255, 0.6)',
+                    opacity: 1,
+                  },
                 },
               },
-            },
-          }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <TagIcon sx={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: { xs: '1.2rem', sm: '1.5rem' } }} />
-              </InputAdornment>
-            ),
-            endAdornment: tagSearch && (
-              <InputAdornment position="end">
-                <IconButton
-                  size="small"
-                  onClick={() => setTagSearch('')}
-                  sx={{ 
-                    color: 'rgba(255, 255, 255, 0.7)',
-                    p: { xs: 0.5, sm: 1 }
-                  }}
-                >
-                  <ClearIcon sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem' } }} />
-                </IconButton>
-              </InputAdornment>
-            )
-          }}
-        />
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <TagIcon sx={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: { xs: '1.1rem', sm: '1.5rem' } }} />
+                </InputAdornment>
+              ),
+              endAdornment: tagSearch && (
+                <InputAdornment position="end">
+                  <IconButton
+                    size="small"
+                    onClick={() => setTagSearch('')}
+                    sx={{ 
+                      color: 'rgba(255, 255, 255, 0.7)',
+                      p: { xs: 0.5, sm: 1 }
+                    }}
+                  >
+                    <ClearIcon sx={{ fontSize: { xs: '1rem', sm: '1.3rem' } }} />
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
+          />
+          {/* Mobile Add Pinpoint & Current Location Buttons */}
+          <Box sx={{
+            display: { xs: 'flex', sm: 'none' },
+            flexDirection: 'row',
+            gap: 0.5,
+            alignItems: 'center',
+            height: 36,
+          }}>
+            <Fab
+              size="small"
+              onClick={toggleAddLocationMode}
+              sx={{
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                color: '#222',
+                boxShadow: 2,
+                minHeight: 28,
+                width: 28,
+                height: 28,
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                },
+                border: isAddingLocation ? '2px solid #2196f3' : undefined,
+              }}
+            >
+              <AddLocationIcon sx={{ fontSize: '1rem' }} />
+            </Fab>
+            <Fab
+              size="small"
+              onClick={handleLocateMe}
+              sx={{
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                color: '#222',
+                boxShadow: 2,
+                minHeight: 28,
+                width: 28,
+                height: 28,
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                },
+              }}
+            >
+              <MyLocationIcon sx={{ fontSize: '1rem' }} />
+            </Fab>
+          </Box>
+        </Box>
         
         {/* Selected Tags */}
         {selectedTags.length > 0 && (
@@ -4132,7 +4280,7 @@ const MapPage = ({ darkMode }: MapPageProps) => {
           ref={mapRef}
           zoomControl={false}
           attributionControl={false}
-          minZoom={2}
+          minZoom={3}
           maxZoom={18}
           maxBounds={[[-90, -180], [90, 180]]}
           maxBoundsViscosity={1.0}
@@ -4301,7 +4449,7 @@ const MapPage = ({ darkMode }: MapPageProps) => {
       </Box>
 
       {/* Map Controls - Fixed position */}
-      <Box sx={modernStyles.mapControls}>
+      <Box sx={{ ...modernStyles.mapControls, display: { xs: 'none', sm: 'flex' } }}>
         <Fab
           size="medium"
           onClick={toggleAddLocationMode}

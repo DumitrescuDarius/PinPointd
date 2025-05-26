@@ -135,7 +135,7 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
         zIndex: 1300,
         paddingTop: 'env(safe-area-inset-top)',
         margin: 0,
-        display: { xs: 'none', sm: 'flex' },
+        display: 'flex',
       }}>
         <Toolbar sx={{ minHeight: 44, py: 1, px: { xs: 1, sm: 3 }, display: 'flex', alignItems: 'center' }}>
           <IconButton
@@ -178,7 +178,7 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
             />
           </Box>
           {currentUser ? (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center', gap: 1 }}>
               {(isAdmin || isBusiness) && (
                 <Tooltip title={t('navigation.tokens')}>
                   <Button
@@ -241,7 +241,7 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
               
               <Notifications />
               
-              <IconButton onClick={handleAccountClick} sx={{ ml: 1, display: 'flex', alignItems: 'center' }}>
+              <IconButton onClick={handleAccountClick} sx={{ ml: 1, display: { xs: 'none', sm: 'flex' }, alignItems: 'center' }}>
                 <Avatar 
                   sx={{ width: 32, height: 32 }} 
                   src={currentUser?.photoURL || undefined}
@@ -251,13 +251,13 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
               </IconButton>
             </Box>
           ) : (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Button
-              color="inherit"
-              component={RouterLink}
-              to="/login"
+            <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center', gap: 1 }}>
+              <Button
+                color="inherit"
+                component={RouterLink}
+                to="/login"
                 sx={{ color: '#fff' }}
-            >
+              >
                 {t('navigation.login')}
               </Button>
               <Button
@@ -274,8 +274,28 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
                 }}
               >
                 {t('navigation.register')}
-            </Button>
+              </Button>
             </Box>
+          )}
+          
+          {/* Mobile Account Button */}
+          {currentUser && (
+            <IconButton 
+              onClick={handleAccountClick} 
+              sx={{ 
+                ml: 1, 
+                display: { xs: 'flex', sm: 'none' }, 
+                alignItems: 'center',
+                color: '#fff'
+              }}
+            >
+              <Avatar 
+                sx={{ width: 32, height: 32 }} 
+                src={currentUser?.photoURL || undefined}
+              >
+                {currentUser?.displayName?.[0]?.toUpperCase() || '?'}
+              </Avatar>
+            </IconButton>
           )}
         </Toolbar>
       </AppBar>
@@ -285,47 +305,142 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
         onClose={handleDrawerClose}
         sx={{
           '& .MuiDrawer-paper': {
-            width: { xs: 220, sm: 320 },
+            width: { xs: 280, sm: 360 },
             boxSizing: 'border-box',
-            background: '#1a1a1a',
+            background: 'linear-gradient(135deg, rgba(26, 26, 26, 0.5) 0%, rgba(45, 55, 72, 0.5) 100%)',
             color: '#fff',
             borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             paddingTop: { xs: '56px', sm: '72px' },
-            boxShadow: 6,
+            boxShadow: '0 0 40px rgba(0, 0, 0, 0.5)',
             borderRadius: '0 16px 16px 0',
             fontSize: { xs: '0.95rem', sm: '1rem' },
-            px: { xs: 1, sm: 3 },
+            px: { xs: 2, sm: 4 },
+            backdropFilter: 'blur(10px)',
           },
         }}
       >
-        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', px: 3 }}>
-          <Avatar sx={{ width: 80, height: 80, mb: 2, bgcolor: '#444', color: '#fff', fontSize: 40, boxShadow: 2 }} src={currentUser?.photoURL || undefined}>
+        <Box sx={{ 
+          width: '100%', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center',
+          position: 'relative',
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '1px',
+            background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent)',
+          }
+        }}>
+          <Avatar 
+            sx={{ 
+              width: 100, 
+              height: 100, 
+              mb: 3, 
+              bgcolor: '#444', 
+              color: '#fff', 
+              fontSize: 40, 
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+              border: '2px solid rgba(255, 255, 255, 0.1)',
+              transition: 'transform 0.3s ease',
+              '&:hover': {
+                transform: 'scale(1.05)',
+              }
+            }} 
+            src={currentUser?.photoURL || undefined}
+          >
             {currentUser?.displayName?.[0]?.toUpperCase() || '?'}
           </Avatar>
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 1 }}>
-            <Typography variant="h6" sx={{ fontWeight: 700, textAlign: 'center', wordBreak: 'break-word', color: '#fff', maxWidth: 1, overflowWrap: 'break-word' }}>
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            mb: 3,
+            position: 'relative',
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              bottom: -16,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '40%',
+              height: '1px',
+              background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent)',
+            }
+          }}>
+            <Typography 
+              variant="h5" 
+              sx={{ 
+                fontWeight: 700, 
+                textAlign: 'center', 
+                wordBreak: 'break-word', 
+                color: '#fff', 
+                maxWidth: 1, 
+                overflowWrap: 'break-word',
+                mb: 0.5,
+                textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+              }}
+            >
               {(currentUser?.displayName || t('navigation.username')).slice(0, 20)}
             </Typography>
-            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)', textAlign: 'center', wordBreak: 'break-word', maxWidth: 1, overflowWrap: 'break-word' }}>
+            <Typography 
+              variant="body1" 
+              sx={{ 
+                color: 'rgba(255, 255, 255, 0.7)', 
+                textAlign: 'center', 
+                wordBreak: 'break-word', 
+                maxWidth: 1, 
+                overflowWrap: 'break-word',
+                fontSize: '0.9rem',
+              }}
+            >
               {username ? `@${username.slice(0, 20)}` : ''}
             </Typography>
             {isBusiness && (
-              <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.7)', mt: 0.5 }}>
+              <Typography 
+                variant="caption" 
+                sx={{ 
+                  color: 'rgba(255, 255, 255, 0.7)', 
+                  mt: 1,
+                  padding: '4px 12px',
+                  borderRadius: '12px',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  backdropFilter: 'blur(4px)',
+                }}
+              >
                 Business Account: {businessName}
               </Typography>
             )}
           </Box>
-          <Divider sx={{ width: '100%', my: 2, bgcolor: 'rgba(255,255,255,0.08)' }} />
         </Box>
         
         {/* Spacer to push buttons to bottom */}
         <Box sx={{ flexGrow: 1 }} />
         
         {/* Bottom buttons */}
-        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2, mb: 4, px: 3 }}>
+        <Box sx={{ 
+          width: '100%', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: 2, 
+          mb: 4,
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: -16,
+            left: 0,
+            right: 0,
+            height: '1px',
+            background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent)',
+          }
+        }}>
           <Button
             variant="contained"
             color="primary"
@@ -335,11 +450,14 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
               borderRadius: 3, 
               fontSize: 16, 
               py: 1.5, 
-              boxShadow: 2,
-              backgroundColor: '#2196f3',
+              boxShadow: '0 4px 12px rgba(33, 150, 243, 0.3)',
+              background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
               '&:hover': {
-                backgroundColor: '#1976d2'
-              }
+                background: 'linear-gradient(45deg, #1976D2 30%, #00BCD4 90%)',
+                boxShadow: '0 6px 16px rgba(33, 150, 243, 0.4)',
+                transform: 'translateY(-1px)',
+              },
+              transition: 'all 0.3s ease',
             }}
             onClick={() => { setDrawerOpen(false); navigate('/account'); }}
           >
@@ -354,12 +472,15 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
               borderRadius: 3, 
               fontSize: 16, 
               py: 1.5,
-              borderColor: '#f44336',
+              borderColor: 'rgba(244, 67, 54, 0.5)',
               color: '#f44336',
+              backdropFilter: 'blur(4px)',
               '&:hover': {
                 borderColor: '#d32f2f',
-                backgroundColor: 'rgba(244, 67, 54, 0.08)'
-              }
+                backgroundColor: 'rgba(244, 67, 54, 0.08)',
+                transform: 'translateY(-1px)',
+              },
+              transition: 'all 0.3s ease',
             }}
             onClick={async () => { setDrawerOpen(false); await handleLogout(); }}
           >

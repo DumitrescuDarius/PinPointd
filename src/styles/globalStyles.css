@@ -193,6 +193,13 @@ footer,
   display: flex !important;
 }
 
+@media (max-width: 600px) {
+  footer, 
+  .MuiBox-root[component="footer"] {
+    display: none !important;
+  }
+}
+
 /* Ensure all pages have enough bottom space for footer */
 .container, 
 .MuiContainer-root {

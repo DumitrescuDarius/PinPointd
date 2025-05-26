@@ -51,6 +51,7 @@ interface Notification {
   toUserId: string;
   postId?: string;
   locationId?: string;
+  chatId?: string;
   text?: string;
   createdAt: Timestamp;
   read: boolean;
@@ -190,6 +191,13 @@ const Notifications = () => {
       case 'pinpoint':
         if (notification.locationId) {
           navigate(`/location/${notification.locationId}`);
+        }
+        break;
+      case 'message':
+        if (notification.chatId) {
+          navigate(`/chat?chatId=${notification.chatId}`);
+        } else {
+          navigate('/chat');
         }
         break;
       default:
