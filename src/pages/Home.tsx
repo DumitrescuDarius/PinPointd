@@ -379,12 +379,12 @@ const Home: React.FC = () => {
           position: 'relative',
           overflow: 'hidden',
           minHeight: {
-            xs: '60vh',
+            xs: '80vh',
             sm: '60vh'
           },
           display: 'flex',
           alignItems: 'center',
-          py: { xs: 2, sm: 3 },
+          py: { xs: 4, sm: 3 },
         }}
       >
         {/* Abstract Background with 3D layers */}
@@ -497,9 +497,9 @@ const Home: React.FC = () => {
                   variant="h1"
                   sx={{
                     fontWeight: 900,
-                    fontSize: { xs: '3rem', sm: '4rem', md: '5rem' },
-                    mb: 3,
-                    lineHeight: 1.05,
+                    fontSize: { xs: '2rem', sm: '3rem', md: '4rem' },
+                    mb: { xs: 2, sm: 3 },
+                    lineHeight: 1.2,
                     background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
                     backgroundClip: 'text',
                     WebkitBackgroundClip: 'text',
@@ -512,16 +512,22 @@ const Home: React.FC = () => {
                 <Typography
                   variant="h5"
                   sx={{
-                    mb: 5,
+                    mb: { xs: 3, sm: 5 },
                     maxWidth: { xs: '100%', md: '95%' },
                     color: 'text.secondary',
-                    lineHeight: 1.7,
-                    fontSize: { xs: '1.3rem', sm: '1.5rem', md: '1.7rem' },
+                    lineHeight: 1.5,
+                    fontSize: { xs: '1.1rem', sm: '1.5rem', md: '1.7rem' },
                   }}
                 >
                   {t('home.hero.subtitle')}
                 </Typography>
-                <Box sx={{ display: 'flex', gap: 2, flexWrap: 'nowrap', justifyContent: 'flex-start', ml: { xs: 0, sm: 4 } }}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  gap: { xs: 1, sm: 2 },
+                  flexWrap: 'wrap',
+                  justifyContent: { xs: 'center', sm: 'flex-start' },
+                  ml: { xs: 0, sm: 0 } 
+                }}>
                   <Button
                     variant="contained"
                     size="large"
@@ -533,10 +539,10 @@ const Home: React.FC = () => {
                       borderRadius: '50px',
                       fontSize: { xs: '1rem', sm: '1.1rem' },
                       fontWeight: 600,
-                      background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                      background: `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.secondary.dark})`,
                       boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
                       '&:hover': {
-                        background: `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.secondary.dark})`,
+                        background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
                         transform: 'translateY(-3px)',
                         boxShadow: '0 6px 25px rgba(0,0,0,0.3)',
                       },
@@ -592,7 +598,11 @@ const Home: React.FC = () => {
                 </Box>
               </motion.div>
             </Grid>
-            <Grid item xs={12} md={6} sx={{ display: { xs: 'none', md: 'block' } }}>
+            <Grid item xs={12} md={6} sx={{ 
+              display: { xs: 'block', md: 'block' },
+              height: { xs: '300px', sm: '400px' },
+              mt: { xs: 4, sm: 0 }
+            }}>
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -846,7 +856,7 @@ const Home: React.FC = () => {
       <Box
         id="features-section"
         sx={{
-          py: { xs: 8, md: 12 },
+          py: { xs: 6, md: 12 },
           background: `linear-gradient(to bottom, ${theme.palette.background.default}, ${theme.palette.background.paper})`,
           position: 'relative',
           overflow: 'hidden',
@@ -860,25 +870,25 @@ const Home: React.FC = () => {
                 align="center"
                 sx={{
                   fontWeight: 800,
-                  mb: { xs: 4, md: 6 },
+                  mb: { xs: 3, md: 6 },
                   background: `linear-gradient(135deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
-                  fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' }
+                  fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' }
                 }}
               >
                 {t('about.key_features')}
               </Typography>
               
-              <Grid container spacing={4} justifyContent="center">
+              <Grid container spacing={{ xs: 2, md: 4 }} justifyContent="center">
                 {features.map((feature, idx) => (
                   <Grid item xs={12} sm={6} md={4} key={idx}>
                     <Slide direction="up" in={visibleSection >= 1} timeout={300 + idx * 200}>
                       <Paper
                         elevation={0}
                         sx={{
-                          p: 4,
+                          p: { xs: 3, md: 4 },
                           height: '100%',
                           borderRadius: '24px',
                           background: 'rgba(40, 44, 52, 0.5)',
@@ -886,8 +896,8 @@ const Home: React.FC = () => {
                           border: '1px solid rgba(255, 255, 255, 0.1)',
                           transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                           '&:hover': {
-                            transform: 'translateY(-10px)',
-                            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)',
+                            transform: { xs: 'none', md: 'translateY(-10px)' },
+                            boxShadow: { xs: 'none', md: '0 20px 40px rgba(0, 0, 0, 0.2)' },
                           },
                           display: 'flex',
                           flexDirection: 'column',
@@ -938,7 +948,7 @@ const Home: React.FC = () => {
       <Box
         id="locations-section"
         sx={{
-          py: { xs: 8, md: 12 },
+          py: { xs: 6, md: 12 },
           background: theme.palette.background.paper,
           position: 'relative',
         }}
@@ -946,7 +956,14 @@ const Home: React.FC = () => {
         <Container maxWidth="lg">
           <Fade in={visibleSection >= 2} timeout={1000}>
             <Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: { xs: 4, md: 6 } }}>
+              <Box sx={{ 
+                display: 'flex', 
+                flexDirection: { xs: 'column', sm: 'row' },
+                justifyContent: 'space-between', 
+                alignItems: { xs: 'flex-start', sm: 'center' }, 
+                mb: { xs: 3, md: 6 },
+                gap: { xs: 2, sm: 0 }
+              }}>
                 <Typography
                   variant="h2"
                   sx={{
@@ -989,10 +1006,10 @@ const Home: React.FC = () => {
                           border: '1px solid rgba(255, 255, 255, 0.1)',
                           transition: 'transform 0.4s ease-out, box-shadow 0.4s ease',
                           '&:hover': {
-                            transform: 'translateY(-12px) scale(1.02)',
-                            boxShadow: '0 30px 60px rgba(0, 0, 0, 0.3)',
+                            transform: { xs: 'none', md: 'translateY(-12px) scale(1.02)' },
+                            boxShadow: { xs: 'none', md: '0 30px 60px rgba(0, 0, 0, 0.3)' },
                             '& .location-image': {
-                              transform: 'scale(1.1)',
+                              transform: { xs: 'none', md: 'scale(1.1)' },
                             }
                           },
                         }}
@@ -1142,7 +1159,7 @@ const Home: React.FC = () => {
       <Box
         id="testimonials-section"
         sx={{
-          py: { xs: 8, md: 12 },
+          py: { xs: 6, md: 12 },
           background: `linear-gradient(to top, ${theme.palette.background.default}, ${theme.palette.background.paper})`,
           position: 'relative',
         }}
@@ -1155,25 +1172,25 @@ const Home: React.FC = () => {
                 align="center"
                 sx={{
                   fontWeight: 800,
-                  mb: { xs: 4, md: 6 },
+                  mb: { xs: 3, md: 6 },
                   background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
-                  fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' }
+                  fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' }
                 }}
               >
                 {t('home.testimonials.title')}
               </Typography>
               
-              <Grid container spacing={3} justifyContent="center">
+              <Grid container spacing={{ xs: 2, md: 3 }} justifyContent="center">
                 {testimonials.map((testimonial, idx) => (
                   <Grid item xs={12} md={4} key={testimonial.id}>
                     <Slide direction="up" in={visibleSection >= 3} timeout={300 + idx * 200}>
                       <Paper
                         elevation={0}
                         sx={{
-                          p: 4,
+                          p: { xs: 3, md: 4 },
                           borderRadius: '24px',
                           background: 'rgba(40, 44, 52, 0.5)',
                           backdropFilter: 'blur(10px)',

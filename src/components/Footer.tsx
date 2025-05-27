@@ -16,7 +16,7 @@ export default function Footer() {
         right: 0,
         height: '24px', // Original height
         bgcolor: 'black',
-        display: 'flex',
+        display: { xs: 'none', sm: 'flex' }, // Hide on mobile, show on tablet and up
         alignItems: 'center',
         justifyContent: 'center',
         gap: 2,

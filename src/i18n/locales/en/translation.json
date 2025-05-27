@@ -407,6 +407,20 @@
       },
       "checking": "Checking availability...",
       "format_help": "Only lowercase letters, numbers, and \".\" or \"_\" between words"
+    },
+    "forgot_password": {
+      "title": "Forgot Password",
+      "description": "Enter your email address and we'll send you a link to reset your password.",
+      "email": "Email address",
+      "send_link": "Send Reset Link",
+      "back_to_login": "Back to Login",
+      "success": "Password reset link sent! Please check your email.",
+      "errors": {
+        "invalid_email": "Please enter a valid email address",
+        "user_not_found": "No account found with this email address",
+        "too_many_requests": "Too many attempts. Please try again later",
+        "send_failed": "Failed to send reset link. Please try again"
+      }
     }
   },
   "profile": {
