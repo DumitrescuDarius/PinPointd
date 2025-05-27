@@ -94,6 +94,8 @@ import ClearIcon from '@mui/icons-material/Clear'
 import TrendingUpIcon from '@mui/icons-material/TrendingUp'
 import ExploreIcon from '@mui/icons-material/Explore'
 import VisibilityIcon from '@mui/icons-material/Visibility'
+import GroupIcon from '@mui/icons-material/Group'
+import PersonIcon from '@mui/icons-material/Person'
 
 // Other imports
 import { MapContainer, TileLayer, Marker, Popup, useMap, ZoomControl, useMapEvents, Polyline } from 'react-leaflet'
@@ -349,30 +351,30 @@ const modernStyles = {
     },
     boxShadow: '0 2px 10px rgba(0, 0, 0, 0.18)',
     border: '1px solid rgba(255, 255, 255, 0.08)',
-    p: { xs: 0.5, sm: 1.2 }, // Even less padding on mobile
+    p: { xs: 0.2, sm: 1.2 }, // Much less padding on mobile
     maxWidth: { xs: 'calc(100% - 8px)', sm: 340 },
     minWidth: { xs: 'unset', sm: 220 },
     '& .MuiTypography-h6': {
-      fontSize: { xs: '0.95rem', sm: '1.1rem' }, // Even smaller title on mobile
+      fontSize: { xs: '0.8rem', sm: '1.1rem' }, // Smaller title on mobile
       fontWeight: 600,
       mb: { xs: 0.3, sm: 0.7 }
     },
     '& .MuiTypography-body1': {
-      fontSize: { xs: '0.8rem', sm: '0.95rem' }, // Even smaller description on mobile
+      fontSize: { xs: '0.7rem', sm: '0.95rem' }, // Smaller description on mobile
       mb: { xs: 0.3, sm: 0.7 }
     },
     '& .MuiTypography-caption': {
-      fontSize: { xs: '0.7rem', sm: '0.8rem' } // Even smaller caption on mobile
+      fontSize: { xs: '0.6rem', sm: '0.8rem' } // Smaller caption on mobile
     },
     '& .MuiButton-root': {
-      fontSize: { xs: '0.8rem', sm: '0.95rem' }, // Even smaller button text on mobile
-      py: { xs: 0.3, sm: 0.7 }, // Even less vertical padding on mobile
-      px: { xs: 0.7, sm: 1.5 } // Even less horizontal padding on mobile
+      fontSize: { xs: '0.7rem', sm: '0.95rem' }, // Smaller button text on mobile
+      py: { xs: 0.2, sm: 0.7 }, // Less vertical padding on mobile
+      px: { xs: 0.5, sm: 1.5 } // Less horizontal padding on mobile
     },
     '& .MuiIconButton-root': {
-      padding: { xs: 0.3, sm: 0.7 }, // Even smaller icon buttons on mobile
+      padding: { xs: 0.2, sm: 0.7 }, // Smaller icon buttons on mobile
       '& svg': {
-        fontSize: { xs: '1rem', sm: '1.2rem' } // Even smaller icons on mobile
+        fontSize: { xs: '0.9rem', sm: '1.2rem' } // Smaller icons on mobile
       }
     }
   },
@@ -511,7 +513,7 @@ const modernStyles = {
   tagSearchContainer: {
     position: 'absolute',
     top: {
-      xs: 2, // Even higher on mobile
+      xs: 48, // Move even further down on mobile
       sm: 10,
       md: 16
     },
@@ -522,36 +524,49 @@ const modernStyles = {
     },
     zIndex: 1000,
     width: {
-      xs: 'calc(100vw - 8px)', // Even more compact on mobile
+      xs: '90vw', // Less wide on mobile
       sm: 260,
       md: 320
     },
-    backgroundColor: 'rgba(30, 32, 38, 0.85)',
-    backdropFilter: 'blur(10px)',
+    maxHeight: {
+      xs: 'calc(100vh - 80px)', // Smaller visible area on mobile
+      sm: 'unset',
+      md: 'unset'
+    },
+    overflowY: {
+      xs: 'auto',
+      sm: 'unset',
+      md: 'unset'
+    },
+    backgroundColor: 'rgba(30, 32, 38, 0.90)',
+    backdropFilter: 'blur(8px)',
     borderRadius: {
-      xs: '5px', // Even smaller radius
+      xs: '18px', // More round on mobile
       sm: '10px'
     },
-    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.18)',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
-    p: { xs: 0.5, sm: 1 }, // Less padding
-    fontSize: { xs: '0.8rem', sm: '0.95rem' }, // Smaller font
+    boxShadow: '0 1px 6px rgba(0, 0, 0, 0.12)',
+    border: '1px solid rgba(255, 255, 255, 0.05)',
+    p: { xs: 0.2, sm: 1 }, // Minimal padding on mobile
+    fontSize: { xs: '0.7rem', sm: '0.95rem' }, // Smaller font
     '& .MuiInputBase-root': {
-      fontSize: { xs: '0.8rem', sm: '0.95rem' },
-      minHeight: 32,
+      fontSize: { xs: '0.7rem', sm: '0.95rem' },
+      minHeight: 28,
+      borderRadius: { xs: '3px', sm: '10px' },
+      p: { xs: 0.2, sm: 1 },
     },
     '& .MuiChip-root': {
-      height: { xs: 20, sm: 24 },
-      fontSize: { xs: '0.7rem', sm: '0.8rem' },
-      px: { xs: 0.5, sm: 1 },
+      height: { xs: 16, sm: 24 },
+      fontSize: { xs: '0.6rem', sm: '0.8rem' },
+      px: { xs: 0.3, sm: 1 },
+      borderRadius: { xs: '8px', sm: '16px' },
     },
     '& .MuiTypography-root': {
-      fontSize: { xs: '0.8rem', sm: '0.95rem' },
+      fontSize: { xs: '0.7rem', sm: '0.95rem' },
     },
     '& .MuiIconButton-root': {
-      padding: { xs: 0.3, sm: 0.7 },
+      padding: { xs: 0.15, sm: 0.7 },
       '& svg': {
-        fontSize: { xs: '1rem', sm: '1.2rem' }
+        fontSize: { xs: '0.9rem', sm: '1.2rem' }
       }
     }
   },
@@ -2329,8 +2344,8 @@ const MapPage = ({ darkMode }: MapPageProps) => {
           position: 'relative', 
           width: '100%', 
           mb: { xs: 0.15, sm: 0.25 },
-          paddingTop: '56.25%', // This creates a 16:9 aspect ratio (9/16 = 0.5625)
-          maxHeight: 'none', // Remove maxHeight constraint
+          paddingTop: '56.25%', // Always 16:9 aspect ratio
+          maxHeight: 'none', // No max height limit
         }}>
           {location.photos && location.photos.length > 0 && (
             <>
@@ -2377,21 +2392,6 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                   className="notranslate"
                 />
               </Box>
-              {/* Trash bin button under the image */}
-              {(isCreator || isAdmin) && (
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-                  <IconButton
-                    color="error"
-                    size="medium"
-                    onClick={() => {
-                      setDeleteDialogOpen(true);
-                      setDeleteTargetId(location.id);
-                    }}
-                  >
-                    <DeleteIcon fontSize="medium" />
-                  </IconButton>
-                </Box>
-              )}
               {location.photos.length > 1 && (
                 <>
                   <IconButton
@@ -2488,26 +2488,43 @@ const MapPage = ({ darkMode }: MapPageProps) => {
               </Box>
 
               {/* Title directly above description */}
-              <Typography 
-                variant="h5" 
-                component="h2" 
-                sx={{ 
-                  fontSize: {
-                    xs: '1rem',
-                    sm: '1.15rem',
-                    md: '1.25rem'
-                  },
-                  lineHeight: 1.2,
-                  fontWeight: 600,
-                  mb: 0.15,
-                  mt: 0,
-                  p: 0,
-                  wordBreak: 'break-word',
-                  whiteSpace: 'normal'
-                }}
-              >
-                {location.name}
-              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography 
+                  variant="h5" 
+                  component="h2" 
+                  sx={{ 
+                    fontSize: {
+                      xs: '1rem',
+                      sm: '1.15rem',
+                      md: '1.25rem'
+                    },
+                    lineHeight: 1.2,
+                    fontWeight: 600,
+                    mb: 0.15,
+                    mt: 0,
+                    p: 0,
+                    wordBreak: 'break-word',
+                    whiteSpace: 'normal',
+                    flex: 1
+                  }}
+                >
+                  {location.name}
+                </Typography>
+                {/* Trash bin button to the right of the title */}
+                {(isCreator || isAdmin) && (
+                  <IconButton
+                    color="error"
+                    size="small"
+                    onClick={() => {
+                      setDeleteDialogOpen(true);
+                      setDeleteTargetId(location.id);
+                    }}
+                    sx={{ ml: 1 }}
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                )}
+              </Box>
 
               {/* Description */}
               <Typography 
@@ -3937,7 +3954,7 @@ const MapPage = ({ darkMode }: MapPageProps) => {
       {/* Tag Search Bar with suggestions and trending tags */}
       <Box sx={{
         ...modernStyles.tagSearchContainer,
-        width: { xs: 'calc(100vw - 8px)', sm: 400, md: 320 },
+        width: { xs: '90vw', sm: 400, md: 320 },
         p: { xs: 0.5, sm: 1 },
         top: { xs: 0, sm: 10, md: 16 },
         minHeight: { xs: 44, sm: 'unset' },
@@ -4186,23 +4203,31 @@ const MapPage = ({ darkMode }: MapPageProps) => {
         {/* Trending Tags Section */}
         <Box sx={{ 
           borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-          mt: 1,
-          pt: 1,
-          px: { xs: 1.5, sm: 2 },
-          pb: { xs: 1, sm: 1.5 }
+          mt: { xs: 0.5, sm: 1 },
+          pt: { xs: 0.5, sm: 1 },
+          px: { xs: 0.5, sm: 2 },
+          pb: { xs: 0.5, sm: 1.5 }
         }}>
+          <Box sx={{ display: { xs: 'flex', sm: 'none' }, alignItems: 'center', gap: 0.5, mb: 0.5 }}>
+            <Tooltip title="Trending Tags (24h)">
+              <TrendingUpIcon sx={{ fontSize: '1rem', color: 'rgba(255,255,255,0.7)' }} />
+            </Tooltip>
+            <Typography sx={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.7rem', fontWeight: 500 }}>
+              24h
+            </Typography>
+          </Box>
           <Typography
             sx={{
+              display: { xs: 'none', sm: 'flex' },
               color: 'rgba(255, 255, 255, 0.7)',
-              fontSize: { xs: '0.75rem', sm: '0.8rem' },
+              fontSize: { sm: '0.8rem' },
               fontWeight: 500,
               mb: 1,
-              display: 'flex',
               alignItems: 'center',
               gap: 0.5
             }}
           >
-            <TrendingUpIcon sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }} />
+            <TrendingUpIcon sx={{ fontSize: { sm: '1rem' } }} />
             Trending Tags (24h)
           </Typography>
           
@@ -4706,85 +4731,178 @@ const MapPage = ({ darkMode }: MapPageProps) => {
         elevation={0}
         sx={{
           position: 'absolute',
-          left: 20,
-          bottom: 20,
-          width: 280,
+          left: {
+            xs: 8,
+            sm: 20
+          },
+          bottom: {
+            xs: 8,
+            sm: 20
+          },
+          width: {
+            xs: 160,
+            sm: 280
+          },
           zIndex: 1000,
-          p: 1.2,
-          borderRadius: '20px',
-          bgcolor: 'rgba(30, 32, 38, 0.7)',
+          p: {
+            xs: 0.5,
+            sm: 1.2
+          },
+          borderRadius: {
+            xs: '16px',
+            sm: '20px'
+          },
+          bgcolor: 'rgba(30, 32, 38, 0.85)',
           boxShadow: '0 4px 16px 0 rgba(31, 38, 135, 0.10)',
           backdropFilter: 'blur(8px)',
           border: '1px solid rgba(255,255,255,0.10)',
           display: 'flex',
           flexDirection: 'column',
-          gap: 1,
+          alignItems: 'center',
+          gap: {
+            xs: 0.5,
+            sm: 1
+          },
         }}
       >
-        <Typography variant="subtitle2" sx={{ color: '#fff', px: 1, borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 1 }}>
-          {t('map.additional_filters')}
-        </Typography>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={showNearbyOnly}
-                onChange={(e) => setShowNearbyOnly(e.target.checked)}
-                color="primary"
-                size="small"
-              />
-            }
-            label={
-              <Typography variant="body2" sx={{ color: '#fff', fontSize: '0.875rem' }}>
+        {/* Minimalist 2x2 grid for mobile */}
+        <Box sx={{ display: { xs: 'flex', sm: 'none' }, flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+          <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', mb: 0.5 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+              <Tooltip title={t('map.posts_in_area')} placement="top">
+                <Switch
+                  checked={showNearbyOnly}
+                  onChange={(e) => setShowNearbyOnly(e.target.checked)}
+                  color="primary"
+                  size="small"
+                  sx={{ transform: 'scale(0.7)', mb: 0.2 }}
+                  icon={<MyLocationIcon sx={{ fontSize: 20, color: '#fff' }} />}
+                  checkedIcon={<MyLocationIcon sx={{ fontSize: 20, color: 'primary.main' }} />}
+                />
+              </Tooltip>
+              <Typography sx={{ fontSize: '0.65rem', color: '#fff', mt: 0.1, textAlign: 'center' }}>
                 {t('map.posts_in_area')}
               </Typography>
-            }
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                checked={showRecentOnly}
-                onChange={(e) => setShowRecentOnly(e.target.checked)}
-                color="primary"
-                size="small"
-              />
-            }
-            label={
-              <Typography variant="body2" sx={{ color: '#fff', fontSize: '0.875rem' }}>
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+              <Tooltip title={t('map.posted_last_24h')} placement="top">
+                <Switch
+                  checked={showRecentOnly}
+                  onChange={(e) => setShowRecentOnly(e.target.checked)}
+                  color="primary"
+                  size="small"
+                  sx={{ transform: 'scale(0.7)', mb: 0.2 }}
+                  icon={<AccessTimeIcon sx={{ fontSize: 20, color: '#fff' }} />}
+                  checkedIcon={<AccessTimeIcon sx={{ fontSize: 20, color: 'primary.main' }} />}
+                />
+              </Tooltip>
+              <Typography sx={{ fontSize: '0.65rem', color: '#fff', mt: 0.1, textAlign: 'center' }}>
                 {t('map.posted_last_24h')}
               </Typography>
-            }
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                checked={showFriendsOnly}
-                onChange={(e) => setShowFriendsOnly(e.target.checked)}
-                color="primary"
-                size="small"
-              />
-            }
-            label={
-              <Typography variant="body2" sx={{ color: '#fff', fontSize: '0.875rem' }}>
+            </Box>
+          </Box>
+          <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+              <Tooltip title={t('map.made_by_friends')} placement="top">
+                <Switch
+                  checked={showFriendsOnly}
+                  onChange={(e) => setShowFriendsOnly(e.target.checked)}
+                  color="primary"
+                  size="small"
+                  sx={{ transform: 'scale(0.7)', mb: 0.2 }}
+                  icon={<GroupIcon sx={{ fontSize: 20, color: '#fff' }} />}
+                  checkedIcon={<GroupIcon sx={{ fontSize: 20, color: 'primary.main' }} />}
+                />
+              </Tooltip>
+              <Typography sx={{ fontSize: '0.65rem', color: '#fff', mt: 0.1, textAlign: 'center' }}>
                 {t('map.made_by_friends')}
               </Typography>
-            }
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                checked={showMineOnly}
-                onChange={(e) => setShowMineOnly(e.target.checked)}
-                color="primary"
-                size="small"
-              />
-            }
-            label={
-              <Typography variant="body2" sx={{ color: '#fff', fontSize: '0.875rem' }}>
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+              <Tooltip title={t('map.made_by_you')} placement="top">
+                <Switch
+                  checked={showMineOnly}
+                  onChange={(e) => setShowMineOnly(e.target.checked)}
+                  color="primary"
+                  size="small"
+                  sx={{ transform: 'scale(0.7)', mb: 0.2 }}
+                  icon={<PersonIcon sx={{ fontSize: 20, color: '#fff' }} />}
+                  checkedIcon={<PersonIcon sx={{ fontSize: 20, color: 'primary.main' }} />}
+                />
+              </Tooltip>
+              <Typography sx={{ fontSize: '0.65rem', color: '#fff', mt: 0.1, textAlign: 'center' }}>
                 {t('map.made_by_you')}
               </Typography>
-            }
-          />
+            </Box>
+          </Box>
+        </Box>
+        {/* Original design for sm and up */}
+        <Box sx={{ display: { xs: 'none', sm: 'flex' }, flexDirection: 'column', width: '100%' }}>
+          <Typography variant="subtitle2" sx={{ color: '#fff', px: 1, borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 1 }}>
+            {t('map.additional_filters')}
+          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={showNearbyOnly}
+                  onChange={(e) => setShowNearbyOnly(e.target.checked)}
+                  color="primary"
+                  size="small"
+                />
+              }
+              label={
+                <Typography variant="body2" sx={{ color: '#fff', fontSize: '0.875rem' }}>
+                  {t('map.posts_in_area')}
+                </Typography>
+              }
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={showRecentOnly}
+                  onChange={(e) => setShowRecentOnly(e.target.checked)}
+                  color="primary"
+                  size="small"
+                />
+              }
+              label={
+                <Typography variant="body2" sx={{ color: '#fff', fontSize: '0.875rem' }}>
+                  {t('map.posted_last_24h')}
+                </Typography>
+              }
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={showFriendsOnly}
+                  onChange={(e) => setShowFriendsOnly(e.target.checked)}
+                  color="primary"
+                  size="small"
+                />
+              }
+              label={
+                <Typography variant="body2" sx={{ color: '#fff', fontSize: '0.875rem' }}>
+                  {t('map.made_by_friends')}
+                </Typography>
+              }
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={showMineOnly}
+                  onChange={(e) => setShowMineOnly(e.target.checked)}
+                  color="primary"
+                  size="small"
+                />
+              }
+              label={
+                <Typography variant="body2" sx={{ color: '#fff', fontSize: '0.875rem' }}>
+                  {t('map.made_by_you')}
+                </Typography>
+              }
+            />
+          </Box>
         </Box>
       </Paper>
     </Box>
