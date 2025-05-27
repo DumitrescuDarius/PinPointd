@@ -77,3 +77,10 @@ git clone https://github.com/DumitrescuDarius/Infoeducatie_PinPointd.git
 cd PinPointd
 npm install
 npm run dev
+```
+
+## 🚀 Accesează platforma acum în browser
+
+```bash
+https://pinpointd.netlify.app/
+```
