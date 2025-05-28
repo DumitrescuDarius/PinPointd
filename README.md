@@ -79,8 +79,9 @@ npm install
 npm run dev
 ```
 
-## 🚀 Accesează platforma acum în browser
+---
 
-```bash
-https://pinpointd.netlify.app/
-```
+## Work in Progress
+
+- Sistem de recompensare
+- Suport pentru mai multe limbi străine
