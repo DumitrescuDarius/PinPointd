@@ -79,6 +79,8 @@ declare module 'i18next' {
           logout: string;
           language: string;
           change_language: string;
+          navigation: string;
+          saved_pinpoints: string;
         };
       };
     };

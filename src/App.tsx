@@ -34,6 +34,8 @@ import Brightness7Icon from '@mui/icons-material/Brightness7'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import InfoIcon from '@mui/icons-material/Info'
 import PrivacyPolicy from './pages/PrivacyPolicy'
+import SavedPinpoints from './pages/SavedPinpoints'
+import BookmarkIcon from '@mui/icons-material/Bookmark'
 import './styles/globalStyles.css'
 import './i18n/i18n'
 
@@ -715,6 +717,7 @@ function App() {
               }
             />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/saved-pinpoints" element={<SavedPinpoints />} />
           </Routes>
         </Box>
         <Footer />

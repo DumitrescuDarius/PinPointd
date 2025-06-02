@@ -16,6 +16,7 @@ import ChatIcon from '@mui/icons-material/Chat'
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
 import { doc, getDoc, onSnapshot } from 'firebase/firestore'
 import { db } from '../config/firebase'
+import BookmarkIcon from '@mui/icons-material/Bookmark'
 
 // Create a context for drawer state
 export const NavbarContext = createContext<{
@@ -122,12 +123,13 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
   return (
     <NavbarContext.Provider value={{ closeAllDrawers, notifyDrawerOpened, currentlyOpenDrawer }}>
       <AppBar position="fixed" elevation={0} sx={{
-        background: 'rgba(0,0,0,0.85)',
-        boxShadow: 'none',
-        transition: 'background 0.8s',
+        background: 'rgba(18, 18, 18, 0.85)',
+        boxShadow: '0 2px 20px rgba(0, 0, 0, 0.15)',
+        transition: 'all 0.3s ease',
         minHeight: 44,
         justifyContent: 'center',
-        backdropFilter: 'blur(18px)',
+        backdropFilter: 'blur(10px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
         top: 0,
         left: 0,
         right: 0,
@@ -137,13 +139,27 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
         margin: 0,
         display: 'flex',
       }}>
-        <Toolbar sx={{ minHeight: 44, py: 1, px: { xs: 1, sm: 3 }, display: 'flex', alignItems: 'center' }}>
+        <Toolbar sx={{ 
+          minHeight: 44, 
+          py: 1, 
+          px: { xs: 1.5, sm: 3 }, 
+          display: 'flex', 
+          alignItems: 'center',
+          gap: 1
+        }}>
           <IconButton
             edge="start"
             color="inherit"
             aria-label="menu"
             onClick={onMenuClick}
-            sx={{ mr: 2, color: '#fff' }}
+            sx={{ 
+              color: '#fff',
+              transition: 'transform 0.2s ease',
+              '&:hover': {
+                transform: 'scale(1.05)',
+                background: 'rgba(255, 255, 255, 0.1)'
+              }
+            }}
           >
             <MenuIcon />
           </IconButton>
@@ -173,12 +189,24 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
                 m: 0,
                 background: 'none',
                 alignSelf: 'center',
-                filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.10))',
+                filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.15))',
+                transition: 'transform 0.2s ease',
+                '&:hover': {
+                  transform: 'scale(1.02)'
+                }
               }}
             />
           </Box>
           {currentUser ? (
-            <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center', gap: 1 }}>
+            <Box sx={{ 
+              display: { xs: 'none', sm: 'flex' }, 
+              alignItems: 'center', 
+              gap: { xs: 0.5, sm: 1 },
+              background: 'rgba(255, 255, 255, 0.04)',
+              borderRadius: 2,
+              p: 0.5,
+              backdropFilter: 'blur(8px)'
+            }}>
               {(isAdmin || isBusiness) && (
                 <Tooltip title={t('navigation.tokens')}>
                   <Button
@@ -188,19 +216,31 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
                       px: 1.5,
                       fontWeight: 600,
                       fontSize: '1rem',
-                      mr: 1,
-                      background: 'rgba(255,255,255,0.07)',
-                      borderRadius: 3,
-                      boxShadow: 1,
+                      background: 'rgba(255, 255, 255, 0.06)',
+                      borderRadius: 2,
                       color: '#fff',
+                      transition: 'all 0.2s ease',
                       '&:hover': {
-                        background: 'rgba(255,255,255,0.15)'
+                        background: 'rgba(255, 255, 255, 0.12)',
+                        transform: 'translateY(-1px)'
                       }
                     }}
                     onClick={() => navigate('/tokens')}
                   >
-                    <Badge badgeContent={isAdmin ? 999 : (typeof tokenCount === 'number' && tokenCount >= 0 ? tokenCount : 0)} color="warning" max={999} showZero>
-                      <MonetizationOnIcon sx={{ color: '#FFD600' }} />
+                    <Badge 
+                      badgeContent={isAdmin ? 999 : (typeof tokenCount === 'number' && tokenCount >= 0 ? tokenCount : 0)} 
+                      color="warning" 
+                      max={999} 
+                      showZero
+                      sx={{
+                        '& .MuiBadge-badge': {
+                          background: 'linear-gradient(45deg, #FFD700, #FFA500)',
+                          border: '2px solid rgba(18, 18, 18, 0.9)',
+                          fontWeight: 'bold'
+                        }
+                      }}
+                    >
+                      <MonetizationOnIcon sx={{ color: '#FFD700' }} />
                     </Badge>
                   </Button>
                 </Tooltip>
@@ -210,40 +250,86 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
                   color="inherit"
                   component={RouterLink}
                   to="/map"
-                  startIcon={<MapIcon sx={{ color: '#fff' }} />}
-                  sx={{ color: '#fff' }}
+                  startIcon={<MapIcon />}
+                  sx={{ 
+                    color: '#fff',
+                    px: 2,
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      background: 'rgba(255, 255, 255, 0.08)',
+                      transform: 'translateY(-1px)'
+                    }
+                  }}
                 >
                   {t('navigation.map')}
                 </Button>
               </Tooltip>
               
-              <Tooltip title={t('navigation.chat')}>
-                <IconButton
-                  color="inherit"
-                  component={RouterLink}
-                  to="/chat"
-                  sx={{ color: '#fff' }}
-                >
-                  <ChatIcon />
-                </IconButton>
-              </Tooltip>
+              <Box sx={{ 
+                display: 'flex', 
+                gap: 0.5, 
+                background: 'rgba(255, 255, 255, 0.06)',
+                borderRadius: 2,
+                p: 0.5
+              }}>
+                <Tooltip title={t('navigation.chat')}>
+                  <IconButton
+                    color="inherit"
+                    component={RouterLink}
+                    to="/chat"
+                    sx={{ 
+                      color: '#fff',
+                      transition: 'all 0.2s ease',
+                      '&:hover': {
+                        background: 'rgba(255, 255, 255, 0.08)',
+                        transform: 'translateY(-1px)'
+                      }
+                    }}
+                  >
+                    <ChatIcon />
+                  </IconButton>
+                </Tooltip>
+                
+                <Tooltip title={t('navigation.friends')}>
+                  <IconButton
+                    color="inherit"
+                    component={RouterLink}
+                    to="/friends"
+                    sx={{ 
+                      color: '#fff',
+                      transition: 'all 0.2s ease',
+                      '&:hover': {
+                        background: 'rgba(255, 255, 255, 0.08)',
+                        transform: 'translateY(-1px)'
+                      }
+                    }}
+                  >
+                    <PeopleIcon />
+                  </IconButton>
+                </Tooltip>
+                
+                <Notifications />
+              </Box>
               
-              <Tooltip title={t('navigation.friends')}>
-                <IconButton
-                  color="inherit"
-                  component={RouterLink}
-                  to="/friends"
-                  sx={{ color: '#fff' }}
-                >
-                  <PeopleIcon />
-                </IconButton>
-              </Tooltip>
-              
-              <Notifications />
-              
-              <IconButton onClick={handleAccountClick} sx={{ ml: 1, display: { xs: 'none', sm: 'flex' }, alignItems: 'center' }}>
+              <IconButton 
+                onClick={handleAccountClick} 
+                sx={{ 
+                  ml: 1, 
+                  display: { xs: 'none', sm: 'flex' }, 
+                  alignItems: 'center',
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    transform: 'scale(1.05)'
+                  }
+                }}
+              >
                 <Avatar 
-                  sx={{ width: 32, height: 32 }} 
+                  sx={{ 
+                    width: 32, 
+                    height: 32,
+                    border: '2px solid rgba(255, 255, 255, 0.2)',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)'
+                  }} 
                   src={currentUser?.photoURL || undefined}
                 >
                   {currentUser?.displayName?.[0]?.toUpperCase() || '?'}
@@ -251,26 +337,46 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
               </IconButton>
             </Box>
           ) : (
-            <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center', gap: 1 }}>
+            <Box sx={{ 
+              display: { xs: 'none', sm: 'flex' }, 
+              alignItems: 'center', 
+              gap: 1,
+              background: 'rgba(255, 255, 255, 0.04)',
+              borderRadius: 2,
+              p: 0.5
+            }}>
               <Button
                 color="inherit"
                 component={RouterLink}
                 to="/login"
-                sx={{ color: '#fff' }}
+                sx={{ 
+                  color: '#fff',
+                  px: 2,
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    transform: 'translateY(-1px)'
+                  }
+                }}
               >
                 {t('navigation.login')}
               </Button>
               <Button
-                color="primary"
                 variant="contained"
                 component={RouterLink}
                 to="/register"
                 sx={{
                   background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
                   color: '#fff',
+                  px: 2,
+                  fontWeight: 600,
+                  boxShadow: '0 2px 8px rgba(33, 150, 243, 0.3)',
+                  transition: 'all 0.2s ease',
                   '&:hover': {
                     background: 'linear-gradient(45deg, #1976D2 30%, #00BCD4 90%)',
-                  },
+                    transform: 'translateY(-1px)',
+                    boxShadow: '0 4px 12px rgba(33, 150, 243, 0.4)'
+                  }
                 }}
               >
                 {t('navigation.register')}
@@ -286,11 +392,20 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
                 ml: 1, 
                 display: { xs: 'flex', sm: 'none' }, 
                 alignItems: 'center',
-                color: '#fff'
+                color: '#fff',
+                transition: 'all 0.2s ease',
+                '&:hover': {
+                  transform: 'scale(1.05)'
+                }
               }}
             >
               <Avatar 
-                sx={{ width: 32, height: 32 }} 
+                sx={{ 
+                  width: 32, 
+                  height: 32,
+                  border: '2px solid rgba(255, 255, 255, 0.2)',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)'
+                }} 
                 src={currentUser?.photoURL || undefined}
               >
                 {currentUser?.displayName?.[0]?.toUpperCase() || '?'}
@@ -304,6 +419,7 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
         open={drawerOpen}
         onClose={handleDrawerClose}
         sx={{
+          zIndex: 1200,
           '& .MuiDrawer-paper': {
             width: { xs: 280, sm: 360 },
             boxSizing: 'border-box',
@@ -441,6 +557,29 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
             background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent)',
           }
         }}>
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ 
+              fontWeight: 600, 
+              borderRadius: 3, 
+              fontSize: 16, 
+              py: 1.5, 
+              boxShadow: '0 4px 12px rgba(33, 150, 243, 0.3)',
+              background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+              '&:hover': {
+                background: 'linear-gradient(45deg, #1976D2 30%, #00BCD4 90%)',
+                boxShadow: '0 6px 16px rgba(33, 150, 243, 0.4)',
+                transform: 'translateY(-1px)',
+              },
+              transition: 'all 0.3s ease',
+            }}
+            onClick={() => { setDrawerOpen(false); navigate('/saved-pinpoints'); }}
+            startIcon={<BookmarkIcon />}
+          >
+            {t('navigation.saved_pinpoints')}
+          </Button>
           <Button
             variant="contained"
             color="primary"

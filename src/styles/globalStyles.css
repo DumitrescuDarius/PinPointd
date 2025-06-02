@@ -181,7 +181,7 @@ div {
 
 /* Fix navbar and footer positioning */
 .MuiAppBar-root {
-  z-index: 1300 !important; /* Ensure navbar is above other content */
+  z-index: 1300 !important; /* Ensure navbar is above all content */
 }
 
 footer, 

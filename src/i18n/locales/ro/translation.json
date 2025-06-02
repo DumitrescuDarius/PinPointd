@@ -37,11 +37,11 @@
         "desc": "Interfață simplă cu o experiență de utilizare rapidă"
       },
       "geolocation": {
-        "title": "Postări bazate pe geolocalizare",
+        "title": "Postări cu geolocalizare",
         "desc": "Marchează toate locurile tale preferate și împărtășește-le cu prietenii"
       },
       "map": {
-        "title": "O hartă cu actualizări în timp real",
+        "title": "Actualizări în timp real",
         "desc": "Harta noastră este actualizată constant cu cele mai recente informații"
       }
     },
@@ -65,6 +65,7 @@
     "chat": "Chat",
     "friends": "Prieteni",
     "about": "Despre",
+    "saved_pinpoints": "Pinpoint-uri salvate",
     "tokens": "Tokeni",
     "login": "Autentificare",
     "register": "Înregistrare",

@@ -581,16 +581,20 @@ const Home: React.FC = () => {
                     size="large"
                     onClick={() => navigate('/about')}
                     sx={{
+                      py: 1,
+                      px: { xs: 2, sm: 3 },
                       borderRadius: '50px',
-                      px: 4,
-                      py: 1.5,
+                      fontSize: { xs: '1.3rem', sm: '1rem' },
                       fontWeight: 600,
+                      borderWidth: 2,
                       borderColor: theme.palette.primary.main,
-                      color: theme.palette.primary.main,
+                      color: 'text.primary',
                       '&:hover': {
-                        borderColor: theme.palette.primary.dark,
-                        backgroundColor: `${theme.palette.primary.main}22`
-                      }
+                        borderWidth: 2,
+                        transform: 'translateY(-3px)',
+                        boxShadow: '0 6px 25px rgba(0,0,0,0.15)',
+                      },
+                      transition: 'all 0.3s ease',
                     }}
                   >
                     {t('about.title')}

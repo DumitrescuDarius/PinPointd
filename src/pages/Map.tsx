@@ -46,7 +46,8 @@ import {
   InputAdornment,
   Card,
   Skeleton,
-  Popover
+  Popover,
+  CardMedia
 } from '@mui/material'
 
 // Import all icons from @mui/icons-material
@@ -96,6 +97,11 @@ import ExploreIcon from '@mui/icons-material/Explore'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import GroupIcon from '@mui/icons-material/Group'
 import PersonIcon from '@mui/icons-material/Person'
+import NavigationIcon from '@mui/icons-material/Navigation'
+import ChatIcon from '@mui/icons-material/Chat'
+import BookmarkIcon from '@mui/icons-material/Bookmark'
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
+import ZoomInIcon from '@mui/icons-material/ZoomIn'
 
 // Other imports
 import { MapContainer, TileLayer, Marker, Popup, useMap, ZoomControl, useMapEvents, Polyline } from 'react-leaflet'
@@ -104,7 +110,7 @@ import L from 'leaflet'
 import iconUrl from 'leaflet/dist/images/marker-icon.png'
 import iconShadow from 'leaflet/dist/images/marker-shadow.png'
 import { db } from '../config/firebase'
-import { collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, getDoc, writeBatch, serverTimestamp, updateDoc, arrayRemove, arrayUnion, Timestamp, query, where, orderBy, increment } from 'firebase/firestore'
+import { addDoc, collection, getDocs, deleteDoc, doc, onSnapshot, getDoc, writeBatch, serverTimestamp, updateDoc, arrayRemove, arrayUnion, Timestamp, query, where, orderBy, increment } from 'firebase/firestore'
 import { uploadImage } from '../config/cloudinary'
 import { keyframes } from '@mui/system'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
@@ -221,9 +227,9 @@ const modernStyles = {
     },
     left: '50%',
     transform: 'translateX(-50%)',
-    zIndex: 1000,
+    zIndex: 1100,
     width: {
-      xs: '90vw', // more compact on mobile
+      xs: '90vw',
       sm: 'calc(100% - 40px)',
       md: 500
     },
@@ -281,7 +287,7 @@ const modernStyles = {
       sm: 80,
       md: 100
     },
-    zIndex: 1000,
+    zIndex: 1100,
     display: 'flex',
     flexDirection: 'column',
     gap: {
@@ -301,7 +307,7 @@ const modernStyles = {
       sm: 80,
       md: 100
     },
-    zIndex: 1000,
+    zIndex: 1100,
     display: 'flex',
     flexDirection: 'column',
     gap: {
@@ -342,7 +348,7 @@ const modernStyles = {
       xs: 4, // Even closer to edge on mobile
       sm: 12
     },
-    zIndex: 1000,
+    zIndex: 1100,
     backgroundColor: 'rgba(30, 32, 38, 0.85)',
     backdropFilter: 'blur(10px)',
     borderRadius: {
@@ -355,7 +361,7 @@ const modernStyles = {
     maxWidth: { xs: 'calc(100% - 8px)', sm: 340 },
     minWidth: { xs: 'unset', sm: 220 },
     '& .MuiTypography-h6': {
-      fontSize: { xs: '0.8rem', sm: '1.1rem' }, // Smaller title on mobile
+      fontSize: { xs: '6rem', sm: '1.1rem' }, // Smaller title on mobile
       fontWeight: 600,
       mb: { xs: 0.3, sm: 0.7 }
     },
@@ -499,7 +505,7 @@ const modernStyles = {
     position: 'fixed',
     right: 20,
     top: 100,
-    zIndex: 1000,
+    zIndex: 1200,
     width: 500,
     maxWidth: { xs: 'calc(100vw - 40px)', sm: 500 },
     maxHeight: 'calc(100vh - 150px)',
@@ -508,28 +514,28 @@ const modernStyles = {
     boxShadow: 3
   },
   dialogOverlay: {
-    zIndex: 9999
+    zIndex: 1200
   },
   tagSearchContainer: {
     position: 'absolute',
     top: {
-      xs: 48, // Move even further down on mobile
+      xs: 48,
       sm: 10,
       md: 16
     },
     left: {
-      xs: 2, // Even closer to edge on mobile
+      xs: 2,
       sm: 10,
       md: 16
     },
-    zIndex: 1000,
+    zIndex: 1100,
     width: {
-      xs: '90vw', // Less wide on mobile
+      xs: '90vw',
       sm: 260,
       md: 320
     },
     maxHeight: {
-      xs: 'calc(100vh - 80px)', // Smaller visible area on mobile
+      xs: 'calc(100vh - 80px)',
       sm: 'unset',
       md: 'unset'
     },
@@ -539,34 +545,69 @@ const modernStyles = {
       md: 'unset'
     },
     backgroundColor: 'rgba(30, 32, 38, 0.90)',
-    backdropFilter: 'blur(8px)',
+    backdropFilter: 'blur(12px)',
     borderRadius: {
-      xs: '18px', // More round on mobile
-      sm: '10px'
+      xs: '24px',
+      sm: '28px'
     },
-    boxShadow: '0 1px 6px rgba(0, 0, 0, 0.12)',
-    border: '1px solid rgba(255, 255, 255, 0.05)',
-    p: { xs: 0.2, sm: 1 }, // Minimal padding on mobile
-    fontSize: { xs: '0.7rem', sm: '0.95rem' }, // Smaller font
+    boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
+    border: '1px solid rgba(255, 255, 255, 0.12)',
+    p: { xs: 1.5, sm: 2 },
+    fontSize: { xs: '0.7rem', sm: '0.95rem' },
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.25)',
+      border: '1px solid rgba(255,255,255,0.18)',
+    },
     '& .MuiInputBase-root': {
       fontSize: { xs: '0.7rem', sm: '0.95rem' },
       minHeight: 28,
-      borderRadius: { xs: '3px', sm: '10px' },
-      p: { xs: 0.2, sm: 1 },
+      borderRadius: { xs: '16px', sm: '20px' },
+      p: { xs: 1, sm: 1.5 },
+      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+      border: '1px solid rgba(255, 255, 255, 0.08)',
+      transition: 'all 0.2s ease',
+      '&:hover': {
+        backgroundColor: 'rgba(255, 255, 255, 0.08)',
+        border: '1px solid rgba(255, 255, 255, 0.12)',
+      },
+      '&.Mui-focused': {
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        border: '1px solid rgba(255, 255, 255, 0.15)',
+      }
     },
     '& .MuiChip-root': {
-      height: { xs: 16, sm: 24 },
-      fontSize: { xs: '0.6rem', sm: '0.8rem' },
-      px: { xs: 0.3, sm: 1 },
-      borderRadius: { xs: '8px', sm: '16px' },
+      height: { xs: 24, sm: 28 },
+      fontSize: { xs: '0.7rem', sm: '0.8rem' },
+      px: { xs: 0.75, sm: 1 },
+      borderRadius: { xs: '12px', sm: '14px' },
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      color: '#fff',
+      border: '1px solid rgba(255, 255, 255, 0.12)',
+      transition: 'all 0.2s ease',
+      '&:hover': {
+        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+      },
+      '& .MuiChip-deleteIcon': {
+        color: 'rgba(255, 255, 255, 0.7)',
+        '&:hover': {
+          color: '#fff'
+        }
+      }
     },
     '& .MuiTypography-root': {
       fontSize: { xs: '0.7rem', sm: '0.95rem' },
+      color: 'rgba(255, 255, 255, 0.9)'
     },
     '& .MuiIconButton-root': {
-      padding: { xs: 0.15, sm: 0.7 },
+      padding: { xs: 0.75, sm: 1 },
       '& svg': {
-        fontSize: { xs: '0.9rem', sm: '1.2rem' }
+        fontSize: { xs: '1.1rem', sm: '1.3rem' },
+        color: 'rgba(255, 255, 255, 0.7)',
+        transition: 'color 0.2s ease',
+      },
+      '&:hover svg': {
+        color: '#fff'
       }
     }
   },
@@ -645,35 +686,62 @@ const modernStyles = {
   },
   filterMenu: {
     position: 'absolute',
-    top: {
-      xs: 4, // Higher position on mobile
-      sm: 16,
-      md: 20
+    left: {
+      xs: 8,
+      sm: 20
     },
-    right: {
-      xs: 4, // Closer to edge on mobile
-      sm: 16,
-      md: 20
+    bottom: {
+      xs: 8,
+      sm: 20
     },
-    zIndex: 1000,
-    backgroundColor: 'rgba(30, 32, 38, 0.85)',
-    backdropFilter: 'blur(10px)',
+    width: {
+      xs: 160,
+      sm: 280
+    },
+    zIndex: 1100,
+    p: {
+      xs: 1,
+      sm: 2
+    },
     borderRadius: {
-      xs: '6px', // Smaller radius on mobile
-      sm: '12px'
+      xs: '24px',
+      sm: '28px'
     },
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    p: { xs: 0.5, sm: 2 }, // Less padding on mobile
-    fontSize: { xs: '0.85rem', sm: '1rem' }, // Smaller font on mobile
-    '& .MuiFormControlLabel-root': {
-      margin: { xs: '4px 0', sm: '8px 0' }, // Smaller margins on mobile
+    bgcolor: 'rgba(30, 32, 38, 0.90)',
+    boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
+    backdropFilter: 'blur(12px)',
+    border: '1px solid rgba(255,255,255,0.12)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: {
+      xs: 0.75,
+      sm: 1.5
     },
-    '& .MuiTypography-root': {
-      fontSize: { xs: '0.85rem', sm: '1rem' }, // Smaller text on mobile
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.25)',
+      border: '1px solid rgba(255,255,255,0.18)',
     },
     '& .MuiSwitch-root': {
-      transform: { xs: 'scale(0.8)', sm: 'scale(1)' }, // Smaller switch on mobile
+      '& .MuiSwitch-switchBase': {
+        '&.Mui-checked': {
+          '& + .MuiSwitch-track': {
+            backgroundColor: 'rgba(255, 255, 255, 0.3) !important',
+            opacity: 1,
+          },
+          '& .MuiSwitch-thumb': {
+            backgroundColor: '#fff',
+          },
+        },
+        '& .MuiSwitch-thumb': {
+          backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        },
+        '& + .MuiSwitch-track': {
+          backgroundColor: 'rgba(255, 255, 255, 0.1) !important',
+          opacity: 1,
+        },
+      },
     },
   },
 }
@@ -971,6 +1039,22 @@ const MapPage = ({ darkMode }: MapPageProps) => {
   const [showFriendsOnly, setShowFriendsOnly] = useState(false);
   const [showMineOnly, setShowMineOnly] = useState(false);
   const [userFriends, setUserFriends] = useState<string[]>([]);
+  
+  // Add state for menu visibility
+  const [areMenusVisible, setAreMenusVisible] = useState(true);
+  
+  // Update the useEffect that handles selected location
+  useEffect(() => {
+    if (selectedLocation) {
+      // Hide menus on mobile when location is selected
+      if (window.innerWidth <= 600) {
+        setAreMenusVisible(false);
+      }
+    } else {
+      // Show menus when no location is selected
+      setAreMenusVisible(true);
+    }
+  }, [selectedLocation]);
   
   // Add useEffect to filter locations based on tag search
   useEffect(() => {
@@ -2037,7 +2121,7 @@ const MapPage = ({ darkMode }: MapPageProps) => {
     return regularLocations[0];
   }, [displayLocations, currentUser]);
 
-  // Update handleNextPinpoint to handle async getWeightedRandomLocation
+  // Update handleNextPinpoint to use the same centering logic
   const handleNextPinpoint = useCallback(async (currentLocationId: string) => {
     const nextLocation = await getWeightedRandomLocation(currentLocationId);
     if (!nextLocation) return;
@@ -2045,40 +2129,50 @@ const MapPage = ({ darkMode }: MapPageProps) => {
     if (mapRef.current) {
       const map = mapRef.current;
       const currentZoom = map.getZoom();
-      const targetZoom = currentZoom < 10 ? 17 : 15;
+      const targetZoom = currentZoom < 10 ? 17 : currentZoom;
       
-      // Calculate the optimal view center
-        const bounds = map.getBounds();
-        const southWest = bounds.getSouthWest();
-        const northEast = bounds.getNorthEast();
-      const latOffset = (northEast.lat - southWest.lat) * 0.25;
-        const targetViewCenter: [number, number] = [
-          nextLocation.coordinates[0] + latOffset,
-          nextLocation.coordinates[1]
-        ];
-
-      // Calculate distance between current center and target location
+      // Calculate distance to next location
       const currentCenter = map.getCenter();
-      const distance = currentCenter.distanceTo(L.latLng(nextLocation.coordinates));
+      const targetLatLng = L.latLng(nextLocation.coordinates);
+      const distance = currentCenter.distanceTo(targetLatLng);
       
-      // Adjust animation duration based on distance
-      // For distances > 100km, use longer duration
-      // For distances < 10km, use shorter duration
-      const duration = distance > 100000 ? 2.0 : 
-                      distance > 50000 ? 1.5 :
-                      distance > 10000 ? 1.0 : 0.8;
+      // Use the same duration calculation
+      const duration = distance < 5000 ? 0.6 : 
+                      distance < 50000 ? 0.6 + (distance - 5000) / 50000 * 1.4 : 
+                      2.0;
+      
+      // Calculate the offset needed to center the card
+      const bounds = map.getBounds();
+      const mapHeight = bounds.getNorth() - bounds.getSouth();
+      
+      // Get the height of the location card and convert it to latitude offset
+      const screenHeightInDegrees = mapHeight;
+      const cardHeightInDegrees = screenHeightInDegrees * 0.6;
+      const latOffset = cardHeightInDegrees / 2;
+      
+      // Create the final view center with the offset
+      const finalViewCenter = L.latLng([
+        nextLocation.coordinates[0] + latOffset,
+        nextLocation.coordinates[1]
+      ]);
 
-      map.flyTo(targetViewCenter, targetZoom, {
-        animate: true,
+      // Use dynamic duration for the animation
+      map.flyTo(finalViewCenter, targetZoom, {
         duration: duration,
-        easeLinearity: 0.35,
-        noMoveStart: true
-      }).once('moveend', () => {
-        const marker = markerRefs.current[nextLocation.id];
-        if (marker && !marker.isPopupOpen()) {
-          marker.openPopup();
-        }
+        easeLinearity: distance < 5000 ? 0.3 : 0.1,
+        noMoveStart: true,
+        animate: true
       });
+
+      // Open popup after animation
+      const marker = markerRefs.current[nextLocation.id];
+      if (marker) {
+        setTimeout(() => {
+          if (!marker.isPopupOpen()) {
+            marker.openPopup();
+          }
+        }, duration * 1000 + 100); // Add small buffer for animation completion
+      }
     }
   }, [getWeightedRandomLocation]);
 
@@ -2130,6 +2224,17 @@ const MapPage = ({ darkMode }: MapPageProps) => {
     return Math.ceil(diff / (1000 * 60 * 60 * 24));
   };
 
+  // Add handler for tag selection
+  const handleTagClick = useCallback((tag: string) => {
+    setSelectedTags(prev => {
+      if (prev.includes(tag)) {
+        return prev.filter(t => t !== tag);
+      } else {
+        return [...prev, tag];
+      }
+    });
+  }, []);
+
   // Enhanced location card component with dark mode styling
   const LocationCard = ({ location }: { location: Location }): JSX.Element => {
     const { t } = useTranslation();
@@ -2140,13 +2245,18 @@ const MapPage = ({ darkMode }: MapPageProps) => {
     const [likes, setLikes] = useState<string[]>(location.likes || []);
     const [isFriend, setIsFriend] = useState(false);
     const [zoomOpen, setZoomOpen] = useState(false);
-    const [loadingImages, setLoadingImages] = useState<Record<number, boolean>>({});
+    const [loadingImages, setLoadingImages] = useState<{ [key: number]: boolean }>({});
     const [profileAnchorEl, setProfileAnchorEl] = useState<HTMLElement | null>(null);
     const [isRequestSent, setIsRequestSent] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error' | 'info'>('success');
     const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [isSaved, setIsSaved] = useState(false);
+    const [savingInProgress, setSavingInProgress] = useState(false);
+    const [isHovering, setIsHovering] = useState(false);
+    const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
+    const theme = useTheme();
 
     // Check if the post creator is in the user's friends list
     useEffect(() => {
@@ -2171,14 +2281,14 @@ const MapPage = ({ darkMode }: MapPageProps) => {
     }, [currentUser, location.createdBy.uid]);
     
     const handleImageLoad = (index: number) => {
-      setLoadingImages((prev: Record<number, boolean>) => ({
+      setLoadingImages((prev: { [key: number]: boolean }) => ({
         ...prev,
         [index]: false
       }));
     };
 
     const handleImageLoadStart = (index: number) => {
-      setLoadingImages((prev: Record<number, boolean>) => ({
+      setLoadingImages((prev: { [key: number]: boolean }) => ({
         ...prev,
         [index]: true
       }));
@@ -2313,6 +2423,120 @@ const MapPage = ({ darkMode }: MapPageProps) => {
       }
     };
 
+    // Check if the pinpoint is saved
+    useEffect(() => {
+      const checkIfSaved = async () => {
+        if (!currentUser) return;
+        
+        try {
+          const savedPinpointsRef = collection(db, 'savedPinpoints');
+          const q = query(
+            savedPinpointsRef, 
+            where('userId', '==', currentUser.uid),
+            where('pinpointId', '==', location.id)
+          );
+          const querySnapshot = await getDocs(q);
+          setIsSaved(!querySnapshot.empty);
+        } catch (err) {
+          console.error('Error checking if pinpoint is saved:', err);
+        }
+      };
+
+      checkIfSaved();
+    }, [currentUser, location.id]);
+
+    const handleSave = async () => {
+      if (!currentUser) {
+        setSnackbarMessage('Please log in to save pinpoints');
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
+        return;
+      }
+
+      try {
+        setSavingInProgress(true);
+        
+        if (isSaved) {
+          // Find and delete the saved pinpoint
+          const savedPinpointsRef = collection(db, 'savedPinpoints');
+          const q = query(
+            savedPinpointsRef, 
+            where('userId', '==', currentUser.uid),
+            where('pinpointId', '==', location.id)
+          );
+          const querySnapshot = await getDocs(q);
+          
+          if (!querySnapshot.empty) {
+            await deleteDoc(querySnapshot.docs[0].ref);
+          }
+          
+          setIsSaved(false);
+          setSnackbarMessage('Pinpoint removed from saved');
+        } else {
+          // Save the pinpoint
+          await addDoc(collection(db, 'savedPinpoints'), {
+            userId: currentUser.uid,
+            pinpointId: location.id,
+            savedAt: new Date()
+          });
+          
+          setIsSaved(true);
+          setSnackbarMessage('Pinpoint saved successfully');
+        }
+        
+        setSnackbarSeverity('success');
+        setSnackbarOpen(true);
+      } catch (err) {
+        console.error('Error saving/unsaving pinpoint:', err);
+        setSnackbarMessage('Failed to save/unsave pinpoint');
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
+      } finally {
+        setSavingInProgress(false);
+      }
+    };
+
+    const handleImageClick = (e: React.MouseEvent) => {
+      e.stopPropagation(); // Prevent card click
+      setIsImageViewerOpen(true);
+    };
+
+    const handleCloseImageViewer = () => {
+      setIsImageViewerOpen(false);
+    };
+
+    const handleNextImage = (e?: React.MouseEvent) => {
+      e?.stopPropagation();
+      if (location.photos && location.photos.length > 0) {
+        setCurrentPhotoIndex((prev) => (prev === location.photos.length - 1 ? 0 : prev + 1));
+      }
+    };
+
+    const handlePrevImage = (e?: React.MouseEvent) => {
+      e?.stopPropagation();
+      if (location.photos && location.photos.length > 0) {
+        setCurrentPhotoIndex((prev) => (prev === 0 ? location.photos.length - 1 : prev - 1));
+      }
+    };
+
+    // Handle keyboard navigation
+    useEffect(() => {
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (!isImageViewerOpen) return;
+        
+        if (e.key === 'ArrowRight') {
+          handleNextImage();
+        } else if (e.key === 'ArrowLeft') {
+          handlePrevImage();
+        } else if (e.key === 'Escape') {
+          handleCloseImageViewer();
+        }
+      };
+
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isImageViewerOpen, location.photos]);
+
     return (
       <Box sx={{
         width: '100%',
@@ -2321,16 +2545,8 @@ const MapPage = ({ darkMode }: MapPageProps) => {
         position: 'relative',
         overflow: 'hidden',
         flexDirection: 'column',
-        p: {
-          xs: 0.5,
-          sm: 0.75,
-          md: 1,
-        },
-        gap: {
-          xs: 0.5,
-          sm: 0.75,
-          md: 1,
-        },
+        p: { xs: 0.25, sm: 0.5, md: 0.75 },
+        gap: { xs: 0.25, sm: 0.5, md: 0.75 },
       }}>
         {/* Add UserProfilePopup */}
         <UserProfilePopup
@@ -2339,14 +2555,24 @@ const MapPage = ({ darkMode }: MapPageProps) => {
           onClose={() => setProfileAnchorEl(null)}
         />
         
-        {/* Photo section */}
+        {/* Photo section with improved styling */}
         <Box sx={{ 
           position: 'relative', 
           width: '100%', 
-          mb: { xs: 0.15, sm: 0.25 },
-          paddingTop: '56.25%', // Always 16:9 aspect ratio
-          maxHeight: 'none', // No max height limit
-        }}>
+          mb: { xs: 0.5, sm: 0.5 }, // Reduced margin bottom
+          paddingTop: '50%',
+          maxHeight: 'none',
+          borderRadius: '12px',
+          overflow: 'hidden',
+          boxShadow: '0 3px 8px rgba(0,0,0,0.15)',
+          '&:hover': {
+            '& .navigation-buttons': {
+              opacity: 1,
+            }
+          }
+        }}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}>
           {location.photos && location.photos.length > 0 && (
             <>
               <Box sx={{
@@ -2356,8 +2582,18 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                 width: '100%',
                 height: '100%',
                 overflow: 'hidden',
-                borderRadius: { xs: 1, sm: 2 },
+                borderRadius: '12px',
                 cursor: 'zoom-in',
+                '&::after': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  background: 'linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 20%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.4) 100%)',
+                  pointerEvents: 'none',
+                }
               }} onClick={() => setZoomOpen(true)}>
                 {loadingImages[currentPhotoIndex] && (
                   <Skeleton
@@ -2383,9 +2619,9 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                     width: '100%',
                     height: '100%',
                     objectFit: 'cover',
-                    borderRadius: 12,
                     opacity: loadingImages[currentPhotoIndex] ? 0 : 1,
-                    transition: 'opacity 0.3s ease-in-out',
+                    transition: 'opacity 0.3s ease-in-out, transform 0.3s ease-in-out',
+                    transform: 'scale(1.01)', // Slight scale for better appearance
                   }}
                   onLoadStart={() => handleImageLoadStart(currentPhotoIndex)}
                   onLoad={() => handleImageLoad(currentPhotoIndex)}
@@ -2394,77 +2630,124 @@ const MapPage = ({ darkMode }: MapPageProps) => {
               </Box>
               {location.photos.length > 1 && (
                 <>
-                  <IconButton
-                    onClick={prevPhoto}
-                    sx={{
-                      position: 'absolute',
-                      left: 8,
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      color: '#fff',
-                      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                      '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.7)' },
-                      p: 1,
-                    }}
-                    size="large"
-                  >
-                    <ChevronLeftIcon fontSize="large" />
-                  </IconButton>
-                  <IconButton
-                    onClick={nextPhoto}
-                    sx={{
-                      position: 'absolute',
-                      right: 8,
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      color: '#fff',
-                      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                      '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.7)' },
-                      p: 1,
-                    }}
-                    size="large"
-                  >
-                    <ChevronRightIcon fontSize="large" />
-                  </IconButton>
+                  {/* Navigation Buttons */}
+                  <Box className="navigation-buttons" sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    px: 1,
+                    opacity: 0,
+                    transition: 'opacity 0.2s ease-in-out',
+                    zIndex: 2,
+                    pointerEvents: 'none', // This allows clicks to pass through to the image
+                  }}>
+                    <IconButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        prevPhoto();
+                      }}
+                      sx={{
+                        bgcolor: 'rgba(0, 0, 0, 0.4)',
+                        color: 'white',
+                        '&:hover': {
+                          bgcolor: 'rgba(0, 0, 0, 0.6)',
+                        },
+                        pointerEvents: 'auto', // Re-enable clicks for the button
+                      }}
+                      size="small"
+                    >
+                      <ChevronLeftIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        nextPhoto();
+                      }}
+                      sx={{
+                        bgcolor: 'rgba(0, 0, 0, 0.4)',
+                        color: 'white',
+                        '&:hover': {
+                          bgcolor: 'rgba(0, 0, 0, 0.6)',
+                        },
+                        pointerEvents: 'auto', // Re-enable clicks for the button
+                      }}
+                      size="small"
+                    >
+                      <ChevronRightIcon />
+                    </IconButton>
+                  </Box>
+                  {/* Photo Counter */}
+                  <Box sx={{
+                    position: 'absolute',
+                    bottom: 8,
+                    right: 8,
+                    bgcolor: 'rgba(0, 0, 0, 0.5)',
+                    color: 'white',
+                    px: 1.5,
+                    py: 0.5,
+                    borderRadius: '12px',
+                    fontSize: '0.75rem',
+                    zIndex: 2,
+                    backdropFilter: 'blur(4px)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 0.5,
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+                    minWidth: '40px',
+                    justifyContent: 'center'
+                  }}>
+                    {currentPhotoIndex + 1}/{location.photos.length}
+                  </Box>
                 </>
               )}
             </>
           )}
         </Box>
-        {/* Zoom modal/dialog for image */}
-        <Dialog open={zoomOpen} onClose={() => setZoomOpen(false)} maxWidth="md" fullWidth>
-          <DialogContent sx={{ p: 0, bgcolor: '#000' }}>
-            <img
-              src={location.photos[currentPhotoIndex]}
-              alt="Zoomed"
-              style={{ width: '100%', height: 'auto', display: 'block', maxHeight: '80vh', objectFit: 'contain' }}
-            />
-          </DialogContent>
-        </Dialog>
-        {/* Info section, more compact */}
+
+        {/* Info section with improved layout */}
         <Box sx={{ 
-          p: { xs: 0.15, sm: 0.25 }, 
-          pt: 0, 
-          minWidth: 0 
+          p: { xs: 0.35, sm: 0.5 }, 
+          pt: 0.25, // Reduced top padding
+          minWidth: 0,
         }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 0.15 }}>
-            <Box>
-              {/* Date at the very top */}
-              <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.5)', display: 'block', mb: 0.05, fontSize: '0.65rem' }}>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 0.25 }}> {/* Reduced margin bottom */}
+            <Box sx={{ flex: 1 }}>
+              {/* Date with improved styling */}
+              <Typography variant="caption" sx={{ 
+                color: 'rgba(255, 255, 255, 0.6)',
+                display: 'block',
+                mb: 0.1, // Reduced margin bottom
+                fontSize: '0.6rem',
+                fontWeight: 500,
+              }}>
                 {formatDate(location.createdAt)}
               </Typography>
-              {/* Creator info */}
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.1 }}>
+
+              {/* Creator info with hover effects */}
+              <Box sx={{ 
+                display: 'flex',
+                alignItems: 'center',
+                mb: 0.25, // Reduced margin bottom
+                gap: 0.75,
+              }}>
                 <Avatar 
                   src={location.createdBy.photoURL || undefined} 
                   alt={location.createdBy.displayName || 'User'} 
                   sx={{ 
-                    width: 32, 
-                    height: 32, 
-                    mr: 0.5,
+                    width: 24, 
+                    height: 24,
                     cursor: 'pointer',
+                    border: '1.5px solid rgba(255, 255, 255, 0.2)',
+                    transition: 'all 0.2s ease-in-out',
                     '&:hover': {
-                      opacity: 0.8
+                      transform: 'scale(1.1)',
+                      border: '1.5px solid rgba(255, 255, 255, 0.4)',
                     }
                   }}
                   onClick={(e) => setProfileAnchorEl(e.currentTarget)}
@@ -2473,12 +2756,14 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                   variant="subtitle2" 
                   component="span"
                   sx={{ 
-                    color: 'rgba(255,255,255,0.8)', 
-                    fontWeight: 500,
+                    color: 'rgba(255,255,255,0.9)', 
+                    fontWeight: 600,
                     cursor: 'pointer',
-                    fontSize: '0.8rem',
+                    fontSize: '0.75rem',
+                    transition: 'all 0.2s ease-in-out',
                     '&:hover': {
-                      textDecoration: 'underline'
+                      color: '#fff',
+                      transform: 'translateX(2px)',
                     }
                   }}
                   onClick={(e) => setProfileAnchorEl(e.currentTarget)}
@@ -2487,192 +2772,375 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                 </Typography>
               </Box>
 
-              {/* Title directly above description */}
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Typography 
-                  variant="h5" 
-                  component="h2" 
-                  sx={{ 
-                    fontSize: {
-                      xs: '1rem',
-                      sm: '1.15rem',
-                      md: '1.25rem'
-                    },
-                    lineHeight: 1.2,
-                    fontWeight: 600,
-                    mb: 0.15,
-                    mt: 0,
-                    p: 0,
-                    wordBreak: 'break-word',
-                    whiteSpace: 'normal',
-                    flex: 1
-                  }}
-                >
-                  {location.name}
-                </Typography>
-                {/* Trash bin button to the right of the title */}
-                {(isCreator || isAdmin) && (
-                  <IconButton
-                    color="error"
-                    size="small"
-                    onClick={() => {
-                      setDeleteDialogOpen(true);
-                      setDeleteTargetId(location.id);
-                    }}
-                    sx={{ ml: 1 }}
-                  >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                )}
-              </Box>
+              {/* Title and description with improved typography */}
+              <Typography 
+                variant="h5" 
+                component="h2" 
+                sx={{ 
+                  fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem' },
+                  lineHeight: 1.2,
+                  fontWeight: 700,
+                  mb: 0.25, // Reduced margin bottom
+                  color: '#fff',
+                  textShadow: '0 1px 2px rgba(0,0,0,0.1)',
+                }}
+              >
+                {location.name}
+              </Typography>
 
-              {/* Description */}
               <Typography 
                 variant="body1" 
                 sx={{ 
-                  fontSize: {
-                    xs: '0.75rem',
-                    sm: '0.85rem',
-                    md: '0.9rem'
-                  },
-                  mb: 0.5,
-                  mt: 0,
-                  lineHeight: 1.3,
-                  p: 0,
-                  whiteSpace: 'pre-line',
-                  wordBreak: 'break-word',
-                  color: 'rgba(255, 255, 255, 0.7)'
+                  fontSize: { xs: '0.75rem', sm: '0.8rem', md: '0.85rem' },
+                  lineHeight: 1.4,
+                  color: 'rgba(255, 255, 255, 0.85)',
+                  mb: 0.25, // Reduced margin before tags
+                  fontWeight: 400,
                 }}
               >
                 {location.description}
               </Typography>
-            </Box>
-            {/* Likes and Views row */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mt: 1, mb: 0.5 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25 }}>
-                <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.8rem', minWidth: 20, textAlign: 'right' }}>
-                {likes.length}
-              </Typography>
-              <IconButton 
-                onClick={handleLike}
-                sx={{
-                  color: likes.includes(currentUser?.uid || '') ? 'error.main' : 'rgba(255, 255, 255, 0.7)',
-                  '&:hover': {
-                    color: 'error.main'
-                  },
-                  p: 0.3,
-                  ml: 0.5
-                }}
-                size="small"
-              >
-                {likes.includes(currentUser?.uid || '') ? (
-                    <FavoriteIcon fontSize="small" />
-                ) : (
-                    <FavoriteBorderIcon fontSize="small" />
-                )}
-              </IconButton>
+
+              {/* Tags with improved styling */}
+              <Box sx={{ 
+                display: 'flex', 
+                flexWrap: 'wrap', 
+                gap: 0.35,
+                mb: 0.25, // Reduced margin before the line
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
+                {/* Tags on the left */}
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.35 }}>
+                  {location.tags?.map((tag) => (
+                    <Chip
+                      key={tag}
+                      label={tag === 'Sponsored' && daysRemaining ? `${tag} (${daysRemaining}d left)` : tag}
+                      size="small"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleTagClick(tag);
+                      }}
+                      sx={{
+                        backgroundColor: selectedTags?.includes(tag) 
+                          ? (tag === 'Sponsored' ? '#FFB700' : 'rgba(255, 255, 255, 0.35)') 
+                          : (tag === 'Sponsored' ? '#FFD700' : 'rgba(255, 255, 255, 0.15)'),
+                        color: tag === 'Sponsored' ? '#000000' : '#fff',
+                        fontSize: '0.65rem',
+                        height: 18, // Slightly smaller height
+                        cursor: 'pointer',
+                        '& .MuiChip-label': {
+                          px: 1,
+                        },
+                        '&:hover': {
+                          backgroundColor: tag === 'Sponsored' ? '#FFC800' : 'rgba(255, 255, 255, 0.25)',
+                          transform: 'translateY(-1px)',
+                        },
+                        transition: 'all 0.2s ease-in-out',
+                        ...(selectedTags?.includes(tag) && {
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                        })
+                      }}
+                    />
+                  ))}
+                </Box>
+
+                {/* Stats on the right */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                  {/* Likes */}
+                  <Box sx={{ 
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 0.35,
+                  }}>
+                    <IconButton 
+                      onClick={handleLike}
+                      sx={{
+                        color: likes.includes(currentUser?.uid || '') ? '#ff4081' : 'rgba(255, 255, 255, 0.7)',
+                        '&:hover': {
+                          transform: 'scale(1.1)',
+                          color: '#ff4081',
+                        },
+                        transition: 'all 0.2s ease-in-out',
+                        p: 0.35,
+                      }}
+                      size="small"
+                    >
+                      {likes.includes(currentUser?.uid || '') ? (
+                        <FavoriteIcon sx={{ fontSize: '1rem' }} />
+                      ) : (
+                        <FavoriteBorderIcon sx={{ fontSize: '1rem' }} />
+                      )}
+                    </IconButton>
+                    <Typography sx={{ 
+                      color: 'rgba(255, 255, 255, 0.9)',
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                    }}>
+                      {likes.length}
+                    </Typography>
+                  </Box>
+
+                  {/* Views */}
+                  <Box sx={{ 
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 0.35,
+                  }}>
+                    <VisibilityIcon sx={{ 
+                      fontSize: '1rem',
+                      color: 'rgba(255, 255, 255, 0.7)',
+                    }} />
+                    <Typography sx={{ 
+                      color: 'rgba(255, 255, 255, 0.9)',
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                    }}>
+                      {location.views || 0}
+                    </Typography>
+                  </Box>
+                </Box>
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25 }}>
-                <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.8rem', minWidth: 20, textAlign: 'right' }}>
-                  {location.views || 0}
-                </Typography>
-                <IconButton 
-                  sx={{
-                    color: 'rgba(255, 255, 255, 0.7)',
-                    p: 0.3,
-                    ml: 0.5
-                  }}
-                  size="small"
-                >
-                  <VisibilityIcon fontSize="small" />
-                </IconButton>
-              </Box>
-            </Box>
-          </Box>
-          {/* Tags */}
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.15, mb: 0.5 }}>
-            {location.tags?.map((tag) => (
-              <Chip
-                key={tag}
-                label={tag === 'Sponsored' && daysRemaining ? `${tag} (${daysRemaining}d left)` : tag}
-                size="small"
-                sx={{
-                  backgroundColor: tag === 'Sponsored' ? '#FFD700' : 'rgba(255, 255, 255, 0.1)',
-                  color: tag === 'Sponsored' ? '#000000' : 'rgba(255, 255, 255, 0.7)',
-                  fontSize: '0.65rem',
-                  height: 18,
-                  p: 0.15,
-                  fontWeight: tag === 'Sponsored' ? 'bold' : 'normal',
-                  '&:hover': {
-                    backgroundColor: tag === 'Sponsored' ? '#FFC800' : 'rgba(255, 255, 255, 0.15)',
-                  }
-                }}
-              />
-            ))}
-          </Box>
-          {/* Actions */}
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 0.5, mt: 0.25 }}>
-            <Box sx={{ display: 'flex', gap: 0.5 }}>
-              <Button
-                variant="outlined"
-                color="primary"
-                size="small"
-                startIcon={<DirectionsIcon sx={{ fontSize: '0.9rem' }} />}
-                onClick={() => handleNavigate(location)}
-                sx={{ minWidth: 0, px: 1, fontSize: '0.8rem', py: 0.5 }}
-              >
-                Navigate
-              </Button>
-              <Tooltip title={!isFriend ? "You can only respond to posts from your friends" : "Respond to this post"}>
-                <span>
-                  <Button
-                    variant="outlined"
-                    color="primary"
+
+              {/* Action buttons */}
+              <Box sx={{ 
+                display: 'flex', 
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                mt: 0.75,
+                pt: 0.75,
+                borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+              }}>
+                {/* Left side - Action buttons */}
+                <Box sx={{ display: 'flex', gap: 0.5 }}>
+                  <IconButton
+                    onClick={() => handleNavigate(location)}
                     size="small"
-                    startIcon={<ReplyIcon sx={{ fontSize: '0.9rem' }} />}
-                    onClick={() => handleRespond(location)}
-                    disabled={!isFriend}
-                    sx={{ 
-                      minWidth: 0, 
-                      px: 1, 
-                      fontSize: '0.8rem',
-                      py: 0.5,
-                      opacity: isFriend ? 1 : 0.5
+                    sx={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                      color: '#fff',
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                      },
+                      width: 28,
+                      height: 28,
                     }}
                   >
-                    Respond
-                  </Button>
-                </span>
-              </Tooltip>
-              <Button
-                variant="outlined"
-                color="primary"
-                size="small"
-                startIcon={<ShareIcon sx={{ fontSize: '0.9rem' }} />}
-                onClick={() => handleShare(location.id)}
-                sx={{ minWidth: 0, px: 1, fontSize: '0.8rem', py: 0.5 }}
-              >
-                Share
-              </Button>
+                    <NavigationIcon sx={{ fontSize: '1rem' }} />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => handleRespond(location)}
+                    size="small"
+                    sx={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                      color: '#fff',
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                      },
+                      width: 28,
+                      height: 28,
+                    }}
+                  >
+                    <ChatIcon sx={{ fontSize: '1rem' }} />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => handleShare(location.id)}
+                    size="small"
+                    sx={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                      color: '#fff',
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                      },
+                      width: 28,
+                      height: 28,
+                    }}
+                  >
+                    <ShareIcon sx={{ fontSize: '1rem' }} />
+                  </IconButton>
+                  <IconButton
+                    onClick={handleSave}
+                    size="small"
+                    disabled={savingInProgress}
+                    sx={{
+                      backgroundColor: isSaved ? 'rgba(33, 150, 243, 0.3)' : 'rgba(255, 255, 255, 0.15)',
+                      color: '#fff',
+                      '&:hover': {
+                        backgroundColor: isSaved ? 'rgba(33, 150, 243, 0.4)' : 'rgba(255, 255, 255, 0.25)',
+                      },
+                      width: 28,
+                      height: 28,
+                    }}
+                  >
+                    {isSaved ? (
+                      <BookmarkIcon sx={{ fontSize: '1rem' }} />
+                    ) : (
+                      <BookmarkBorderIcon sx={{ fontSize: '1rem' }} />
+                    )}
+                  </IconButton>
+                </Box>
+
+                {/* Right side - Next button */}
+                <Button
+                  variant="contained"
+                  size="small"
+                  startIcon={<ExploreIcon sx={{ fontSize: '0.9rem' }} />}
+                  onClick={() => handleNextPinpoint(location.id)}
+                  sx={{ 
+                    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                    color: '#fff',
+                    backdropFilter: 'blur(4px)',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                      transform: 'scale(1.02)',
+                    },
+                    transition: 'all 0.2s ease-in-out',
+                    textTransform: 'none',
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    minWidth: 0,
+                    px: 1.25,
+                    py: 0.5,
+                  }}
+                >
+                  Next
+                </Button>
+              </Box>
             </Box>
-              <Button
-                variant="outlined"
-                color="primary"
-              size="small"
-              startIcon={<ExploreIcon sx={{ fontSize: '0.9rem' }} />}
-                onClick={() => handleNextPinpoint(location.id)}
-              sx={{ 
-                minWidth: 0, 
-                px: 1, 
-                fontSize: '0.8rem', 
-                py: 0.5,
-                ml: 'auto'  // Push to the right
-              }}
-              >
-                Next
-              </Button>
           </Box>
         </Box>
+
+        {/* Snackbar for save/unsave feedback */}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000}
+          onClose={() => setSnackbarOpen(false)}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert 
+            onClose={() => setSnackbarOpen(false)} 
+            severity={snackbarSeverity}
+            sx={{ width: '100%' }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
+
+        {/* Full-screen Image Viewer */}
+        <Dialog
+          open={zoomOpen}
+          onClose={() => setZoomOpen(false)}
+          maxWidth={false}
+          sx={{
+            '& .MuiDialog-paper': {
+              bgcolor: 'rgba(0, 0, 0, 0.95)',
+              boxShadow: 'none',
+              m: 0,
+              width: '100vw',
+              height: '100vh',
+              maxWidth: 'none',
+              maxHeight: 'none'
+            }
+          }}
+        >
+          <IconButton
+            onClick={() => setZoomOpen(false)}
+            sx={{
+              position: 'absolute',
+              top: 16,
+              right: 16,
+              color: 'white',
+              bgcolor: 'rgba(0, 0, 0, 0.5)',
+              '&:hover': {
+                bgcolor: 'rgba(0, 0, 0, 0.7)'
+              },
+              zIndex: 1
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+
+          <Box
+            sx={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'relative'
+            }}
+          >
+            {location.photos && location.photos.length > 1 && (
+              <>
+                <IconButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    prevPhoto();
+                  }}
+                  sx={{
+                    position: 'absolute',
+                    left: 16,
+                    color: 'white',
+                    bgcolor: 'rgba(0, 0, 0, 0.5)',
+                    '&:hover': {
+                      bgcolor: 'rgba(0, 0, 0, 0.7)'
+                    }
+                  }}
+                >
+                  <ChevronLeftIcon />
+                </IconButton>
+                <IconButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    nextPhoto();
+                  }}
+                  sx={{
+                    position: 'absolute',
+                    right: 16,
+                    color: 'white',
+                    bgcolor: 'rgba(0, 0, 0, 0.5)',
+                    '&:hover': {
+                      bgcolor: 'rgba(0, 0, 0, 0.7)'
+                    }
+                  }}
+                >
+                  <ChevronRightIcon />
+                </IconButton>
+              </>
+            )}
+
+            <Box
+              component="img"
+              src={location.photos?.[currentPhotoIndex]}
+              alt={location.name}
+              sx={{
+                maxWidth: '90%',
+                maxHeight: '90%',
+                objectFit: 'contain',
+                userSelect: 'none'
+              }}
+            />
+
+            {location.photos && location.photos.length > 1 && (
+              <Box
+                sx={{
+                  position: 'absolute',
+                  bottom: 16,
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  bgcolor: 'rgba(0, 0, 0, 0.5)',
+                  color: 'white',
+                  px: 2,
+                  py: 1,
+                  borderRadius: 2,
+                  backdropFilter: 'blur(4px)'
+                }}
+              >
+                {currentPhotoIndex + 1} / {location.photos.length}
+              </Box>
+            )}
+          </Box>
+        </Dialog>
       </Box>
     );
   };
@@ -2683,6 +3151,15 @@ const MapPage = ({ darkMode }: MapPageProps) => {
     const style = document.createElement('style');
     // Define the CSS
     style.textContent = `
+      .leaflet-popup {
+        margin-bottom: 15px;
+        opacity: 1;
+        transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
       .leaflet-popup-content-wrapper {
         background-color: rgba(30, 32, 38, 0.95);
         backdrop-filter: blur(10px);
@@ -2690,11 +3167,80 @@ const MapPage = ({ darkMode }: MapPageProps) => {
         border: 1px solid rgba(255, 255, 255, 0.1);
         color: #fff;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-        min-width: min(600px, calc(100vw - 32px));
-        max-width: min(660px, calc(100vw - 32px));
+        min-width: min(800px, calc(100vw - 32px));
+        max-width: min(900px, calc(100vw - 32px));
         padding: 0;
         margin: 0;
+        animation: popup-fade-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-origin: bottom center;
+        position: relative;
+        left: 0;
+        transform: none;
       }
+      
+      .leaflet-popup-tip-container {
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        left: 50%;
+        margin-left: -10px;
+        overflow: hidden;
+        pointer-events: none;
+        bottom: -19px;
+      }
+      
+      .leaflet-popup-tip {
+        background-color: rgba(30, 32, 38, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: none;
+        width: 17px;
+        height: 17px;
+        padding: 1px;
+        margin: -9px auto 0;
+        pointer-events: none;
+        transform-origin: center;
+        transform: rotate(45deg);
+        animation: tip-fade-in 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      @keyframes popup-fade-in {
+        0% {
+          opacity: 0;
+          transform: translateY(20px) scale(0.95);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes popup-fade-out {
+        0% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(20px) scale(0.95);
+        }
+      }
+      
+      @keyframes tip-fade-in {
+        0% {
+          opacity: 0;
+          transform: translateY(-5px) rotate(45deg);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) rotate(45deg);
+        }
+      }
+      
+      .leaflet-popup.leaflet-popup--closing {
+        animation: popup-fade-out 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
       .leaflet-popup-content {
         margin: 0;
         padding: 0;
@@ -2702,33 +3248,9 @@ const MapPage = ({ darkMode }: MapPageProps) => {
         color: #fff;
         width: 100% !important;
       }
-      .leaflet-popup-tip {
-        background-color: rgba(30, 32, 38, 0.95);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
+      
       .leaflet-popup-close-button {
-        color: #fff !important;
-        padding: 0 !important;
-        right: 0px !important;
-        top: 0px !important;
-        font-size: 22px !important;
-        width: 30px !important;
-        height: 30px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        background-color: rgba(120, 120, 120, 0.7) !important;
-        border-radius: 0 14px 0 14px !important;
-        text-decoration: none !important;
-        transition: background-color 0.2s !important;
-      }
-      .leaflet-popup-close-button:hover {
-        background-color: rgba(150, 150, 150, 0.9) !important;
-        color: #fff !important;
-      }
-      .leaflet-popup {
-        margin-bottom: 2px;
+        display: none !important;
       }
       
       /* Fix modal input fields */
@@ -2742,12 +3264,39 @@ const MapPage = ({ darkMode }: MapPageProps) => {
         z-index: 9999 !important;
       }
     `;
+    
     // Add the style to the document head
     document.head.appendChild(style);
     
-    // Clean up the style when component unmounts
+    // Add event listeners for popup close animation
+    const addPopupCloseAnimation = () => {
+      const popups = document.querySelectorAll('.leaflet-popup');
+      popups.forEach(popup => {
+        const closeButton = popup.querySelector('.leaflet-popup-close-button');
+        if (closeButton) {
+          closeButton.addEventListener('click', () => {
+            popup.classList.add('leaflet-popup--closing');
+          });
+        }
+      });
+    };
+
+    // Create a MutationObserver to watch for new popups
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.addedNodes.length) {
+          addPopupCloseAnimation();
+        }
+      });
+    });
+
+    // Start observing the document with the configured parameters
+    observer.observe(document.body, { childList: true, subtree: true });
+    
+    // Clean up
     return () => {
       document.head.removeChild(style);
+      observer.disconnect();
     };
   }, []);
 
@@ -3538,6 +4087,11 @@ const MapPage = ({ darkMode }: MapPageProps) => {
     // No cleanup needed since fetchLocations doesn't return an unsubscribe function
   }, []);
 
+  // Add effect to refetch locations when selected tags change
+  useEffect(() => {
+    fetchLocations();
+  }, [selectedTags]);
+
   // Update Current Location Marker to be more visible
   const CurrentLocationMarker = () => {
     if (!currentPosition) return null;
@@ -3755,113 +4309,90 @@ const MapPage = ({ darkMode }: MapPageProps) => {
 
   // Add this function near the top of the component, after the other utility functions
   const animateToLocation = (map: L.Map, location: Location) => {
+    const marker = markerRefs.current[location.id];
     const currentZoom = map.getZoom();
-    const targetZoom = currentZoom < 10 ? 17 : 15;
+    const targetZoom = currentZoom < 10 ? 17 : currentZoom;
     
     // Calculate distance between current center and target location
     const currentCenter = map.getCenter();
-    const distance = currentCenter.distanceTo(L.latLng(location.coordinates));
+    const targetLatLng = L.latLng(location.coordinates);
+    const distance = currentCenter.distanceTo(targetLatLng);
     
-    // Adjust animation duration based on distance
-    // For distances > 100km, use longer duration
-    // For distances < 10km, use shorter duration
-    const duration = distance > 100000 ? 2.0 : 
-                    distance > 50000 ? 1.5 :
-                    distance > 10000 ? 1.0 : 0.8;
+    // Calculate animation duration based on distance
+    // For close distances (< 5km), make it quick
+    // For medium distances (5-50km), scale gradually
+    // For long distances (> 50km), cap at max duration
+    const duration = distance < 5000 ? 0.6 : // Less than 5km
+                    distance < 50000 ? 0.6 + (distance - 5000) / 50000 * 1.4 : // 5km to 50km
+                    2.0; // More than 50km
     
-    // Calculate the final view center with offset to show pinpoint in lower portion
+    // Calculate the offset needed to center the card
     const bounds = map.getBounds();
-    const southWest = bounds.getSouthWest();
-    const northEast = bounds.getNorthEast();
-    const latSpan = northEast.lat - southWest.lat;
+    const mapHeight = bounds.getNorth() - bounds.getSouth();
     
-    // Position the pinpoint about 1/3 from the bottom of the screen
-    const latOffset = latSpan * 0.25;
-    const finalViewCenter: [number, number] = [
+    // Get the height of the location card and convert it to latitude offset
+    // Assuming the card takes roughly 60% of the screen height
+    const screenHeightInDegrees = mapHeight;
+    const cardHeightInDegrees = screenHeightInDegrees * 0.6;
+    const latOffset = cardHeightInDegrees / 2;
+    
+    // Create the final view center with the offset
+    const finalViewCenter = L.latLng([
       location.coordinates[0] + latOffset,
       location.coordinates[1]
-    ];
-    
-    // First zoom out slightly if we're already zoomed in
-    if (currentZoom > targetZoom) {
-      map.flyTo(finalViewCenter, targetZoom - 2, {
-        animate: true,
-        duration: duration * 0.5,
-        easeLinearity: 0.35,
-        noMoveStart: true
-      }).once('moveend', () => {
-        // Then zoom in to the final position
-        map.flyTo(finalViewCenter, targetZoom, {
-          animate: true,
-          duration: duration * 0.5,
-          easeLinearity: 0.35,
-          noMoveStart: true
-        }).once('moveend', () => {
-          // After animation ends, check if the marker is visible
-          const marker = markerRefs.current[location.id] as L.Marker;
-          if (marker) {
-            const markerLatLng = marker.getLatLng();
-            const isVisible = map.getBounds().contains(markerLatLng);
-            
-            if (!isVisible) {
-              // If marker is not visible, position it in the lower portion of the screen
-              const newBounds = map.getBounds();
-              const newLatSpan = newBounds.getNorthEast().lat - newBounds.getSouthWest().lat;
-              const newCenter: [number, number] = [
-                location.coordinates[0] + (newLatSpan * 0.25),
-                location.coordinates[1]
-              ];
-              
-              map.setView(newCenter, map.getZoom(), {
-                animate: true,
-                duration: 0.5,
-                easeLinearity: 0.35
-              });
-            }
-            
-            // Open the popup after ensuring visibility
-            if (!marker.isPopupOpen()) {
-              marker.openPopup();
-            }
-          }
-        });
-      });
-    } else {
-      // If we're already zoomed out, just zoom in directly
-      map.flyTo(finalViewCenter, targetZoom, {
-        animate: true,
-        duration: duration,
-        easeLinearity: 0.35,
-        noMoveStart: true
-      }).once('moveend', () => {
-        // After animation ends, check if the marker is visible
-        const marker = markerRefs.current[location.id] as L.Marker;
-        if (marker) {
-          const markerLatLng = marker.getLatLng();
-          const isVisible = map.getBounds().contains(markerLatLng);
-          
-          if (!isVisible) {
-            // If marker is not visible, position it in the lower portion of the screen
-            const newBounds = map.getBounds();
-            const newLatSpan = newBounds.getNorthEast().lat - newBounds.getSouthWest().lat;
-            const newCenter: [number, number] = [
-              location.coordinates[0] + (newLatSpan * 0.25),
-              location.coordinates[1]
-            ];
-            
-            map.setView(newCenter, map.getZoom(), {
-              animate: true,
-              duration: 0.5,
-              easeLinearity: 0.35
-            });
-          }
-          
-          // Open the popup after ensuring visibility
-          if (!marker.isPopupOpen()) {
-            marker.openPopup();
-          }
+    ]);
+
+    // Use a single smooth flyTo animation with dynamic duration
+    map.flyTo(finalViewCenter, targetZoom, {
+      duration: duration,
+      easeLinearity: distance < 5000 ? 0.3 : 0.1, // Sharper easing for short distances
+      noMoveStart: true, // Prevents initial movement jank
+      animate: true
+    });
+
+    // Open popup after animation completes
+    if (marker) {
+      const moveEndHandler = () => {
+        if (!marker.isPopupOpen()) {
+          marker.openPopup();
         }
-      });
+        map.off('moveend', moveEndHandler);
+      };
+      
+      map.on('moveend', moveEndHandler);
+      
+      // Cleanup handler after max animation duration
+      setTimeout(() => {
+        map.off('moveend', moveEndHandler);
+      }, (duration + 0.5) * 1000); // Add 500ms buffer
+    }
+  };
+
+  // Helper function to ensure marker is visible and properly positioned
+  const ensureMarkerVisibility = (map: L.Map, location: Location, marker: L.Marker | undefined) => {
+    if (marker) {
+      const markerLatLng = marker.getLatLng();
+      const isVisible = map.getBounds().contains(markerLatLng);
+      
+      if (!isVisible) {
+        const bounds = map.getBounds();
+        const latSpan = bounds.getNorthEast().lat - bounds.getSouthWest().lat;
+        const newCenter: [number, number] = [
+          location.coordinates[0] + (latSpan * 0.3),
+          location.coordinates[1]
+        ];
+        
+        map.setView(newCenter, map.getZoom(), {
+          animate: true,
+          duration: 0.3,
+          easeLinearity: 0.25
+        });
+      }
+      
+      // Open the popup after ensuring visibility
+      if (!marker.isPopupOpen()) {
+        marker.openPopup();
+      }
     }
   };
 
@@ -3886,7 +4417,25 @@ const MapPage = ({ darkMode }: MapPageProps) => {
             setSelectedPinId(location.id);
             incrementViews(location.id);
             if (mapRef.current) {
-              animateToLocation(mapRef.current, location);
+              const map = mapRef.current;
+              const currentZoom = map.getZoom();
+              
+              if (currentZoom >= 10) {
+                animateToLocation(map, location);
+              } else {
+                // Simple, smooth pan for zoomed out view
+                map.setView(location.coordinates, currentZoom, {
+                  animate: true,
+                  duration: 1,
+                  easeLinearity: 0.1,
+                  noMoveStart: true
+                });
+                
+                const marker = markerRefs.current[location.id];
+                if (marker && !marker.isPopupOpen()) {
+                  marker.openPopup();
+                }
+              }
             }
           },
           popupclose: () => {
@@ -3899,7 +4448,21 @@ const MapPage = ({ darkMode }: MapPageProps) => {
               setSelectedPinId(location.id);
               incrementViews(location.id);
               if (mapRef.current) {
-                animateToLocation(mapRef.current, location);
+                const map = mapRef.current;
+                const currentZoom = map.getZoom();
+                
+                if (currentZoom >= 10) {
+                  animateToLocation(map, location);
+                } else {
+                  // Simple, smooth pan for zoomed out view
+                  map.setView(location.coordinates, currentZoom, {
+                    animate: true,
+                    duration: 1,
+                    easeLinearity: 0.1,
+                    noMoveStart: true
+                  });
+                  marker.openPopup();
+                }
               }
             }
           },
@@ -3958,6 +4521,7 @@ const MapPage = ({ darkMode }: MapPageProps) => {
         p: { xs: 0.5, sm: 1 },
         top: { xs: 0, sm: 10, md: 16 },
         minHeight: { xs: 44, sm: 'unset' },
+        display: { xs: areMenusVisible ? 'block' : 'none', sm: 'block' }
       }}>
         {/* Row for search bar and buttons on mobile */}
         <Box sx={{
@@ -4354,7 +4918,25 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                     setSelectedPinId(location.id);
                     incrementViews(location.id);
                     if (mapRef.current) {
-                      animateToLocation(mapRef.current, location);
+                      const map = mapRef.current;
+                      const currentZoom = map.getZoom();
+                      
+                      if (currentZoom >= 10) {
+                        animateToLocation(map, location);
+                      } else {
+                        // Simple, smooth pan for zoomed out view
+                        map.setView(location.coordinates, currentZoom, {
+                          animate: true,
+                          duration: 1,
+                          easeLinearity: 0.1,
+                          noMoveStart: true
+                        });
+                        
+                        const marker = markerRefs.current[location.id];
+                        if (marker && !marker.isPopupOpen()) {
+                          marker.openPopup();
+                        }
+                      }
                     }
                   },
                   popupclose: () => {
@@ -4367,7 +4949,21 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                       setSelectedPinId(location.id);
                       incrementViews(location.id);
                       if (mapRef.current) {
-                        animateToLocation(mapRef.current, location);
+                        const map = mapRef.current;
+                        const currentZoom = map.getZoom();
+                        
+                        if (currentZoom >= 10) {
+                          animateToLocation(map, location);
+                        } else {
+                          // Simple, smooth pan for zoomed out view
+                          map.setView(location.coordinates, currentZoom, {
+                            animate: true,
+                            duration: 1,
+                            easeLinearity: 0.1,
+                            noMoveStart: true
+                          });
+                          marker.openPopup();
+                        }
                       }
                     }
                   },
@@ -4745,103 +5341,158 @@ const MapPage = ({ darkMode }: MapPageProps) => {
           },
           zIndex: 1000,
           p: {
-            xs: 0.5,
-            sm: 1.2
+            xs: 1,
+            sm: 2
           },
           borderRadius: {
-            xs: '16px',
-            sm: '20px'
+            xs: '24px',
+            sm: '28px'
           },
-          bgcolor: 'rgba(30, 32, 38, 0.85)',
-          boxShadow: '0 4px 16px 0 rgba(31, 38, 135, 0.10)',
-          backdropFilter: 'blur(8px)',
-          border: '1px solid rgba(255,255,255,0.10)',
-          display: 'flex',
+          bgcolor: 'rgba(30, 32, 38, 0.90)',
+          boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
+          backdropFilter: 'blur(12px)',
+          border: '1px solid rgba(255,255,255,0.12)',
+          display: { xs: areMenusVisible ? 'flex' : 'none', sm: 'flex' },
           flexDirection: 'column',
           alignItems: 'center',
           gap: {
-            xs: 0.5,
-            sm: 1
+            xs: 0.75,
+            sm: 1.5
+          },
+          transition: 'all 0.3s ease',
+          '&:hover': {
+            boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.25)',
+            border: '1px solid rgba(255,255,255,0.18)',
+          },
+          '& .MuiSwitch-root': {
+            '& .MuiSwitch-switchBase': {
+              '&.Mui-checked': {
+                '& + .MuiSwitch-track': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.3) !important',
+                  opacity: 1,
+                },
+                '& .MuiSwitch-thumb': {
+                  backgroundColor: '#fff',
+                },
+              },
+              '& .MuiSwitch-thumb': {
+                backgroundColor: 'rgba(255, 255, 255, 0.5)',
+              },
+              '& + .MuiSwitch-track': {
+                backgroundColor: 'rgba(255, 255, 255, 0.1) !important',
+                opacity: 1,
+              },
+            },
           },
         }}
       >
         {/* Minimalist 2x2 grid for mobile */}
         <Box sx={{ display: { xs: 'flex', sm: 'none' }, flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-          <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', mb: 0.5 }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1, width: '100%' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <Tooltip title={t('map.posts_in_area')} placement="top">
-                <Switch
-                  checked={showNearbyOnly}
-                  onChange={(e) => setShowNearbyOnly(e.target.checked)}
-                  color="primary"
-                  size="small"
-                  sx={{ transform: 'scale(0.7)', mb: 0.2 }}
-                  icon={<MyLocationIcon sx={{ fontSize: 20, color: '#fff' }} />}
-                  checkedIcon={<MyLocationIcon sx={{ fontSize: 20, color: 'primary.main' }} />}
-                />
+                <IconButton
+                  onClick={() => setShowNearbyOnly(!showNearbyOnly)}
+                  sx={{
+                    backgroundColor: showNearbyOnly ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    p: 1,
+                    borderRadius: '16px',
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      backgroundColor: showNearbyOnly ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.1)',
+                    },
+                  }}
+                >
+                  <MyLocationIcon sx={{ fontSize: 18, color: showNearbyOnly ? '#fff' : 'rgba(255, 255, 255, 0.7)' }} />
+                </IconButton>
               </Tooltip>
-              <Typography sx={{ fontSize: '0.65rem', color: '#fff', mt: 0.1, textAlign: 'center' }}>
+              <Typography sx={{ fontSize: '0.65rem', color: showNearbyOnly ? '#fff' : 'rgba(255, 255, 255, 0.7)', mt: 0.5, textAlign: 'center' }}>
                 {t('map.posts_in_area')}
               </Typography>
             </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <Tooltip title={t('map.posted_last_24h')} placement="top">
-                <Switch
-                  checked={showRecentOnly}
-                  onChange={(e) => setShowRecentOnly(e.target.checked)}
-                  color="primary"
-                  size="small"
-                  sx={{ transform: 'scale(0.7)', mb: 0.2 }}
-                  icon={<AccessTimeIcon sx={{ fontSize: 20, color: '#fff' }} />}
-                  checkedIcon={<AccessTimeIcon sx={{ fontSize: 20, color: 'primary.main' }} />}
-                />
+                <IconButton
+                  onClick={() => setShowRecentOnly(!showRecentOnly)}
+                  sx={{
+                    backgroundColor: showRecentOnly ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    p: 1,
+                    borderRadius: '16px',
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      backgroundColor: showRecentOnly ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.1)',
+                    },
+                  }}
+                >
+                  <AccessTimeIcon sx={{ fontSize: 18, color: showRecentOnly ? '#fff' : 'rgba(255, 255, 255, 0.7)' }} />
+                </IconButton>
               </Tooltip>
-              <Typography sx={{ fontSize: '0.65rem', color: '#fff', mt: 0.1, textAlign: 'center' }}>
+              <Typography sx={{ fontSize: '0.65rem', color: showRecentOnly ? '#fff' : 'rgba(255, 255, 255, 0.7)', mt: 0.5, textAlign: 'center' }}>
                 {t('map.posted_last_24h')}
               </Typography>
             </Box>
-          </Box>
-          <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <Tooltip title={t('map.made_by_friends')} placement="top">
-                <Switch
-                  checked={showFriendsOnly}
-                  onChange={(e) => setShowFriendsOnly(e.target.checked)}
-                  color="primary"
-                  size="small"
-                  sx={{ transform: 'scale(0.7)', mb: 0.2 }}
-                  icon={<GroupIcon sx={{ fontSize: 20, color: '#fff' }} />}
-                  checkedIcon={<GroupIcon sx={{ fontSize: 20, color: 'primary.main' }} />}
-                />
+                <IconButton
+                  onClick={() => setShowFriendsOnly(!showFriendsOnly)}
+                  sx={{
+                    backgroundColor: showFriendsOnly ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    p: 1,
+                    borderRadius: '16px',
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      backgroundColor: showFriendsOnly ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.1)',
+                    },
+                  }}
+                >
+                  <GroupIcon sx={{ fontSize: 18, color: showFriendsOnly ? '#fff' : 'rgba(255, 255, 255, 0.7)' }} />
+                </IconButton>
               </Tooltip>
-              <Typography sx={{ fontSize: '0.65rem', color: '#fff', mt: 0.1, textAlign: 'center' }}>
+              <Typography sx={{ fontSize: '0.65rem', color: showFriendsOnly ? '#fff' : 'rgba(255, 255, 255, 0.7)', mt: 0.5, textAlign: 'center' }}>
                 {t('map.made_by_friends')}
               </Typography>
             </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <Tooltip title={t('map.made_by_you')} placement="top">
-                <Switch
-                  checked={showMineOnly}
-                  onChange={(e) => setShowMineOnly(e.target.checked)}
-                  color="primary"
-                  size="small"
-                  sx={{ transform: 'scale(0.7)', mb: 0.2 }}
-                  icon={<PersonIcon sx={{ fontSize: 20, color: '#fff' }} />}
-                  checkedIcon={<PersonIcon sx={{ fontSize: 20, color: 'primary.main' }} />}
-                />
+                <IconButton
+                  onClick={() => setShowMineOnly(!showMineOnly)}
+                  sx={{
+                    backgroundColor: showMineOnly ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                    p: 1,
+                    borderRadius: '16px',
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      backgroundColor: showMineOnly ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.1)',
+                    },
+                  }}
+                >
+                  <PersonIcon sx={{ fontSize: 18, color: showMineOnly ? '#fff' : 'rgba(255, 255, 255, 0.7)' }} />
+                </IconButton>
               </Tooltip>
-              <Typography sx={{ fontSize: '0.65rem', color: '#fff', mt: 0.1, textAlign: 'center' }}>
+              <Typography sx={{ fontSize: '0.65rem', color: showMineOnly ? '#fff' : 'rgba(255, 255, 255, 0.7)', mt: 0.5, textAlign: 'center' }}>
                 {t('map.made_by_you')}
               </Typography>
             </Box>
           </Box>
         </Box>
-        {/* Original design for sm and up */}
+
+        {/* Desktop filter section */}
         <Box sx={{ display: { xs: 'none', sm: 'flex' }, flexDirection: 'column', width: '100%' }}>
-          <Typography variant="subtitle2" sx={{ color: '#fff', px: 1, borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 1 }}>
+          <Typography 
+            variant="subtitle2" 
+            sx={{ 
+              color: '#fff', 
+              px: 1.5, 
+              pb: 1.5,
+              borderBottom: '1px solid rgba(255,255,255,0.12)', 
+              fontSize: '0.9rem',
+              fontWeight: 600,
+              letterSpacing: '0.5px'
+            }}
+          >
             {t('map.additional_filters')}
           </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 1.5, px: 1 }}>
             <FormControlLabel
               control={
                 <Switch
@@ -4852,9 +5503,12 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                 />
               }
               label={
-                <Typography variant="body2" sx={{ color: '#fff', fontSize: '0.875rem' }}>
-                  {t('map.posts_in_area')}
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <MyLocationIcon sx={{ fontSize: 18, color: showNearbyOnly ? '#fff' : 'rgba(255, 255, 255, 0.7)' }} />
+                  <Typography variant="body2" sx={{ color: showNearbyOnly ? '#fff' : 'rgba(255, 255, 255, 0.7)', fontSize: '0.875rem' }}>
+                    {t('map.posts_in_area')}
+                  </Typography>
+                </Box>
               }
             />
             <FormControlLabel
@@ -4867,9 +5521,12 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                 />
               }
               label={
-                <Typography variant="body2" sx={{ color: '#fff', fontSize: '0.875rem' }}>
-                  {t('map.posted_last_24h')}
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <AccessTimeIcon sx={{ fontSize: 18, color: showRecentOnly ? '#fff' : 'rgba(255, 255, 255, 0.7)' }} />
+                  <Typography variant="body2" sx={{ color: showRecentOnly ? '#fff' : 'rgba(255, 255, 255, 0.7)', fontSize: '0.875rem' }}>
+                    {t('map.posted_last_24h')}
+                  </Typography>
+                </Box>
               }
             />
             <FormControlLabel
@@ -4882,9 +5539,12 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                 />
               }
               label={
-                <Typography variant="body2" sx={{ color: '#fff', fontSize: '0.875rem' }}>
-                  {t('map.made_by_friends')}
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <GroupIcon sx={{ fontSize: 18, color: showFriendsOnly ? '#fff' : 'rgba(255, 255, 255, 0.7)' }} />
+                  <Typography variant="body2" sx={{ color: showFriendsOnly ? '#fff' : 'rgba(255, 255, 255, 0.7)', fontSize: '0.875rem' }}>
+                    {t('map.made_by_friends')}
+                  </Typography>
+                </Box>
               }
             />
             <FormControlLabel
@@ -4897,9 +5557,12 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                 />
               }
               label={
-                <Typography variant="body2" sx={{ color: '#fff', fontSize: '0.875rem' }}>
-                  {t('map.made_by_you')}
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <PersonIcon sx={{ fontSize: 18, color: showMineOnly ? '#fff' : 'rgba(255, 255, 255, 0.7)' }} />
+                  <Typography variant="body2" sx={{ color: showMineOnly ? '#fff' : 'rgba(255, 255, 255, 0.7)', fontSize: '0.875rem' }}>
+                    {t('map.made_by_you')}
+                  </Typography>
+                </Box>
               }
             />
           </Box>

@@ -41,7 +41,7 @@
         "desc": "PinPoint all of your favourite places and share them with your friends"
       },
       "map": {
-        "title": "A map with realtime updates",
+        "title": "Realtime updates",
         "desc": "Our map is constantly updated with the latest information"
       }
     },
@@ -73,7 +73,8 @@
     "logout": "Logout",
     "language": "Language",
     "change_language": "Change Language",
-    "navigation": "Navigation"
+    "navigation": "Navigation",
+    "saved_pinpoints": "Saved Pinpoints"
   },
   "home": {
     "hero": {

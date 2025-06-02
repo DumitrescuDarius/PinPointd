@@ -4758,7 +4758,7 @@ const Social = () => {
             top: '64px', // Height of the navbar
             height: 'calc(100% - 64px)', // Full height minus navbar
             position: 'fixed', // Use fixed so it stays below the navbar
-            zIndex: 1200 // Lower than the AppBar (navbar is 1300)
+            zIndex: 1100 // Lower than the AppBar (navbar is 1300)
           }
         }}
       >
