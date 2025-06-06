@@ -70,7 +70,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const login = async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    
+    // Check if email is verified in Firestore
+    const userDoc = await getDoc(doc(db, 'users', result.user.uid));
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      if (!userData.emailVerified) {
+        // Sign out the user if email is not verified
+        await firebaseSignOut(auth);
+        throw new Error('Please verify your email before logging in.');
+      }
+    } else {
+      // Sign out if user document doesn't exist
+      await firebaseSignOut(auth);
+      throw new Error('User account not found. Please register first.');
+    }
   };
 
   const loginWithGoogle = async () => {

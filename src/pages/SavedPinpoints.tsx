@@ -76,9 +76,8 @@ const SavedPinpoints = () => {
     fetchSavedPinpoints();
   }, [currentUser]);
 
-  const handleViewOnMap = (pinpointId: string, coordinates: [number, number]) => {
-    // Navigate to map with location ID in query params to trigger auto-open
-    navigate(`/map?location=${pinpointId}`);
+  const handleViewOnMap = (coordinates: [number, number]) => {
+    navigate('/map', { state: { center: coordinates, zoom: 15 } });
   };
 
   const handleDelete = async (savedId: string) => {
@@ -124,26 +123,12 @@ const SavedPinpoints = () => {
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom sx={{ mb: 4 }}>
-        {t('navigation.saved_pinpoints', 'Saved Pinpoints')}
+        Saved Pinpoints
       </Typography>
 
-      {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
-          {error}
-        </Alert>
-      )}
-
-      {loading ? (
-        <Grid container spacing={3}>
-          {[1, 2, 3, 4].map((skeleton) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={skeleton}>
-              <Skeleton variant="rectangular" height={200} sx={{ borderRadius: 2 }} />
-            </Grid>
-          ))}
-        </Grid>
-      ) : savedPinpoints.length === 0 ? (
+      {savedPinpoints.length === 0 ? (
         <Typography variant="body1" color="text.secondary">
-          {t('saved_pinpoints.no_saved_pinpoints', "You haven't saved any pinpoints yet.")}
+          You haven't saved any pinpoints yet.
         </Typography>
       ) : (
         <Grid container spacing={3}>
@@ -154,42 +139,56 @@ const SavedPinpoints = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 position: 'relative',
-                transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
+                transition: 'transform 0.2s ease-in-out',
                 cursor: 'pointer',
                 '&:hover': {
-                  transform: 'translateY(-4px)',
-                  boxShadow: (theme) => theme.shadows[8]
+                  transform: 'translateY(-4px)'
                 }
               }}
-              onClick={() => handleViewOnMap(saved.pinpointId, saved.pinpointData.coordinates)}
+              onClick={() => handleViewOnMap(saved.pinpointData.coordinates)}
               >
                 <CardMedia
                   component="img"
                   height="200"
                   image={saved.pinpointData.photos[0] || '/placeholder-image.jpg'}
                   alt={saved.pinpointData.name}
-                  sx={{ 
-                    objectFit: 'cover',
-                    borderRadius: '4px 4px 0 0'
-                  }}
+                  sx={{ objectFit: 'cover' }}
                 />
-                <CardContent sx={{ flexGrow: 1, pb: 1 }}>
-                  <Typography variant="h6" gutterBottom component="div" noWrap>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
                     {saved.pinpointData.name}
                   </Typography>
-                  <Typography 
-                    variant="body2" 
-                    color="text.secondary"
-                    sx={{
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical'
-                    }}
-                  >
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                     {saved.pinpointData.description}
                   </Typography>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mt: 'auto'
+                  }}>
+                    <Typography variant="caption" color="text.secondary">
+                      Saved {new Date(saved.savedAt).toLocaleDateString()}
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <IconButton 
+                        size="small" 
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent card click
+                          handleDelete(saved.id);
+                        }}
+                        color="error"
+                        sx={{
+                          backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                          '&:hover': {
+                            backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                          }
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Box>
+                  </Box>
                 </CardContent>
               </Card>
             </Grid>

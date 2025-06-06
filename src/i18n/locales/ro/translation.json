@@ -1,6 +1,6 @@
 {
   "about": {
-    "title": "PinPointd",
+    "title": "Despre PinPointd",
     "subtitle": "Marchează-ți Amintirile",
     "founded": "Înființat 2024",
     "global_community": "Comunitate Globală",
@@ -67,7 +67,7 @@
     "about": "Despre",
     "saved_pinpoints": "Pinpoint-uri salvate",
     "tokens": "Tokeni",
-    "login": "Autentificare",
+    "login": "Logare",
     "register": "Înregistrare",
     "username": "Nume utilizator",
     "change_account_settings": "Schimbă Setările Contului",
@@ -80,7 +80,7 @@
     "hero": {
       "title": "Marchează-ți amintirile",
       "subtitle": "Marchează locurile tale preferate, conectează-te cu prietenii și explorează lumea împreună",
-      "get_started": "Începe Acum",
+      "get_started": "Logare",
       "register": "Înregistrare",
       "learn_more": "Află Mai Multe",
       "explore_world": "Explorează lumea"

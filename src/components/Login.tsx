@@ -30,20 +30,13 @@ const Login: React.FC = () => {
       // Attempt to sign in
       await login(email, password);
       
-      // Check if user needs to verify their email
-      const currentUser = auth.currentUser;
-      if (currentUser) {
-        const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          // If user has verification code but hasn't verified email, they'll be shown the verification dialog
-          // No need to block navigation here as App.tsx will show the verification dialog
-        }
-      }
-      
       navigate('/');
     } catch (err: any) {
-      if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+      if (err.message === 'Please verify your email before logging in.') {
+        setError('Please verify your email before logging in. Check your inbox for the verification link.');
+      } else if (err.message === 'User account not found. Please register first.') {
+        setError('Account not found. Please register first.');
+      } else if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
         setError('Invalid email or password');
       } else if (err.code === 'auth/invalid-email') {
         setError('Invalid email address');
@@ -64,10 +57,21 @@ const Login: React.FC = () => {
       await loginWithGoogle();
       navigate('/');
     } catch (err: any) {
-      if (err.message) {
+      console.error('Google sign-in error:', err);
+      if (err.code === 'auth/popup-blocked') {
+        setError('Please allow popups for this website or try using a different browser');
+      } else if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
+        setError('Sign-in was cancelled. Please try again.');
+      } else if (err.code === 'auth/network-request-failed') {
+        setError('Network error. Please check your internet connection and try again.');
+      } else if (err.code === 'auth/unauthorized-domain') {
+        setError('This domain is not authorized for Google sign-in. Please contact support.');
+      } else if (err.code === 'auth/internal-error') {
+        setError('An internal error occurred. Please try again later.');
+      } else if (err.message) {
         setError(err.message);
       } else {
-        setError('Failed to sign in with Google');
+        setError('Failed to sign in with Google. Please try again.');
       }
     } finally {
       setGoogleLoading(false);
@@ -102,6 +106,7 @@ const Login: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
             className={styles.error}
           >
             {error}
@@ -112,10 +117,11 @@ const Login: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
             className={styles.googleLoading}
           >
             <FiLoader className={styles.spinner} />
-            Waiting for Google connection...
+            Connecting to Google...
           </motion.div>
         )}
 

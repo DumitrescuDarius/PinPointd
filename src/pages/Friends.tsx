@@ -892,7 +892,13 @@ const Friends = () => {
                                     height: 42,
                                     boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
                                     border: `2px solid ${alpha(theme.palette.background.paper, 0.8)}`,
+                                    cursor: 'pointer',
+                                    transition: 'transform 0.2s ease',
+                                    '&:hover': {
+                                      transform: 'scale(1.05)'
+                                    }
                                   }}
+                                  onClick={() => navigate(`/profile/${user.id}`)}
                                 >
                                   {user.username?.[0]?.toUpperCase()}
                                 </Avatar>
@@ -900,7 +906,18 @@ const Friends = () => {
                               
                               <ListItemText
                                 primary={
-                                  <Typography variant="subtitle1" fontWeight={600}>
+                                  <Typography 
+                                    variant="subtitle1" 
+                                    fontWeight={600}
+                                    sx={{ 
+                                      cursor: 'pointer',
+                                      '&:hover': {
+                                        color: 'primary.main'
+                                      },
+                                      transition: 'color 0.2s ease'
+                                    }}
+                                    onClick={() => navigate(`/profile/${user.id}`)}
+                                  >
                                     {user.username}
                                   </Typography>
                                 }
@@ -1009,7 +1026,13 @@ const Friends = () => {
                                       height: 42,
                                       boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
                                       border: `2px solid ${alpha(theme.palette.background.paper, 0.8)}`,
+                                      cursor: 'pointer',
+                                      transition: 'transform 0.2s ease',
+                                      '&:hover': {
+                                        transform: 'scale(1.05)'
+                                      }
                                     }}
+                                    onClick={() => navigate(`/profile/${user.id}`)}
                                   >
                                     {user.username?.[0]?.toUpperCase()}
                                   </Avatar>
@@ -1017,7 +1040,18 @@ const Friends = () => {
                                 
                                 <ListItemText
                                   primary={
-                                    <Typography variant="subtitle1" fontWeight={600}>
+                                    <Typography 
+                                      variant="subtitle1" 
+                                      fontWeight={600}
+                                      sx={{ 
+                                        cursor: 'pointer',
+                                        '&:hover': {
+                                          color: 'primary.main'
+                                        },
+                                        transition: 'color 0.2s ease'
+                                      }}
+                                      onClick={() => navigate(`/profile/${user.id}`)}
+                                    >
                                       {user.username}
                                     </Typography>
                                   }
@@ -1192,7 +1226,13 @@ const Friends = () => {
                                         height: 42,
                                         boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
                                         border: `2px solid ${alpha(theme.palette.background.paper, 0.8)}`,
+                                        cursor: 'pointer',
+                                        transition: 'transform 0.2s ease',
+                                        '&:hover': {
+                                          transform: 'scale(1.05)'
+                                        }
                                       }}
+                                      onClick={() => navigate(`/profile/${friend.id}`)}
                                     >
                                       {friend.username?.[0]?.toUpperCase()}
                                     </Avatar>
@@ -1201,7 +1241,18 @@ const Friends = () => {
                                 
                                 <ListItemText
                                   primary={
-                                    <Typography variant="subtitle1" fontWeight={600}>
+                                    <Typography 
+                                      variant="subtitle1" 
+                                      fontWeight={600}
+                                      sx={{ 
+                                        cursor: 'pointer',
+                                        '&:hover': {
+                                          color: 'primary.main'
+                                        },
+                                        transition: 'color 0.2s ease'
+                                      }}
+                                      onClick={() => navigate(`/profile/${friend.id}`)}
+                                    >
                                       {friend.username}
                                     </Typography>
                                   }

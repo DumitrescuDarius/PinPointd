@@ -303,10 +303,12 @@ function App() {
         styleOverrides: {
           paper: {
             backgroundImage: 'none',
-            backgroundColor: darkMode ? 'rgba(35, 39, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-            color: darkMode ? '#f5f5f5' : '#1a1a1a',
+            backgroundColor: 'rgba(18, 18, 18, 0.95)',
+            color: '#f5f5f5',
             backdropFilter: 'blur(10px)',
-            borderRight: `1px solid ${darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}`,
+            borderRight: 'none',
+            borderLeft: 'none',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
           },
         },
       },
@@ -529,8 +531,6 @@ function App() {
           display: 'flex',
           flexDirection: 'column',
         }}>
-
-
           <EmailVerificationDialog
             open={showEmailVerification}
             onClose={() => setShowEmailVerification(false)}
@@ -547,25 +547,25 @@ function App() {
             currentUser={currentUser}
           />
           {!showUsernameDialog && (
-            <Drawer
-              anchor="left"
-              open={isDrawerOpen}
-              onClose={() => setIsDrawerOpen(false)}
+            <Box
               sx={{
-                '& .MuiDrawer-paper': {
-                  width: 280,
-                  boxSizing: 'border-box',
-                  background: 'linear-gradient(135deg, rgba(35, 39, 42, 0.5) 0%, rgba(45, 55, 72, 0.5) 100%)',
-                  borderRight: `1px solid ${theme.palette.divider}`,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  paddingTop: '44px',
-                  backdropFilter: 'blur(10px)',
-                  boxShadow: '0 0 40px rgba(0, 0, 0, 0.5)',
-                },
+                position: 'fixed',
+                top: 44, // Below navbar
+                left: isDrawerOpen ? 0 : '-100%',
+                bottom: 0,
+                width: 280,
+                bgcolor: 'rgba(18, 18, 18, 0.95)',
+                borderRight: 'none',
+                backdropFilter: 'blur(10px)',
+                transition: 'left 0.3s ease-in-out',
+                zIndex: 1300,
+                display: 'flex',
+                flexDirection: 'column',
+                boxShadow: '4px 0 25px rgba(0, 0, 0, 0.3)',
+                overflowY: 'auto',
               }}
             >
-              <List sx={{ mt: 8 }}>
+              <List sx={{ mt: 2 }}>
                 <ListItem>
                   <Typography variant="subtitle2" color="text.secondary">
                     {t('navigation.navigation')}
@@ -573,7 +573,16 @@ function App() {
                 </ListItem>
                 {menuItems.map((item, index) => (
                   <ListItem key={index} disablePadding>
-                    <ListItemButton onClick={item.onClick}>
+                    <ListItemButton 
+                      onClick={item.onClick}
+                      sx={{
+                        borderRadius: 1,
+                        mx: 1,
+                        '&:hover': {
+                          background: 'rgba(255, 255, 255, 0.08)',
+                        }
+                      }}
+                    >
                       <ListItemIcon sx={{ color: 'inherit' }}>
                         {item.icon}
                       </ListItemIcon>
@@ -583,11 +592,19 @@ function App() {
                 ))}
               </List>
               <Box sx={{ flexGrow: 1 }} />
-              <Divider />
               <List>
                 {bottomMenuItems.map((item, index) => (
                   <ListItem key={index} disablePadding>
-                    <ListItemButton onClick={item.onClick}>
+                    <ListItemButton
+                      onClick={item.onClick}
+                      sx={{
+                        borderRadius: 1,
+                        mx: 1,
+                        '&:hover': {
+                          background: 'rgba(255, 255, 255, 0.08)',
+                        }
+                      }}
+                    >
                       <ListItemIcon sx={{ color: 'inherit' }}>
                         {item.icon}
                       </ListItemIcon>
@@ -596,7 +613,10 @@ function App() {
                   </ListItem>
                 ))}
               </List>
-            </Drawer>
+              <Box sx={{ p: 2 }}>
+                <Divider sx={{ opacity: 0.1 }} />
+              </Box>
+            </Box>
           )}
           <Menu
             anchorEl={languageMenuAnchor}

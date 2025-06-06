@@ -10,6 +10,7 @@ import { FiUser, FiMail, FiLock, FiLogOut, FiSave, FiTrash2, FiX, FiCamera } fro
 import UsernameField from '../components/UsernameField';
 import { uploadImage } from '../config/cloudinary';
 import { collection, getDocs, query, where } from 'firebase/firestore';
+import { Typography } from '@mui/material';
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -41,6 +42,7 @@ const AccountPage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletePassword, setDeletePassword] = useState('');
   const [deleteError, setDeleteError] = useState('');
+  const [bio, setBio] = useState('');
   const [profileImage, setProfileImage] = useState<{ file?: File; preview: string }>({
     preview: currentUser?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser?.displayName || 'User')}&background=random`
   });
@@ -59,6 +61,7 @@ const AccountPage = () => {
           setCurrentUsername(userData.username || '');
           setIsBusiness(!!userData.isBusiness);
           setBusinessName(userData.businessName || '');
+          setBio(userData.bio || '');
         }
       } catch (err) {
         console.error('Error fetching user data:', err);
@@ -144,7 +147,8 @@ const AccountPage = () => {
         displayName: name,
         photoURL,
         isBusiness,
-        businessName: isBusiness ? businessName.trim() : ''
+        businessName: isBusiness ? businessName.trim() : '',
+        bio: bio.trim()
       });
 
       // Handle password change if provided
@@ -227,6 +231,20 @@ const AccountPage = () => {
       setIsLoading(false);
     }
   };
+
+  const adjustTextareaHeight = (textarea: HTMLTextAreaElement) => {
+    if (!textarea) return;
+    textarea.style.height = '0';
+    const scrollHeight = textarea.scrollHeight;
+    textarea.style.height = `${scrollHeight}px`;
+  };
+
+  useEffect(() => {
+    const textarea = document.querySelector(`.${styles.textarea}`) as HTMLTextAreaElement;
+    if (textarea) {
+      adjustTextareaHeight(textarea);
+    }
+  }, [bio]);
 
   if (!currentUser) {
     navigate('/login');
@@ -370,6 +388,43 @@ const AccountPage = () => {
                   disabled={isLoading}
                   whileFocus={{ scale: 1.01 }}
                 />
+              </motion.div>
+
+              <motion.div 
+                className={styles.inputGroup}
+                variants={fadeIn}
+              >
+                <label className={styles.label}>
+                  <FiUser /> Bio
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <motion.textarea
+                    value={bio}
+                    onChange={(e) => {
+                      const newValue = e.target.value.slice(0, 500);
+                      setBio(newValue);
+                      adjustTextareaHeight(e.target);
+                    }}
+                    className={`${styles.input} ${styles.textarea}`}
+                    placeholder="Tell us about yourself (max 500 characters)"
+                    disabled={isLoading}
+                    style={{ resize: 'none' }}
+                    whileFocus={{ scale: 1.01 }}
+                  />
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      position: 'absolute',
+                      bottom: '8px',
+                      right: '8px',
+                      color: bio.length >= 500 ? '#ff3b30' : '#b0b0b0',
+                      fontSize: '0.75rem',
+                      pointerEvents: 'none'
+                    }}
+                  >
+                    {bio.length}/500
+                  </Typography>
+                </div>
               </motion.div>
 
               <motion.div 

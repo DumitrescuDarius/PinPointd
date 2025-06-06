@@ -509,9 +509,13 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     border: 'none',
     boxShadow: 'none',
     display: 'flex',
-    alignItems: 'center', // Center vertically
+    alignItems: 'center',
     '&:before, &:after': {
       display: 'none',
+    },
+    '&:hover, &:focus, &:focus-within, &.Mui-focused': {
+      boxShadow: 'none',
+      backgroundColor: 'transparent'
     }
   },
   '& .MuiInputBase-input': {
@@ -523,8 +527,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     maxHeight: '112px',
     overflowY: 'auto',
     resize: 'none',
-    display: 'flex',
-    alignItems: 'center', // Center vertically
+    alignItems: 'center',
     color: theme.palette.mode === 'dark' ? '#e3e3e3' : theme.palette.text.primary,
     '&::-webkit-scrollbar': {
       width: '4px'
@@ -535,6 +538,9 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     '&::-webkit-scrollbar-thumb': {
       background: 'rgba(134, 150, 160, 0.5)',
       borderRadius: '3px'
+    },
+    '&:hover, &:focus': {
+      boxShadow: 'none'
     }
   },
   '& .MuiOutlinedInput-notchedOutline': {
@@ -1667,32 +1673,37 @@ const Social = () => {
 
   // Handle typing indicator
   const handleTyping = () => {
-    if (!currentUser || !activeChat) return
+    if (!currentUser || !activeChat) return;
 
-    setIsTyping(true)
+    // Clear any existing timeout
     if (typingTimeout) {
-      clearTimeout(typingTimeout)
+      clearTimeout(typingTimeout);
     }
 
-    const timeout = setTimeout(() => {
-      setIsTyping(false)
-    }, 2000)
-
-    setTypingTimeout(timeout)
-
-    // Update typing status in Firestore
-    const chatRef = doc(db, 'chats', activeChat.id)
-    updateDoc(chatRef, {
-      [`typing.${currentUser.uid}`]: true
-    })
-
-    // Clear typing status after 2 seconds
-    setTimeout(() => {
+    // Only update if not already typing
+    if (!isTyping) {
+      setIsTyping(true);
+      // Update typing status in Firestore
+      const chatRef = doc(db, 'chats', activeChat.id);
       updateDoc(chatRef, {
-        [`typing.${currentUser.uid}`]: false
-      })
-    }, 2000)
-  }
+        [`typing.${currentUser.uid}`]: true
+      }).catch(console.error);
+    }
+
+    // Set new timeout
+    const timeout = setTimeout(() => {
+      setIsTyping(false);
+      // Clear typing status in Firestore
+      if (activeChat) {
+        const chatRef = doc(db, 'chats', activeChat.id);
+        updateDoc(chatRef, {
+          [`typing.${currentUser.uid}`]: false
+        }).catch(console.error);
+      }
+    }, 2000);
+
+    setTypingTimeout(timeout);
+  };
 
   // Monitor online status
   useEffect(() => {
@@ -2839,11 +2850,12 @@ const Social = () => {
       boxShadow: 'none',
       '&:hover': {
         backgroundColor: alpha(theme.palette.background.paper, 0.7),
+        boxShadow: 'none'
       },
       '&.Mui-focused': {
         border: `1px solid ${alpha(theme.palette.primary.main, 0.5)}`,
         backgroundColor: alpha(theme.palette.background.paper, 0.9),
-        boxShadow: `0 0 0 3px ${alpha(theme.palette.primary.main, 0.1)}`,
+        boxShadow: 'none'
       }
     },
     '& .MuiInputBase-input': {
@@ -2851,6 +2863,9 @@ const Social = () => {
       fontSize: '0.95rem',
       lineHeight: '1.5',
       color: 'var(--whatsapp-text-primary)',
+      '&:hover, &:focus': {
+        boxShadow: 'none'
+      }
     },
     '& .MuiOutlinedInput-notchedOutline': {
       border: 'none',
@@ -3526,19 +3541,27 @@ const Social = () => {
   // Update the handleTypingIndicator function
   const handleTypingIndicator = (chatId: string, userId: string, isTyping: boolean) => {
     setMessages(prev => {
-      const typingMessage = {
-        id: `typing-${userId}`,
-        senderId: userId,
-        text: '',
-        timestamp: new Date(),
-        isTyping: true
-      } as Message;
+      // Remove any existing typing indicator for this user
+      const filteredMessages = prev.filter(m => 
+        !(m.isTyping && m.senderId === userId)
+      ) as Message[];
 
       if (isTyping) {
-        return [...prev.filter(m => m.id !== typingMessage.id), typingMessage];
-      } else {
-        return prev.filter(m => m.id !== typingMessage.id);
+        const typingMessage: Message = {
+          id: `typing-${userId}-${Date.now()}`,
+          senderId: userId,
+          text: '',
+          timestamp: new Date(),
+          isTyping: true,
+          read: true,
+          type: 'text',
+          chatId
+        };
+
+        return [...filteredMessages, typingMessage];
       }
+
+      return filteredMessages;
     });
   };
 
@@ -4329,11 +4352,11 @@ const Social = () => {
                     className="input-area-container"
                     sx={{ 
                       height: 'auto',
-                      minHeight: 80, // Increased from 68 for more vertical space
+                      minHeight: 80,
                       display: (!activeChat || isSelectionMode) ? 'none' : 'flex',
                       flexDirection: 'column',
-                      justifyContent: 'center', // Center vertically
-                      alignItems: 'center', // Center horizontally
+                      justifyContent: 'center',
+                      alignItems: 'center',
                       borderTop: '1px solid',
                       borderColor: theme => theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)',
                       backgroundColor: theme => theme.palette.mode === 'dark' ? 'var(--whatsapp-dark-secondary)' : '#ffffff',
@@ -4342,9 +4365,9 @@ const Social = () => {
                       position: 'relative',
                       width: '100%',
                       px: 1.5,
-                      py: 2.5, // Increased vertical padding
+                      py: 2.5,
                       transition: 'all 0.3s ease',
-                      boxShadow: theme => theme.palette.mode === 'dark' ? 'none' : '0 -1px 3px rgba(0, 0, 0, 0.1)'
+                      boxShadow: 'none'
                     }}
                   >
                     <Box 
@@ -4355,16 +4378,16 @@ const Social = () => {
                         gap: 0.5,
                         width: '100%',
                         minHeight: 56,
-                        maxWidth: 'calc(100% - 32px)', // Changed from percentage to calc
+                        maxWidth: 'calc(100% - 32px)',
                         borderRadius: 4,
                         bgcolor: theme => theme.palette.mode === 'dark' ? 'var(--whatsapp-dark-hover)' : '#f0f2f5',
                         position: 'relative',
                         transition: 'all 0.3s ease',
-                        boxShadow: theme => theme.palette.mode === 'dark' ? '0 1px 3px rgba(0, 0, 0, 0.12)' : '0 1px 3px rgba(0, 0, 0, 0.08)',
+                        boxShadow: 'none',
                         px: 1.5,
                         py: 1,
                         alignSelf: 'center',
-                        mx: 'auto', // Added to help with centering
+                        mx: 'auto',
                         border: theme => theme.palette.mode === 'dark' ? 'none' : '1px solid rgba(0, 0, 0, 0.1)'
                       }}
                     >

@@ -297,24 +297,68 @@ body.hide-footer #root > div {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* Typing animation */
-@keyframes typingPulse {
-  0% { opacity: 0.4; transform: scale(0.8); }
-  50% { opacity: 1; transform: scale(1.1); }
-  100% { opacity: 0.4; transform: scale(0.8); }
+/* Modern typing indicator */
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  width: fit-content;
+  margin: 4px 0;
+  gap: 4px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.typing-indicator .typing-text {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-right: 4px;
+}
+
+.typing-dots {
+  display: flex;
+  align-items: center;
+  gap: 3px;
 }
 
 .typing-dot {
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
-  background-color: #3f51b5;
-  animation: typingPulse 1.5s infinite;
+  background-color: rgba(255, 255, 255, 0.7);
 }
 
-.typing-dot-1 { animation-delay: 0s; }
-.typing-dot-2 { animation-delay: 0.2s; }
-.typing-dot-3 { animation-delay: 0.4s; }
+@keyframes typingBounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-4px);
+  }
+}
+
+.typing-dot:nth-child(1) { animation: typingBounce 1.4s infinite 0.2s; }
+.typing-dot:nth-child(2) { animation: typingBounce 1.4s infinite 0.4s; }
+.typing-dot:nth-child(3) { animation: typingBounce 1.4s infinite 0.6s; }
+
+@media (max-width: 600px) {
+  .typing-indicator {
+    padding: 4px 10px;
+    border-radius: 12px;
+  }
+  
+  .typing-indicator .typing-text {
+    font-size: 0.8rem;
+  }
+  
+  .typing-dot {
+    width: 3px;
+    height: 3px;
+  }
+}
 
 /* Chat input field animation */
 .message-input-field .MuiInputBase-root {
@@ -322,8 +366,13 @@ body.hide-footer #root > div {
 }
 
 .message-input-field .MuiInputBase-root:focus-within {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: none;
+  box-shadow: none;
+}
+
+.message-input-field .MuiInputBase-root:hover,
+.message-input-field .MuiInputBase-root.Mui-focused {
+  box-shadow: none;
 }
 
 /* Voice recording animation */

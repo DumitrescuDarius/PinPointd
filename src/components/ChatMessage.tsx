@@ -126,37 +126,36 @@ const MessageBubble = styled(Box, {
   } : {}
 }));
 
+const LoadingDots = () => (
+  <Box className="typing-dots">
+    <Box className="typing-dot" />
+    <Box className="typing-dot" />
+    <Box className="typing-dot" />
+  </Box>
+);
+
 const MessageMetaWrapper = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isCurrentUser'
-})<{ isCurrentUser: boolean }>(({ theme, isCurrentUser }) => ({
+})<{ isCurrentUser: boolean }>(({ isCurrentUser }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',
   gap: '4px',
-  fontSize: '0.75rem',
   marginTop: '2px',
-  opacity: 0.85,
-  color: isCurrentUser ? 'rgba(255, 255, 255, 0.95)' : (theme.palette.mode === 'dark' ? '#8696A0' : '#667781'),
-  '& .read': {
-    color: isCurrentUser ? '#FFFFFF' : (theme.palette.mode === 'dark' ? '#00A884' : '#34B7F1')
+  fontSize: '0.7rem',
+  color: 'rgba(255, 255, 255, 0.7)',
+  '& .message-status': {
+    display: 'flex',
+    alignItems: 'center',
+    '& svg': {
+      fontSize: '1rem',
+      opacity: 0.7,
+      '&.read': {
+        color: '#34B7F1'
+      }
+    }
   }
 }));
-
-// Add loading dots animation
-const LoadingDots = styled('span')({
-  '&::after': {
-    content: '"..."',
-    animation: 'loading 1.5s infinite',
-    display: 'inline-block',
-    width: '1em',
-    textAlign: 'left',
-  },
-  '@keyframes loading': {
-    '0%': { content: '"."' },
-    '33%': { content: '".."' },
-    '66%': { content: '"..."' },
-  }
-});
 
 const ImagePreview = styled('img')({
   maxWidth: '100%',
@@ -321,9 +320,12 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
           ) : (
             <MessageContent>
               {message.isTyping ? (
-                <>
-                  {typeof message.text === 'string' ? message.text : ''}<LoadingDots />
-                </>
+                <Box className="typing-indicator">
+                  <Typography className="typing-text" variant="caption">
+                    {message.isBot ? 'Bot is typing' : 'Typing'}
+                  </Typography>
+                  <LoadingDots />
+                </Box>
               ) : (
                 typeof message.text === 'string' ? formatMessageText(message.text) : ''
               )}

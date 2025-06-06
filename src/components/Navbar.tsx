@@ -10,7 +10,6 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import MenuIcon from '@mui/icons-material/Menu'
 import { useState, createContext, useContext, useEffect } from 'react'
 import { useTheme } from '@mui/material/styles'
-import Notifications from './Notifications'
 import PeopleIcon from '@mui/icons-material/People'
 import ChatIcon from '@mui/icons-material/Chat'
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
@@ -57,9 +56,7 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
         setTokenCount(typeof data.tokenCount === 'number' ? data.tokenCount : 0);
         setUsername(data.username || '');
         setBusinessName(data.businessName || '');
-        // Check if user is admin
-        const adminUids = ['IzankXNslASrGJpxYZ6xRxBL9p62']; // Add your admin UIDs here
-        setIsAdmin(adminUids.includes(currentUser.uid));
+        setIsAdmin(data.isAdmin === true);
       }
     });
     return () => unsub();
@@ -89,10 +86,8 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
 
   const notifyDrawerOpened = (component: string) => {
     if (component === 'account' && currentlyOpenDrawer === 'notifications') {
-      // If opening account drawer while notifications is open, close notifications first
       setCurrentlyOpenDrawer('account')
     } else if (component === 'notifications' && currentlyOpenDrawer === 'account') {
-      // If opening notifications while account drawer is open, close account drawer first
       setDrawerOpen(false)
       setCurrentlyOpenDrawer('notifications')
     } else {
@@ -106,7 +101,6 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
       setDrawerOpen(false)
       setCurrentlyOpenDrawer(null)
     } else {
-      // If opening right drawer, notify parent to close left drawer
       if (onRightDrawerOpen) {
         onRightDrawerOpen();
       }
@@ -129,12 +123,12 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
         minHeight: 44,
         justifyContent: 'center',
         backdropFilter: 'blur(10px)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+        borderBottom: 'none',
         top: 0,
         left: 0,
         right: 0,
         width: '100vw',
-        zIndex: 1300,
+        zIndex: 1400,
         paddingTop: 'env(safe-area-inset-top)',
         margin: 0,
         display: 'flex',
@@ -209,23 +203,17 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
             }}>
               {(isAdmin || isBusiness) && (
                 <Tooltip title={t('navigation.tokens')}>
-                  <Button
+                  <IconButton
                     color="inherit"
-                    sx={{
-                      minWidth: 0,
-                      px: 1.5,
-                      fontWeight: 600,
-                      fontSize: '1rem',
-                      background: 'rgba(255, 255, 255, 0.06)',
-                      borderRadius: 2,
+                    onClick={() => navigate('/tokens')}
+                    sx={{ 
                       color: '#fff',
                       transition: 'all 0.2s ease',
                       '&:hover': {
-                        background: 'rgba(255, 255, 255, 0.12)',
+                        background: 'rgba(255, 255, 255, 0.08)',
                         transform: 'translateY(-1px)'
                       }
                     }}
-                    onClick={() => navigate('/tokens')}
                   >
                     <Badge 
                       badgeContent={isAdmin ? 999 : (typeof tokenCount === 'number' && tokenCount >= 0 ? tokenCount : 0)} 
@@ -236,13 +224,17 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
                         '& .MuiBadge-badge': {
                           background: 'linear-gradient(45deg, #FFD700, #FFA500)',
                           border: '2px solid rgba(18, 18, 18, 0.9)',
-                          fontWeight: 'bold'
+                          fontWeight: 'bold',
+                          fontSize: '0.75rem'
                         }
                       }}
                     >
-                      <MonetizationOnIcon sx={{ color: '#FFD700' }} />
+                      <MonetizationOnIcon sx={{ 
+                        color: '#FFD700',
+                        filter: 'drop-shadow(0 2px 4px rgba(255, 215, 0, 0.3))'
+                      }} />
                     </Badge>
-                  </Button>
+                  </IconButton>
                 </Tooltip>
               )}
               <Tooltip title={t('navigation.map')}>
@@ -307,8 +299,6 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
                     <PeopleIcon />
                   </IconButton>
                 </Tooltip>
-                
-                <Notifications />
               </Box>
               
               <IconButton 
@@ -366,16 +356,17 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
                 component={RouterLink}
                 to="/register"
                 sx={{
-                  background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+                  background: 'linear-gradient(135deg, #3182ce 0%, #805ad5 100%)',
                   color: '#fff',
                   px: 2,
+                  borderRadius: '50px',
                   fontWeight: 600,
-                  boxShadow: '0 2px 8px rgba(33, 150, 243, 0.3)',
+                  boxShadow: '0 2px 8px rgba(49, 130, 206, 0.2)',
                   transition: 'all 0.2s ease',
                   '&:hover': {
-                    background: 'linear-gradient(45deg, #1976D2 30%, #00BCD4 90%)',
+                    background: 'linear-gradient(135deg, #2c5282 0%, #6b46c1 100%)',
                     transform: 'translateY(-1px)',
-                    boxShadow: '0 4px 12px rgba(33, 150, 243, 0.4)'
+                    boxShadow: '0 4px 12px rgba(49, 130, 206, 0.3)'
                   }
                 }}
               >
@@ -414,28 +405,22 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
           )}
         </Toolbar>
       </AppBar>
-      <Drawer
-        anchor="right"
-        open={drawerOpen}
-        onClose={handleDrawerClose}
+      <Box
         sx={{
-          zIndex: 1200,
-          '& .MuiDrawer-paper': {
-            width: { xs: 280, sm: 360 },
-            boxSizing: 'border-box',
-            background: 'linear-gradient(135deg, rgba(26, 26, 26, 0.5) 0%, rgba(45, 55, 72, 0.5) 100%)',
-            color: '#fff',
-            borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            paddingTop: { xs: '56px', sm: '72px' },
-            boxShadow: '0 0 40px rgba(0, 0, 0, 0.5)',
-            borderRadius: '0 16px 16px 0',
-            fontSize: { xs: '0.95rem', sm: '1rem' },
-            px: { xs: 2, sm: 4 },
-            backdropFilter: 'blur(10px)',
-          },
+          position: 'fixed',
+          top: 44,
+          right: drawerOpen ? 0 : '-100%',
+          bottom: 0,
+          width: { xs: '85%', sm: 280 },
+          bgcolor: 'rgba(18, 18, 18, 0.95)',
+          borderLeft: 'none',
+          backdropFilter: 'blur(10px)',
+          transition: 'right 0.3s ease-in-out',
+          zIndex: 1300,
+          display: 'flex',
+          flexDirection: 'column',
+          boxShadow: '-4px 0 25px rgba(0, 0, 0, 0.3)',
+          overflowY: 'auto',
         }}
       >
         <Box sx={{ 
@@ -444,26 +429,22 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
           flexDirection: 'column', 
           alignItems: 'center',
           position: 'relative',
+          pt: 6,
+          px: 3,
           '&::after': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: '1px',
-            background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent)',
+            content: 'none',
           }
         }}>
           <Avatar 
             sx={{ 
-              width: 100, 
-              height: 100, 
+              width: 120, 
+              height: 120, 
               mb: 3, 
               bgcolor: '#444', 
               color: '#fff', 
-              fontSize: 40, 
+              fontSize: 48, 
               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-              border: '2px solid rgba(255, 255, 255, 0.1)',
+              border: 'none',
               transition: 'transform 0.3s ease',
               '&:hover': {
                 transform: 'scale(1.05)',
@@ -480,14 +461,7 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
             mb: 3,
             position: 'relative',
             '&::after': {
-              content: '""',
-              position: 'absolute',
-              bottom: -16,
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: '40%',
-              height: '1px',
-              background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent)',
+              content: 'none',
             }
           }}>
             <Typography 
@@ -536,44 +510,33 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
           </Box>
         </Box>
         
-        {/* Spacer to push buttons to bottom */}
         <Box sx={{ flexGrow: 1 }} />
         
-        {/* Bottom buttons */}
         <Box sx={{ 
           width: '100%', 
           display: 'flex', 
           flexDirection: 'column', 
-          gap: 2, 
+          gap: 0.5,
           mb: 4,
+          px: 2,
           position: 'relative',
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: -16,
-            left: 0,
-            right: 0,
-            height: '1px',
-            background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent)',
-          }
         }}>
           <Button
-            variant="contained"
-            color="primary"
+            variant="text"
             fullWidth
             sx={{ 
-              fontWeight: 600, 
-              borderRadius: 3, 
-              fontSize: 16, 
-              py: 1.5, 
-              boxShadow: '0 4px 12px rgba(33, 150, 243, 0.3)',
-              background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+              fontWeight: 500,
+              fontSize: 13,
+              py: 1.5,
+              color: '#fff',
+              justifyContent: 'flex-start',
+              pl: 2,
+              borderRadius: 1,
+              background: 'transparent',
               '&:hover': {
-                background: 'linear-gradient(45deg, #1976D2 30%, #00BCD4 90%)',
-                boxShadow: '0 6px 16px rgba(33, 150, 243, 0.4)',
-                transform: 'translateY(-1px)',
+                background: 'rgba(255, 255, 255, 0.08)',
               },
-              transition: 'all 0.3s ease',
+              transition: 'all 0.2s ease',
             }}
             onClick={() => { setDrawerOpen(false); navigate('/saved-pinpoints'); }}
             startIcon={<BookmarkIcon />}
@@ -581,52 +544,67 @@ const Navbar = ({ onMenuClick, isLeftDrawerOpen, onRightDrawerOpen }: NavbarProp
             {t('navigation.saved_pinpoints')}
           </Button>
           <Button
-            variant="contained"
-            color="primary"
+            variant="text"
             fullWidth
             sx={{ 
-              fontWeight: 600, 
-              borderRadius: 3, 
-              fontSize: 16, 
-              py: 1.5, 
-              boxShadow: '0 4px 12px rgba(33, 150, 243, 0.3)',
-              background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+              fontWeight: 500,
+              fontSize: 13,
+              py: 1.5,
+              color: '#fff',
+              justifyContent: 'flex-start',
+              pl: 2,
+              borderRadius: 1,
+              background: 'transparent',
               '&:hover': {
-                background: 'linear-gradient(45deg, #1976D2 30%, #00BCD4 90%)',
-                boxShadow: '0 6px 16px rgba(33, 150, 243, 0.4)',
-                transform: 'translateY(-1px)',
+                background: 'rgba(255, 255, 255, 0.08)',
               },
-              transition: 'all 0.3s ease',
+              transition: 'all 0.2s ease',
             }}
             onClick={() => { setDrawerOpen(false); navigate('/account'); }}
+            startIcon={<AccountCircleIcon />}
           >
             {t('navigation.change_account_settings')}
           </Button>
           <Button
-            variant="outlined"
-            color="error"
+            variant="text"
             fullWidth
             sx={{ 
-              fontWeight: 600, 
-              borderRadius: 3, 
-              fontSize: 16, 
+              fontWeight: 500,
+              fontSize: 15,
               py: 1.5,
-              borderColor: 'rgba(244, 67, 54, 0.5)',
               color: '#f44336',
-              backdropFilter: 'blur(4px)',
+              justifyContent: 'flex-start',
+              pl: 2,
+              borderRadius: 1,
+              background: 'transparent',
               '&:hover': {
-                borderColor: '#d32f2f',
-                backgroundColor: 'rgba(244, 67, 54, 0.08)',
-                transform: 'translateY(-1px)',
+                background: 'rgba(244, 67, 54, 0.08)',
               },
-              transition: 'all 0.3s ease',
+              transition: 'all 0.2s ease',
             }}
             onClick={async () => { setDrawerOpen(false); await handleLogout(); }}
+            startIcon={<LogoutIcon />}
           >
             {t('navigation.logout')}
           </Button>
         </Box>
-      </Drawer>
+      </Box>
+      {(drawerOpen || isLeftDrawerOpen) && (
+        <Box
+          onClick={drawerOpen ? handleDrawerClose : onMenuClick}
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            bgcolor: 'rgba(0, 0, 0, 0.5)',
+            backdropFilter: 'blur(4px)',
+            zIndex: 1200,
+            transition: 'opacity 0.3s ease',
+          }}
+        />
+      )}
       <Box sx={{ height: 44 }} />
     </NavbarContext.Provider>
   )

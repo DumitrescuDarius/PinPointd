@@ -179,9 +179,19 @@ div {
   padding-bottom: 24px; /* Exact footer height */
 }
 
-/* Fix navbar and footer positioning */
+/* Fix navbar and drawer positioning */
 .MuiAppBar-root {
-  z-index: 1300 !important; /* Ensure navbar is above all content */
+  z-index: 1400 !important; /* Navbar is always on top */
+}
+
+/* Ensure proper stacking order */
+.drawer-backdrop {
+  z-index: 1200 !important; /* Backdrop below drawers */
+}
+
+.drawer-left,
+.drawer-right {
+  z-index: 1300 !important; /* Drawers above backdrop but below navbar */
 }
 
 footer, 

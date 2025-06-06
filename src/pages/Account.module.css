@@ -181,6 +181,16 @@
   cursor: not-allowed;
 }
 
+.textarea {
+  min-height: 80px;
+  height: auto;
+  width: 100%;
+  resize: none;
+  line-height: 1.5;
+  padding: 1rem;
+  overflow-y: hidden;
+}
+
 .section {
   margin-top: 2rem;
   padding-top: 2rem;

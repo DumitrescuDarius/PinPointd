@@ -591,15 +591,32 @@ const Profile = () => {
         {posts.length > 0 ? (
           <Box>
             {posts.map((post) => (
-              <Card key={post.id} sx={{ mb: 2, overflow: 'visible' }}>
+              <Card key={post.id} sx={{ 
+                mb: 3, 
+                overflow: 'visible',
+                backgroundColor: 'rgba(35, 39, 42, 0.8)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+                borderRadius: 2,
+                transition: 'transform 0.2s ease-in-out',
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                }
+              }}>
                 <CardHeader
                   avatar={
                     <Avatar 
                       src={post.user.photoURL} 
                       alt={post.user.displayName}
+                      sx={{ width: 44, height: 44 }}
                     />
                   }
-                  title={post.user.displayName}
+                  title={
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5 }}>
+                      {post.user.displayName}
+                    </Typography>
+                  }
                   subheader={
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <Typography variant="caption" color="text.secondary">
@@ -610,59 +627,98 @@ const Profile = () => {
                       </Typography>
                     </Box>
                   }
+                  sx={{ 
+                    p: 2.5,
+                    pb: 2,
+                    '& .MuiCardHeader-content': {
+                      overflow: 'hidden'
+                    }
+                  }}
                 />
                 
                 <CardMedia
                   component="img"
-                  height="240"
-                  image={post.location.images?.[0] || 'https://via.placeholder.com/400x240?text=No+Image'}
+                  height="360"
+                  image={post.location.images?.[0] || 'https://via.placeholder.com/400x360?text=No+Image'}
                   alt={post.location.title}
-                  sx={{ cursor: 'pointer' }}
+                  sx={{ 
+                    cursor: 'pointer',
+                    objectFit: 'cover',
+                  }}
                   onClick={() => navigate(`/location/${post.location.id}`)}
                 />
                 
-                <CardContent>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                    <PlaceIcon color="error" fontSize="small" sx={{ mr: 0.5 }} />
-                    <Typography variant="h6" component="div">
+                <CardContent sx={{ p: 2.5, pt: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+                    <PlaceIcon color="error" fontSize="small" sx={{ mr: 1 }} />
+                    <Typography variant="h6" component="div" sx={{ fontWeight: 600 }}>
                       {post.location.title}
                     </Typography>
                   </Box>
                   
                   {post.shareNote && (
-                    <Typography variant="body1" paragraph>
+                    <Typography 
+                      variant="body1" 
+                      paragraph 
+                      sx={{ 
+                        mb: 2,
+                        color: 'text.primary',
+                        lineHeight: 1.6
+                      }}
+                    >
                       {post.shareNote}
                     </Typography>
                   )}
                   
-                  <Typography variant="body2" color="text.secondary" paragraph>
+                  <Typography 
+                    variant="body2" 
+                    color="text.secondary" 
+                    paragraph
+                    sx={{ 
+                      mb: 2,
+                      lineHeight: 1.6
+                    }}
+                  >
                     {post.location.description?.length > 120 
                       ? `${post.location.description.substring(0, 120)}...` 
                       : post.location.description}
                   </Typography>
                   
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 1 }}>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75, mb: 0.5 }}>
                     {post.location.tags?.map((tag: string, index: number) => (
                       <Chip 
                         key={index} 
                         label={tag} 
                         size="small" 
                         color="primary" 
-                        variant="outlined" 
+                        variant="outlined"
+                        sx={{
+                          borderRadius: '16px',
+                          '& .MuiChip-label': {
+                            px: 1
+                          }
+                        }}
                       />
                     ))}
                   </Box>
                 </CardContent>
                 
-                <CardActions>
-                  <IconButton disabled>
+                <CardActions sx={{ px: 2.5, pb: 2, pt: 0.5 }}>
+                  <IconButton 
+                    disabled
+                    sx={{
+                      '&.Mui-disabled': {
+                        color: post.likes?.includes(currentUser?.uid || '') ? 'error.main' : 'action.disabled'
+                      }
+                    }}
+                  >
                     {post.likes?.includes(currentUser?.uid || '') ? (
                       <FavoriteIcon color="error" />
                     ) : (
                       <FavoriteBorderIcon />
                     )}
                   </IconButton>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary" sx={{ mr: 2 }}>
                     {post.likes?.length || 0}
                   </Typography>
                   
@@ -670,7 +726,11 @@ const Profile = () => {
                     variant="outlined"
                     size="small"
                     startIcon={<MapIcon />}
-                    sx={{ ml: 'auto' }}
+                    sx={{ 
+                      ml: 'auto',
+                      borderRadius: '20px',
+                      px: 2
+                    }}
                     onClick={() => navigate(`/location/${post.location.id}`)}
                   >
                     {t('profile.view_on_map')}

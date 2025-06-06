@@ -171,7 +171,9 @@
   transition: all 0.2s ease;
 }
 
-.chat-input-wrapper:focus-within {
+.chat-input-wrapper:focus-within,
+.chat-input-wrapper:hover,
+.chat-input-wrapper:active {
   box-shadow: none;
   border: none;
 }
@@ -188,6 +190,12 @@
   max-height: 120px;
   min-height: 24px;
   color: var(--whatsapp-text-primary);
+}
+
+.chat-input-field:focus,
+.chat-input-field:hover,
+.chat-input-field:active {
+  box-shadow: none;
 }
 
 /* Attachment area */
