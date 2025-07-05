@@ -864,7 +864,22 @@ const Friends = () => {
                         }
                       }}
                     >
-                      <List disablePadding>
+                      <List
+                        sx={{
+                          maxHeight: { xs: '50vh', sm: '60vh', md: '70vh' },
+                          overflowY: 'auto',
+                          pr: 1,
+                          scrollbarWidth: 'thin',
+                          '&::-webkit-scrollbar': {
+                            width: '8px',
+                            background: 'rgba(0,0,0,0.04)'
+                          },
+                          '&::-webkit-scrollbar-thumb': {
+                            background: theme => alpha(theme.palette.primary.main, 0.15),
+                            borderRadius: '8px',
+                          },
+                        }}
+                      >
                         {searchResults.map((user, index) => (
                           <motion.div
                             key={user.id}
@@ -998,7 +1013,22 @@ const Friends = () => {
                           }
                         }}
                       >
-                        <List disablePadding>
+                        <List
+                          sx={{
+                            maxHeight: { xs: '50vh', sm: '60vh', md: '70vh' },
+                            overflowY: 'auto',
+                            pr: 1,
+                            scrollbarWidth: 'thin',
+                            '&::-webkit-scrollbar': {
+                              width: '8px',
+                              background: 'rgba(0,0,0,0.04)'
+                            },
+                            '&::-webkit-scrollbar-thumb': {
+                              background: theme => alpha(theme.palette.primary.main, 0.15),
+                              borderRadius: '8px',
+                            },
+                          }}
+                        >
                           {requests.map((user, index) => (
                             <motion.div
                               key={user.id}
@@ -1183,7 +1213,23 @@ const Friends = () => {
                           }
                         }}
                       >
-                        <List disablePadding>
+                        <List
+                          disablePadding
+                          sx={{
+                            maxHeight: { xs: '50vh', sm: '60vh', md: '70vh' },
+                            overflowY: 'auto',
+                            pr: 1,
+                            scrollbarWidth: 'thin',
+                            '&::-webkit-scrollbar': {
+                              width: '8px',
+                              background: 'rgba(0,0,0,0.04)'
+                            },
+                            '&::-webkit-scrollbar-thumb': {
+                              background: theme => alpha(theme.palette.primary.main, 0.15),
+                              borderRadius: '8px',
+                            },
+                          }}
+                        >
                           {friends.map((friend, index) => (
                             <motion.div
                               key={friend.id}

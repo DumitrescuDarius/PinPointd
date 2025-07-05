@@ -76,8 +76,13 @@ const SavedPinpoints = () => {
     fetchSavedPinpoints();
   }, [currentUser]);
 
-  const handleViewOnMap = (coordinates: [number, number]) => {
-    navigate('/map', { state: { center: coordinates, zoom: 15 } });
+  const handleViewOnMap = (pinpointId: string, coordinates: [number, number]) => {
+    navigate(`/map?location=${pinpointId}`, { 
+      state: { 
+        center: coordinates, 
+        zoom: 15 
+      } 
+    });
   };
 
   const handleDelete = async (savedId: string) => {
@@ -145,7 +150,7 @@ const SavedPinpoints = () => {
                   transform: 'translateY(-4px)'
                 }
               }}
-              onClick={() => handleViewOnMap(saved.pinpointData.coordinates)}
+              onClick={() => handleViewOnMap(saved.pinpointId, saved.pinpointData.coordinates)}
               >
                 <CardMedia
                   component="img"

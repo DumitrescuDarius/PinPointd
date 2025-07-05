@@ -4,21 +4,16 @@ import {
   Paper,
   Avatar,
   Button,
-  Tabs,
-  Tab,
   Grid,
   Card,
-  CardHeader,
   CardMedia,
   CardContent,
   CardActions,
-  IconButton,
-  Divider,
   Chip,
   CircularProgress,
   Tooltip
 } from '@mui/material';
-import { useState, useEffect, SyntheticEvent } from 'react';
+import { useState, useEffect } from 'react';
 import { db } from '../config/firebase';
 import { auth } from '../config/firebase';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -40,13 +35,10 @@ import {
 import { useTranslation } from 'react-i18next';
 import PlaceIcon from '@mui/icons-material/Place';
 import MapIcon from '@mui/icons-material/Map';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import FeedIcon from '@mui/icons-material/RssFeed';
 import { format } from 'date-fns';
 
 // Define interfaces for data types
@@ -75,73 +67,9 @@ interface LocationData {
     photoURL: string | null;
   };
   createdAt: any;
-}
-
-interface PostData {
-  id: string;
-  location: {
-    id: string;
-    title: string;
-    description: string;
-    latitude: number;
-    longitude: number;
-    images: string[];
-    tags: string[];
-  };
-  user: {
-    uid: string;
-    displayName: string;
-    username: string;
-    photoURL: string;
-  };
-  createdAt: any;
-  likes: string[];
-  comments: Array<{
-    id: string;
-    text: string;
-    user: {
-      uid: string;
-      displayName: string;
-      photoURL: string;
-    };
-    createdAt: any;
-  }>;
-  isPublic: boolean;
-  shareNote?: string;
-}
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`profile-tabpanel-${index}`}
-      aria-labelledby={`profile-tab-${index}`}
-      style={{ width: '100%' }}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {children}
-        </Box>
-      )}
-    </div>
-  );
-}
-
-function a11yProps(index: number) {
-  return {
-    id: `profile-tab-${index}`,
-    'aria-controls': `profile-tabpanel-${index}`,
-  };
+  likes?: string[];
+  views?: number;
+  sponsoredUntil?: any;
 }
 
 const Profile = () => {
@@ -151,9 +79,7 @@ const Profile = () => {
   const currentUser = auth.currentUser;
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<UserData | null>(null);
-  const [locations, setLocations] = useState<LocationData[]>([]);
-  const [posts, setPosts] = useState<PostData[]>([]);
-  const [tabValue, setTabValue] = useState(0);
+  const [postLocations, setPostLocations] = useState<any[]>([]);
   const [friendStatus, setFriendStatus] = useState<'none' | 'pending' | 'requested' | 'friends'>('none');
   const [friendRequestLoading, setFriendRequestLoading] = useState<boolean>(false);
   const [stats, setStats] = useState({
@@ -220,48 +146,34 @@ const Profile = () => {
           }
         }
         
-        // Fetch user statistics
-        const locationsQuery = query(
-          collection(db, 'locations'),
-          where('createdBy.uid', '==', userId)
-        );
-        
+        // Fetch posts from 'posts' collection
         const postsQuery = query(
           collection(db, 'posts'),
           where('user.uid', '==', userId),
-          orderBy('createdAt', 'desc'),
-          limit(10)
+          orderBy('createdAt', 'desc')
         );
+        const postsSnapshot = await getDocs(postsQuery);
+        const postsData = postsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setPostLocations(postsData);
         
-        const [locationsSnapshot, postsSnapshot] = await Promise.all([
-          getDocs(locationsQuery),
-          getDocs(postsQuery)
-        ]);
-        
-        // Calculate statistics
+        // Fetch user statistics from locations collection (for stats only)
+        const locationsQuery = query(
+          collection(db, 'locations'),
+          where('createdBy.uid', '==', userId),
+          orderBy('createdAt', 'desc')
+        );
+        const locationsSnapshot = await getDocs(locationsQuery);
         const locationsData = locationsSnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
-        }));
-        
-        const postsData = postsSnapshot.docs.map(doc => {
-          const data = doc.data();
-          return { 
-            id: doc.id,
-            ...data,
-            likes: data.likes || []
-          };
-        });
+        })) as LocationData[];
         
         let totalLikes = 0;
-        for (const post of postsData) {
-          if (post.likes && Array.isArray(post.likes)) {
-            totalLikes += post.likes.length;
+        for (const location of locationsData) {
+          if (location.likes && Array.isArray(location.likes)) {
+            totalLikes += location.likes.length;
           }
         }
-        
-        setLocations(locationsData as any as LocationData[]);
-        setPosts(postsData as any as PostData[]);
         
         setStats({
           totalPins: locationsData.length,
@@ -278,10 +190,6 @@ const Profile = () => {
     
     loadUserData();
   }, [userId, currentUser]);
-  
-  const handleTabChange = (_: SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-  };
   
   const handleFriendRequest = async () => {
     if (!currentUser || !userId || friendRequestLoading) return;
@@ -514,30 +422,23 @@ const Profile = () => {
         </Box>
       </Paper>
       
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={tabValue} onChange={handleTabChange} aria-label="profile tabs">
-          <Tab label={t('profile.locations')} {...a11yProps(0)} />
-          <Tab label={t('profile.posts')} {...a11yProps(1)} />
-        </Tabs>
-      </Box>
-      
-      <TabPanel value={tabValue} index={0}>
-        {locations.length > 0 ? (
+      <Box sx={{ mt: 3 }}>
+        {postLocations.length > 0 ? (
           <Grid container spacing={2}>
-            {locations.map((location) => (
-              <Grid item xs={12} sm={6} md={4} key={location.id}>
+            {postLocations.map((post) => (
+              <Grid item xs={12} sm={6} md={4} key={post.id}>
                 <Card sx={{ height: '100%' }}>
                   <CardMedia
                     component="img"
                     height="160"
-                    image={location.photos?.[0] || 'https://via.placeholder.com/400x160?text=No+Image'}
-                    alt={location.name}
+                    image={post.location?.images?.[0] || post.location?.images || post.location?.photos?.[0] || 'https://via.placeholder.com/400x160?text=No+Image'}
+                    alt={post.location?.title || post.location?.name || 'Location'}
                     sx={{ cursor: 'pointer' }}
-                    onClick={() => navigate(`/location/${location.id}`)}
+                    onClick={() => post.location?.id && navigate(`/map?location=${post.location.id}`)}
                   />
                   <CardContent>
                     <Typography variant="h6" component="div" sx={{ mb: 1 }}>
-                      {location.name}
+                      {post.location?.title || post.location?.name || 'Untitled'}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" sx={{
                       overflow: 'hidden',
@@ -546,17 +447,19 @@ const Profile = () => {
                       WebkitLineClamp: 2,
                       WebkitBoxOrient: 'vertical',
                     }}>
-                      {location.description}
+                      {post.location?.description || ''}
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button 
-                      size="small" 
-                      startIcon={<MapIcon />}
-                      onClick={() => navigate(`/location/${location.id}`)}
-                    >
-                      {t('profile.view_details')}
-                    </Button>
+                    {post.location?.id ? (
+                      <Button 
+                        size="small" 
+                        startIcon={<MapIcon />}
+                        onClick={() => navigate(`/map?location=${post.location.id}`)}
+                      >
+                        {t('profile.view_on_map')}
+                      </Button>
+                    ) : null}
                   </CardActions>
                 </Card>
               </Grid>
@@ -585,184 +488,7 @@ const Profile = () => {
             )}
           </Box>
         )}
-      </TabPanel>
-      
-      <TabPanel value={tabValue} index={1}>
-        {posts.length > 0 ? (
-          <Box>
-            {posts.map((post) => (
-              <Card key={post.id} sx={{ 
-                mb: 3, 
-                overflow: 'visible',
-                backgroundColor: 'rgba(35, 39, 42, 0.8)',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
-                borderRadius: 2,
-                transition: 'transform 0.2s ease-in-out',
-                '&:hover': {
-                  transform: 'translateY(-4px)',
-                }
-              }}>
-                <CardHeader
-                  avatar={
-                    <Avatar 
-                      src={post.user.photoURL} 
-                      alt={post.user.displayName}
-                      sx={{ width: 44, height: 44 }}
-                    />
-                  }
-                  title={
-                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5 }}>
-                      {post.user.displayName}
-                    </Typography>
-                  }
-                  subheader={
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <Typography variant="caption" color="text.secondary">
-                        @{post.user.username}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        • {post.createdAt ? format(post.createdAt.toDate(), 'MMM d, yyyy') : ''}
-                      </Typography>
-                    </Box>
-                  }
-                  sx={{ 
-                    p: 2.5,
-                    pb: 2,
-                    '& .MuiCardHeader-content': {
-                      overflow: 'hidden'
-                    }
-                  }}
-                />
-                
-                <CardMedia
-                  component="img"
-                  height="360"
-                  image={post.location.images?.[0] || 'https://via.placeholder.com/400x360?text=No+Image'}
-                  alt={post.location.title}
-                  sx={{ 
-                    cursor: 'pointer',
-                    objectFit: 'cover',
-                  }}
-                  onClick={() => navigate(`/location/${post.location.id}`)}
-                />
-                
-                <CardContent sx={{ p: 2.5, pt: 2 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
-                    <PlaceIcon color="error" fontSize="small" sx={{ mr: 1 }} />
-                    <Typography variant="h6" component="div" sx={{ fontWeight: 600 }}>
-                      {post.location.title}
-                    </Typography>
-                  </Box>
-                  
-                  {post.shareNote && (
-                    <Typography 
-                      variant="body1" 
-                      paragraph 
-                      sx={{ 
-                        mb: 2,
-                        color: 'text.primary',
-                        lineHeight: 1.6
-                      }}
-                    >
-                      {post.shareNote}
-                    </Typography>
-                  )}
-                  
-                  <Typography 
-                    variant="body2" 
-                    color="text.secondary" 
-                    paragraph
-                    sx={{ 
-                      mb: 2,
-                      lineHeight: 1.6
-                    }}
-                  >
-                    {post.location.description?.length > 120 
-                      ? `${post.location.description.substring(0, 120)}...` 
-                      : post.location.description}
-                  </Typography>
-                  
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75, mb: 0.5 }}>
-                    {post.location.tags?.map((tag: string, index: number) => (
-                      <Chip 
-                        key={index} 
-                        label={tag} 
-                        size="small" 
-                        color="primary" 
-                        variant="outlined"
-                        sx={{
-                          borderRadius: '16px',
-                          '& .MuiChip-label': {
-                            px: 1
-                          }
-                        }}
-                      />
-                    ))}
-                  </Box>
-                </CardContent>
-                
-                <CardActions sx={{ px: 2.5, pb: 2, pt: 0.5 }}>
-                  <IconButton 
-                    disabled
-                    sx={{
-                      '&.Mui-disabled': {
-                        color: post.likes?.includes(currentUser?.uid || '') ? 'error.main' : 'action.disabled'
-                      }
-                    }}
-                  >
-                    {post.likes?.includes(currentUser?.uid || '') ? (
-                      <FavoriteIcon color="error" />
-                    ) : (
-                      <FavoriteBorderIcon />
-                    )}
-                  </IconButton>
-                  <Typography variant="body2" color="text.secondary" sx={{ mr: 2 }}>
-                    {post.likes?.length || 0}
-                  </Typography>
-                  
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    startIcon={<MapIcon />}
-                    sx={{ 
-                      ml: 'auto',
-                      borderRadius: '20px',
-                      px: 2
-                    }}
-                    onClick={() => navigate(`/location/${post.location.id}`)}
-                  >
-                    {t('profile.view_on_map')}
-                  </Button>
-                </CardActions>
-              </Card>
-            ))}
-          </Box>
-        ) : (
-          <Box sx={{ textAlign: 'center', py: 4 }}>
-            <FeedIcon sx={{ fontSize: 60, color: 'primary.main', opacity: 0.5 }} />
-            <Typography variant="h6" gutterBottom>
-              {t('profile.no_posts')}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {userId === currentUser?.uid
-                ? t('profile.share_locations')
-                : t('profile.no_posts_other_user')}
-            </Typography>
-            {userId === currentUser?.uid && (
-              <Button 
-                variant="contained" 
-                startIcon={<MapIcon />}
-                onClick={() => navigate('/map')}
-                sx={{ mt: 2 }}
-              >
-                {t('profile.go_to_map')}
-              </Button>
-            )}
-          </Box>
-        )}
-      </TabPanel>
+      </Box>
     </Box>
   );
 };

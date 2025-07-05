@@ -104,6 +104,7 @@ import RateReviewIcon from '@mui/icons-material/RateReview'
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import CollectionsIcon from '@mui/icons-material/Collections';
+import TouchAppIcon from '@mui/icons-material/TouchApp';
 
 // Other imports
 import { MapContainer, TileLayer, Marker, Popup, useMap, ZoomControl, useMapEvents, Polyline } from 'react-leaflet'
@@ -112,7 +113,7 @@ import L from 'leaflet'
 import iconUrl from 'leaflet/dist/images/marker-icon.png'
 import iconShadow from 'leaflet/dist/images/marker-shadow.png'
 import { db } from '../config/firebase'
-import { addDoc, collection, getDocs, deleteDoc, doc, onSnapshot, getDoc, writeBatch, serverTimestamp, updateDoc, arrayRemove, arrayUnion, Timestamp, query, where, orderBy, increment } from 'firebase/firestore'
+import { addDoc, collection, getDocs, deleteDoc, doc, onSnapshot, getDoc, writeBatch, serverTimestamp, updateDoc, arrayRemove, arrayUnion, Timestamp, query, where, orderBy, increment, limit } from 'firebase/firestore'
 import { uploadImage } from '../config/cloudinary'
 import { keyframes } from '@mui/system'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
@@ -1084,9 +1085,178 @@ const MapPage = ({ darkMode }: MapPageProps) => {
     setSuggestedTags(suggestions);
   }, [tagSearch, allLocations, popularTags]);
 
-  // Add this function to fetch all tags from the locations collection
+  // Add function to calculate distance between two points
+  const calculateDistance = useCallback((lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 6371; // Earth's radius in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  }, []);
+
+  // Fetch locations from Firestore on mount
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        setMapLoading(true);
+        
+        // Use a one-time fetch instead of real-time listener for initial load
+        const locationsQuery = query(
+          collection(db, 'locations'),
+          orderBy('createdAt', 'desc'),
+          limit(100) // Limit initial load to 100 most recent locations
+        );
+        
+        const querySnapshot = await getDocs(locationsQuery);
+        const locs: Location[] = [];
+        
+        querySnapshot.forEach(doc => {
+          const data = doc.data();
+          // Convert Firestore Timestamp to Date
+          const createdAt = data.createdAt?.toDate() || new Date();
+          
+          const locationData = {
+            id: doc.id,
+            ...data,
+            createdAt,
+            coordinates: data.coordinates || [0, 0],
+            tags: data.tags || [],
+            photos: data.photos || [],
+            createdBy: {
+              uid: data.createdBy?.uid || 'anonymous',
+              displayName: data.createdBy?.displayName || 'Anonymous',
+              photoURL: data.createdBy?.photoURL || null
+            }
+          } as Location;
+          
+          // Only add non-expired sponsored posts
+          if (!isSponsoredExpired(locationData)) {
+            locs.push(locationData);
+          }
+        });
+        
+        console.log('Total locations loaded:', locs.length);
+        setAllLocations(locs);
+        setMapLoading(false);
+        
+        // Set up real-time listener for updates after initial load
+        const unsubscribe = onSnapshot(collection(db, 'locations'), (snapshot) => {
+          const updatedLocs: Location[] = [];
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const createdAt = data.createdAt?.toDate() || new Date();
+            
+            const locationData = {
+              id: doc.id,
+              ...data,
+              createdAt,
+              coordinates: data.coordinates || [0, 0],
+              tags: data.tags || [],
+              photos: data.photos || [],
+              createdBy: {
+                uid: data.createdBy?.uid || 'anonymous',
+                displayName: data.createdBy?.displayName || 'Anonymous',
+                photoURL: data.createdBy?.photoURL || null
+              }
+            } as Location;
+            
+            if (!isSponsoredExpired(locationData)) {
+              updatedLocs.push(locationData);
+            }
+          });
+          
+          setAllLocations(updatedLocs);
+        });
+
+        return () => unsubscribe();
+      } catch (error) {
+        console.error('Error fetching locations:', error);
+        setSnackbarMessage('Error loading locations');
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
+        setMapLoading(false);
+      }
+    };
+
+    fetchLocations();
+  }, []);
+
+  // Optimize the filtered locations logic with useMemo and better caching
+  const displayLocations = useMemo(() => {
+    if (allLocations.length === 0) return [];
+    
+    // Separate sponsored and non-sponsored locations
+    const sponsoredLocations = allLocations.filter(loc => loc.tags.includes('Sponsored'));
+    const regularLocations = allLocations.filter(loc => !loc.tags.includes('Sponsored'));
+
+    // Apply filters only to regular locations
+    let filteredRegular = [...regularLocations];
+
+    // Filter by selected tags (must have ALL selected tags)
+    if (selectedTags.length > 0) {
+      filteredRegular = filteredRegular.filter(location => 
+        selectedTags.every(tag => location.tags.includes(tag))
+      );
+    }
+
+    // Filter by nearby locations (100km radius) - only if we have current position
+    if (showNearbyOnly && currentPosition) {
+      filteredRegular = filteredRegular.filter(location => {
+        const distance = calculateDistance(
+          currentPosition[0],
+          currentPosition[1],
+          location.coordinates[0],
+          location.coordinates[1]
+        );
+        return distance <= 100; // 100km radius
+      });
+    }
+
+    // Filter by recent posts (last 24 hours)
+    if (showRecentOnly) {
+      const oneDayAgo = new Date();
+      oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+      filteredRegular = filteredRegular.filter(location => 
+        location.createdAt > oneDayAgo
+      );
+    }
+
+    // Filter by friends' posts
+    if (showFriendsOnly && userFriends.length > 0) {
+      filteredRegular = filteredRegular.filter(location => 
+        userFriends.includes(location.createdBy.uid)
+      );
+    }
+
+    // Filter by user's own posts
+    if (showMineOnly && currentUser) {
+      filteredRegular = filteredRegular.filter(location => 
+        location.createdBy.uid === currentUser.uid
+      );
+    }
+
+    // Always include sponsored locations at the beginning of the array
+    return [...sponsoredLocations, ...filteredRegular];
+  }, [allLocations, selectedTags, showNearbyOnly, showRecentOnly, showFriendsOnly, showMineOnly, currentPosition, userFriends, currentUser, calculateDistance]);
+
+  // Optimize popular tags fetching with caching
   const fetchPopularTags = useCallback(async () => {
     try {
+      // Check if we already have popular tags and they're recent (less than 5 minutes old)
+      const now = Date.now();
+      const lastFetch = localStorage.getItem('popularTagsTimestamp');
+      const cachedTags = localStorage.getItem('popularTags');
+      
+      if (lastFetch && cachedTags && (now - parseInt(lastFetch)) < 5 * 60 * 1000) {
+        // Use cached tags if they're less than 5 minutes old
+        setPopularTags(JSON.parse(cachedTags));
+        return;
+      }
+      
       const locationsSnapshot = await getDocs(collection(db, 'locations'));
       
       // Count all tags
@@ -1109,6 +1279,11 @@ const MapPage = ({ darkMode }: MapPageProps) => {
         .sort((a, b) => b.count - a.count);
       
       setPopularTags(sortedTags);
+      
+      // Cache the results
+      localStorage.setItem('popularTags', JSON.stringify(sortedTags));
+      localStorage.setItem('popularTagsTimestamp', now.toString());
+      
       console.log("Fetched popular tags:", sortedTags);
     } catch (error) {
       console.error("Error fetching tags:", error);
@@ -1119,6 +1294,49 @@ const MapPage = ({ darkMode }: MapPageProps) => {
   useEffect(() => {
     fetchPopularTags();
   }, [fetchPopularTags]);
+
+  // Optimize trending tags calculation
+  const trendingTagsData = useMemo(() => {
+    const oneDayAgo = new Date();
+    oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+    
+    const recentLocations = locations.filter(loc => 
+      loc.createdAt > oneDayAgo
+    );
+
+    const tagCounts = new Map<string, number>();
+    recentLocations.forEach(location => {
+      location.tags.forEach(tag => {
+        tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+      });
+    });
+
+    return Array.from(tagCounts.entries())
+      .map(([tag, count]) => ({ tag, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10);
+  }, [locations]);
+
+  // Optimize suggested tags calculation
+  const suggestedTagsData = useMemo(() => {
+    if (!tagSearch.trim()) return [];
+    
+    const searchTerm = tagSearch.toLowerCase().trim();
+    const tagCounts = new Map<string, number>();
+    
+    locations.forEach(location => {
+      location.tags.forEach(tag => {
+        if (tag.toLowerCase().includes(searchTerm)) {
+          tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+        }
+      });
+    });
+
+    return Array.from(tagCounts.entries())
+      .map(([tag, count]) => ({ tag, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+  }, [locations, tagSearch]);
 
   // Add this useEffect at the beginning of the component to handle URL query parameters
   useEffect(() => {
@@ -1369,19 +1587,6 @@ const MapPage = ({ darkMode }: MapPageProps) => {
     setIsPinMode(false);
   }, [isPinMode, navigate, popularTags]);
 
-  // Add function to calculate distance between two points
-  const calculateDistance = useCallback((lat1: number, lon1: number, lat2: number, lon2: number) => {
-    const R = 6371; // Earth's radius in km
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-      Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    return R * c;
-  }, []);
-
   // Add useEffect to fetch user's friends
   useEffect(() => {
     const fetchUserFriends = async () => {
@@ -1398,62 +1603,6 @@ const MapPage = ({ darkMode }: MapPageProps) => {
     };
     fetchUserFriends();
   }, [currentUser]);
-
-  // Update the filtered locations logic
-  const displayLocations = useMemo(() => {
-    // Separate sponsored and non-sponsored locations
-    const sponsoredLocations = allLocations.filter(loc => loc.tags.includes('Sponsored'));
-    const regularLocations = allLocations.filter(loc => !loc.tags.includes('Sponsored'));
-
-    // Apply filters only to regular locations
-    let filteredRegular = [...regularLocations];
-
-    // Filter by selected tags (must have ALL selected tags)
-    if (selectedTags.length > 0) {
-      filteredRegular = filteredRegular.filter(location => 
-        selectedTags.every(tag => location.tags.includes(tag))
-      );
-    }
-
-    // Filter by nearby locations (100km radius)
-    if (showNearbyOnly && currentPosition) {
-      filteredRegular = filteredRegular.filter(location => {
-        const distance = calculateDistance(
-          currentPosition[0],
-          currentPosition[1],
-          location.coordinates[0],
-          location.coordinates[1]
-        );
-        return distance <= 100; // 100km radius
-      });
-    }
-
-    // Filter by recent posts (last 24 hours)
-    if (showRecentOnly) {
-      const oneDayAgo = new Date();
-      oneDayAgo.setDate(oneDayAgo.getDate() - 1);
-      filteredRegular = filteredRegular.filter(location => 
-        location.createdAt > oneDayAgo
-      );
-    }
-
-    // Filter by friends' posts
-    if (showFriendsOnly) {
-      filteredRegular = filteredRegular.filter(location => 
-        userFriends.includes(location.createdBy.uid)
-      );
-    }
-
-    // Filter by user's own posts
-    if (showMineOnly && currentUser) {
-      filteredRegular = filteredRegular.filter(location => 
-        location.createdBy.uid === currentUser.uid
-      );
-    }
-
-    // Always include sponsored locations at the beginning of the array
-    return [...sponsoredLocations, ...filteredRegular];
-  }, [allLocations, selectedTags, showNearbyOnly, showRecentOnly, showFriendsOnly, showMineOnly, currentPosition, userFriends, currentUser, calculateDistance]);
 
   // Memoize the search cache cleanup
   useEffect(() => {
@@ -1570,52 +1719,6 @@ const MapPage = ({ darkMode }: MapPageProps) => {
     setSearchResults([]);
     setGeocodingResults([]);
   };
-
-  // Fetch locations from Firestore on mount
-  useEffect(() => {
-    const fetchLocations = async () => {
-      try {
-        // Set up a real-time listener for locations
-        const unsubscribe = onSnapshot(collection(db, 'locations'), (snapshot) => {
-          const locs: Location[] = [];
-          snapshot.forEach(doc => {
-            const data = doc.data();
-            // Convert Firestore Timestamp to Date
-            const createdAt = data.createdAt?.toDate() || new Date();
-            
-            const locationData = {
-              id: doc.id,
-              ...data,
-              createdAt,
-              coordinates: data.coordinates || [0, 0],
-              tags: data.tags || [],
-              photos: data.photos || [],
-              createdBy: {
-                uid: data.createdBy?.uid || 'anonymous',
-                displayName: data.createdBy?.displayName || 'Anonymous',
-                photoURL: data.createdBy?.photoURL || null
-              }
-            } as Location;
-            
-            locs.push(locationData);
-            console.log('Loaded location:', locationData);
-          });
-          
-          console.log('Total locations loaded:', locs.length);
-          setAllLocations(locs);
-        });
-
-        return () => unsubscribe();
-      } catch (error) {
-        console.error('Error fetching locations:', error);
-        setSnackbarMessage('Error loading locations');
-        setSnackbarSeverity('error');
-        setSnackbarOpen(true);
-      }
-    };
-
-    fetchLocations();
-  }, []);
 
   // Update the locate me handler to use the same options
   const handleLocateMe = useCallback(() => {
@@ -2239,6 +2342,7 @@ const MapPage = ({ darkMode }: MapPageProps) => {
     const [isSaved, setIsSaved] = useState(false);
     const [savingInProgress, setSavingInProgress] = useState(false);
     const [showCleanImage, setShowCleanImage] = useState(false);
+    const [hasCheckedSaved, setHasCheckedSaved] = useState(false);
 
     // Check if the post creator is in the user's friends list
     useEffect(() => {
@@ -2405,10 +2509,10 @@ const MapPage = ({ darkMode }: MapPageProps) => {
       }
     };
 
-    // Check if the pinpoint is saved
+    // Check if the pinpoint is saved - only once when component mounts
     useEffect(() => {
       const checkIfSaved = async () => {
-        if (!currentUser) return;
+        if (!currentUser || hasCheckedSaved) return;
         
         try {
           const savedPinpointsRef = collection(db, 'savedPinpoints');
@@ -2419,13 +2523,15 @@ const MapPage = ({ darkMode }: MapPageProps) => {
           );
           const querySnapshot = await getDocs(q);
           setIsSaved(!querySnapshot.empty);
+          setHasCheckedSaved(true);
         } catch (err) {
           console.error('Error checking if pinpoint is saved:', err);
+          setHasCheckedSaved(true); // Mark as checked even on error to prevent infinite retries
         }
       };
 
       checkIfSaved();
-    }, [currentUser, location.id]);
+    }, [currentUser, location.id, hasCheckedSaved]);
 
     const handleSave = async () => {
       if (!currentUser) {
@@ -2480,7 +2586,7 @@ const MapPage = ({ darkMode }: MapPageProps) => {
 
     return (
       <Box sx={{
-        width: '100%',
+        width: '100%', 
         display: 'flex',
         color: '#fff',
         position: 'relative',
@@ -2488,6 +2594,9 @@ const MapPage = ({ darkMode }: MapPageProps) => {
         flexDirection: 'column',
         p: { xs: 0.25, sm: 0.5, md: 0.75 },
         gap: { xs: 0.25, sm: 0.5, md: 0.75 },
+        bgcolor: darkMode ? 'rgba(18, 18, 18, 0.95)' : 'rgba(33, 33, 33, 0.95)', // Darker background
+        borderRadius: '12px',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
       }}>
         {/* Add UserProfilePopup */}
         <UserProfilePopup
@@ -2498,10 +2607,10 @@ const MapPage = ({ darkMode }: MapPageProps) => {
         
         {/* Photo section with improved styling */}
         <Box sx={{ 
-          position: 'relative', 
+          position: 'relative',
           width: '100%', 
-          mb: { xs: 0.5, sm: 0.5 },
-          height: 'auto', // Changed from paddingTop to auto height
+          mb: { xs: 0.25, sm: 0.25 }, // Reduced margin bottom
+          height: 'auto',
           borderRadius: '12px',
           overflow: 'hidden',
           boxShadow: '0 3px 8px rgba(0,0,0,0.15)',
@@ -2601,7 +2710,7 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                       alignItems: 'center',
                       gap: 0.5,
                       backdropFilter: 'blur(4px)',
-                      zIndex: 1,
+                      zIndex: 3, // Increased z-index to appear above gradient
                     }}
                   >
                     <CollectionsIcon sx={{ fontSize: '1rem' }} />
@@ -2835,7 +2944,7 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                           const isSelected = selectedTags.includes(tag);
                           return (
                             <Chip
-                              key={index}
+                              key={`${location.id}-${tag}-${index}`}
                               label={tag}
                               size="small"
                               onClick={(e) => {
@@ -2845,20 +2954,33 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                               sx={{
                                 height: { xs: 16, sm: 24 },
                                 fontSize: { xs: '0.55rem', sm: '0.7rem' },
+                                fontWeight: 500, // Fixed font weight to prevent size jumps
                                 cursor: 'pointer',
-                                backgroundColor: isSelected ? alpha(theme.palette.primary.main, 0.2) : 'rgba(255, 255, 255, 0.08)',
-                                color: isSelected ? theme.palette.primary.main : 'inherit',
-                                fontWeight: isSelected ? 500 : 400,
+                                backgroundColor: isSelected 
+                                  ? alpha(theme.palette.primary.main, 0.2) 
+                                  : 'rgba(255, 255, 255, 0.08)',
+                                color: isSelected 
+                                  ? theme.palette.primary.main 
+                                  : 'rgba(255, 255, 255, 0.9)',
+                                border: isSelected 
+                                  ? `1px solid ${alpha(theme.palette.primary.main, 0.3)}`
+                                  : '1px solid rgba(255, 255, 255, 0.1)',
                                 '& .MuiChip-label': {
                                   px: { xs: 0.5, sm: 0.75 },
                                   py: { xs: 0.25, sm: 0.5 },
+                                  fontSize: { xs: '0.55rem', sm: '0.7rem' },
+                                  fontWeight: 500, // Consistent font weight
                                 },
                                 '&:hover': {
                                   backgroundColor: isSelected 
                                     ? alpha(theme.palette.primary.main, 0.3)
                                     : alpha(theme.palette.primary.main, 0.15),
+                                  transform: 'translateY(-1px)',
+                                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
                                 },
-                                transition: 'all 0.2s ease'
+                                transition: 'all 0.2s ease',
+                                transform: 'translateY(0)',
+                                boxShadow: 'none',
                               }}
                             />
                           );
@@ -2977,27 +3099,63 @@ const MapPage = ({ darkMode }: MapPageProps) => {
             </IconButton>
           </Box>
 
-          {/* Right side - Next button */}
-          <Button
-            variant="contained"
-            size="medium"
-            startIcon={<ExploreIcon sx={{ fontSize: '1.2rem' }} />}
-            onClick={() => handleNextPinpoint(location.id)}
-            sx={{ 
-              bgcolor: 'rgba(255, 255, 255, 0.15)',
-              color: '#fff',
-              '&:hover': {
-                bgcolor: 'rgba(255, 255, 255, 0.25)',
-              },
-              fontSize: '0.9rem',
-              height: '36px',
-              minWidth: 'auto',
-              px: 2,
-              borderRadius: '18px',
-            }}
-          >
-            Next
-          </Button>
+          {/* Right side - Like button and Next button */}
+          <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  color: '#fff',
+                  minWidth: '1.5rem',
+                  textAlign: 'center',
+                  fontSize: '0.9rem',
+                  fontWeight: 500,
+                  textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                }}
+              >
+                {likes.length > 0 ? likes.length : ''}
+              </Typography>
+              <IconButton
+                onClick={handleLike}
+                size="small"
+                sx={{
+                  backgroundColor: likes.includes(currentUser?.uid || '') ? 'rgba(244, 67, 54, 0.3)' : 'rgba(255, 255, 255, 0.15)',
+                  color: '#fff',
+                  '&:hover': {
+                    backgroundColor: likes.includes(currentUser?.uid || '') ? 'rgba(244, 67, 54, 0.4)' : 'rgba(255, 255, 255, 0.25)',
+                  },
+                  width: 32,
+                  height: 32,
+                }}
+              >
+                {likes.includes(currentUser?.uid || '') ? (
+                  <FavoriteIcon sx={{ fontSize: '1.2rem' }} />
+                ) : (
+                  <FavoriteBorderIcon sx={{ fontSize: '1.2rem' }} />
+                )}
+              </IconButton>
+            </Box>
+            <Button
+              variant="contained"
+              size="medium"
+              startIcon={<ExploreIcon sx={{ fontSize: '1.2rem' }} />}
+              onClick={() => handleNextPinpoint(location.id)}
+              sx={{ 
+                bgcolor: 'rgba(255, 255, 255, 0.15)',
+                color: '#fff',
+                '&:hover': {
+                  bgcolor: 'rgba(255, 255, 255, 0.25)',
+                },
+                fontSize: '0.9rem',
+                height: '36px',
+                minWidth: 'auto',
+                px: 2,
+                borderRadius: '18px',
+              }}
+            >
+              Next
+            </Button>
+          </Box>
         </Box>
 
         {/* Snackbar for save/unsave feedback */}
@@ -4612,33 +4770,69 @@ const MapPage = ({ darkMode }: MapPageProps) => {
           }}>
             {selectedTags.map((tag) => (
               <Chip
-                key={tag}
+                key={`selected-${tag}`}
                 label={tag}
                 onDelete={() => setSelectedTags(prev => prev.filter(t => t !== tag))}
                 size="small"
                 sx={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                  color: '#fff',
+                  height: { xs: 16, sm: 24 },
+                  fontSize: { xs: '0.55rem', sm: '0.7rem' },
+                  fontWeight: 500,
+                  backgroundColor: alpha(theme.palette.primary.main, 0.2),
+                  color: theme.palette.primary.main,
+                  border: `1px solid ${alpha(theme.palette.primary.main, 0.3)}`,
+                  '& .MuiChip-label': {
+                    px: { xs: 0.5, sm: 0.75 },
+                    py: { xs: 0.25, sm: 0.5 },
+                    fontSize: { xs: '0.55rem', sm: '0.7rem' },
+                    fontWeight: 500,
+                  },
                   '& .MuiChip-deleteIcon': {
-                    color: 'rgba(255, 255, 255, 0.7)',
+                    color: theme.palette.primary.main,
+                    fontSize: { xs: '0.8rem', sm: '1rem' },
                     '&:hover': {
-                      color: '#fff'
+                      color: theme.palette.primary.dark,
+                      backgroundColor: alpha(theme.palette.primary.main, 0.1),
                     }
-                  }
+                  },
+                  '&:hover': {
+                    backgroundColor: alpha(theme.palette.primary.main, 0.3),
+                    transform: 'translateY(-1px)',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+                  },
+                  transition: 'all 0.2s ease',
+                  transform: 'translateY(0)',
+                  boxShadow: 'none',
                 }}
               />
             ))}
             {selectedTags.length > 0 && (
               <Chip
+                key="clear-all"
                 label="Clear All"
                 size="small"
                 onClick={() => setSelectedTags([])}
                 sx={{
+                  height: { xs: 16, sm: 24 },
+                  fontSize: { xs: '0.55rem', sm: '0.7rem' },
+                  fontWeight: 500,
                   backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  color: '#fff',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  '& .MuiChip-label': {
+                    px: { xs: 0.5, sm: 0.75 },
+                    py: { xs: 0.25, sm: 0.5 },
+                    fontSize: { xs: '0.55rem', sm: '0.7rem' },
+                    fontWeight: 500,
+                  },
                   '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.2)'
-                  }
+                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                    transform: 'translateY(-1px)',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+                  },
+                  transition: 'all 0.2s ease',
+                  transform: 'translateY(0)',
+                  boxShadow: 'none',
                 }}
               />
             )}
@@ -4719,13 +4913,16 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                   label={tagInfo.count}
                   size="small"
                   sx={{
+                    height: { xs: 16, sm: 24 },
+                    fontSize: { xs: '0.65rem', sm: '0.7rem' },
                     backgroundColor: 'rgba(255, 255, 255, 0.1)',
                     color: 'rgba(255, 255, 255, 0.7)',
-                    height: { xs: 18, sm: 20 },
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
                     '& .MuiChip-label': {
                       px: { xs: 0.75, sm: 1 },
                       py: { xs: 0.25, sm: 0.5 },
                       fontSize: { xs: '0.65rem', sm: '0.7rem' },
+                      fontWeight: 500,
                     },
                   }}
                 />
@@ -4768,7 +4965,7 @@ const MapPage = ({ darkMode }: MapPageProps) => {
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: { xs: 0.4, sm: 0.5 } }}>
             {trendingTags.map((tagInfo) => (
               <Chip
-                key={tagInfo.tag}
+                key={`trending-${tagInfo.tag}`}
                 label={`${tagInfo.tag} (${tagInfo.count})`}
                 size="small"
                 onClick={() => {
@@ -4794,17 +4991,25 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                   setTagSearch('');
                 }}
                 sx={{
+                  height: { xs: 22, sm: 24 },
+                  fontSize: { xs: '0.7rem', sm: '0.75rem' },
                   backgroundColor: 'rgba(255, 255, 255, 0.1)',
                   color: 'rgba(255, 255, 255, 0.9)',
-                  height: { xs: 22, sm: 24 },
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                  },
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
                   '& .MuiChip-label': {
                     px: { xs: 0.75, sm: 1 },
                     py: { xs: 0.25, sm: 0.5 },
                     fontSize: { xs: '0.7rem', sm: '0.75rem' },
+                    fontWeight: 500,
                   },
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                    transform: 'translateY(-1px)',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+                  },
+                  transition: 'all 0.2s ease',
+                  transform: 'translateY(0)',
+                  boxShadow: 'none',
                 }}
               />
             ))}

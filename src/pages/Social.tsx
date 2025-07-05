@@ -1222,20 +1222,22 @@ const Social = () => {
   const scrollToBottom = (force: boolean = false) => {
     if (!messagesContainerRef.current) return;
     
-    // Always scroll to bottom when force is true
-    if (force) {
-      messagesContainerRef.current.style.scrollBehavior = 'auto';
-      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
-      return;
-    }
-    
-    // For non-forced scrolling, only scroll if we're already near bottom
     const container = messagesContainerRef.current;
     const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
     
-    if (isNearBottom) {
-      container.style.scrollBehavior = 'auto';
-      container.scrollTop = container.scrollHeight;
+    // Only scroll if we're forcing it (like when sending a message) or if we're already near the bottom
+    if (force || isNearBottom) {
+      // Use smooth scrolling only for user-initiated actions (force = false)
+      container.style.scrollBehavior = force ? 'auto' : 'smooth';
+      const scrollHeight = container.scrollHeight;
+      container.scrollTop = scrollHeight;
+      
+      // Reset scroll behavior after animation
+      setTimeout(() => {
+        if (container) {
+          container.style.scrollBehavior = 'auto';
+        }
+      }, 300);
     }
   };
 
@@ -2270,10 +2272,10 @@ const Social = () => {
     }
   }, [activeChat?.id, messages.length]);
 
-  // Keep the messages effect simple
+  // Simplify messages effect to use our improved scrollToBottom
   useEffect(() => {
-    if (messages.length > 0 && messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    if (messages.length > 0) {
+      scrollToBottom(false);
     }
   }, [messages]);
 
@@ -2576,29 +2578,26 @@ const Social = () => {
     }
   }, []);
 
-  // Replace the handleMessageChange function
+  // Update handleMessageChange to use improved scrollToBottom
   const handleMessageChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = e.target;
     const value = textarea.value;
     
-    // Only update if under limit or deleting
     if (value.length <= 20000 || value.length < message.length) {
       setMessage(value);
       handleTyping();
       
-      // Clear any pending resize timeout
       if (resizeTimeoutRef.current) {
         clearTimeout(resizeTimeoutRef.current);
       }
       
-      // Debounce the resize operation
       resizeTimeoutRef.current = setTimeout(() => {
         adjustTextareaHeight(textarea);
-        // Scroll to bottom after typing
-        scrollToBottom(true);
+        // Use smooth scroll when typing
+        scrollToBottom(false);
       }, 10);
     }
-  }, [message.length, handleTyping, adjustTextareaHeight, scrollToBottom]);
+  }, [message.length, handleTyping, adjustTextareaHeight]);
 
   // Replace the handlePaste function
   const handlePaste = useCallback((e: React.ClipboardEvent<HTMLDivElement>) => {
@@ -3485,11 +3484,8 @@ const Social = () => {
       setMessages(newMessages as Message[]);
       setMessagesLoading(false);
       
-      // Immediately scroll to bottom after loading messages without animation
-      if (messagesContainerRef.current) {
-        messagesContainerRef.current.style.scrollBehavior = 'auto';
-        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
-      }
+      // Use the improved scrollToBottom with force=true for initial load
+      scrollToBottom(true);
     });
 
     return () => {
