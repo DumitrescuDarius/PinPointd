@@ -181,6 +181,7 @@ const AddPinpoint = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [dragMode, setDragMode] = useState<'crop' | 'move'>('crop');
   const [loadingImages, setLoadingImages] = useState<boolean[]>([]);
+  const [remainingFiles, setRemainingFiles] = useState<File[]>([]);
 
   const MIN_ZOOM = 1;
   const MAX_ZOOM = 3;
@@ -241,28 +242,15 @@ const AddPinpoint = () => {
         setCurrentImageIndex(-1); // -1 means new image
         setCropperOpen(true);
         
-        // Store the remaining images for later cropping
+        // Store the remaining images for later processing
         if (newFiles.length > 1) {
           const remainingFiles = newFiles.slice(1);
           console.log('Remaining files to add:', remainingFiles);
           
-          // Set loading state for new images
-          const newLoadingState = [...loadingImages];
-          remainingFiles.forEach((_, index) => {
-            newLoadingState[formState.photos.length + index] = true;
-          });
-          setLoadingImages(newLoadingState);
-          
-          // Add remaining files to form state
-          setFormState(prev => {
-            console.log('Previous photos:', prev.photos);
-            const updatedPhotos = [...prev.photos, ...remainingFiles];
-            console.log('Updated photos:', updatedPhotos);
-            return {
-            ...prev,
-              photos: updatedPhotos
-            };
-          });
+          // Store remaining files in state for later processing
+          setRemainingFiles(remainingFiles);
+        } else {
+          setRemainingFiles([]);
         }
       } else {
         // For videos, just add them to the form state
@@ -532,6 +520,31 @@ const AddPinpoint = () => {
             photos: updatedPhotos
           };
         });
+
+        // Process remaining files if any
+        if (remainingFiles.length > 0) {
+          console.log('Processing remaining files:', remainingFiles);
+          
+          // Set loading state for remaining images
+          const newLoadingState = [...loadingImages];
+          remainingFiles.forEach((_, index) => {
+            newLoadingState[formState.photos.length + 1 + index] = true; // +1 for the cropped file
+          });
+          setLoadingImages(newLoadingState);
+          
+          // Add remaining files to form state
+          setFormState(prev => {
+            const updatedPhotos = [...prev.photos, croppedFile, ...remainingFiles];
+            console.log('Updated photos with remaining files:', updatedPhotos);
+            return {
+              ...prev,
+              photos: updatedPhotos
+            };
+          });
+          
+          // Clear remaining files
+          setRemainingFiles([]);
+        }
       } else {
         // Replacing existing image
         console.log('Replacing existing image at index:', currentImageIndex);
@@ -600,6 +613,10 @@ const AddPinpoint = () => {
     setCrop({ x: 0, y: 0 });
     if (currentImage) {
       URL.revokeObjectURL(URL.createObjectURL(currentImage as Blob));
+    }
+    // Clear remaining files if cropper is closed without saving
+    if (currentImageIndex === -1) {
+      setRemainingFiles([]);
     }
   };
 

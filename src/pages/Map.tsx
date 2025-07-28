@@ -2333,6 +2333,7 @@ const MapPage = ({ darkMode }: MapPageProps) => {
     const [isFriend, setIsFriend] = useState(false);
     const [zoomOpen, setZoomOpen] = useState(false);
     const [loadingImages, setLoadingImages] = useState<Record<number, boolean>>({});
+    const [loadedImages, setLoadedImages] = useState<Record<number, boolean>>({});
     const [profileAnchorEl, setProfileAnchorEl] = useState<HTMLElement | null>(null);
     const [isRequestSent, setIsRequestSent] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -2343,6 +2344,17 @@ const MapPage = ({ darkMode }: MapPageProps) => {
     const [savingInProgress, setSavingInProgress] = useState(false);
     const [showCleanImage, setShowCleanImage] = useState(false);
     const [hasCheckedSaved, setHasCheckedSaved] = useState(false);
+
+    // Preload the first image when component mounts
+    useEffect(() => {
+      if (location.photos && location.photos.length > 0) {
+        const firstImg = new Image();
+        firstImg.src = location.photos[0];
+        firstImg.onload = () => {
+          setLoadedImages(prev => ({ ...prev, [0]: true }));
+        };
+      }
+    }, [location.photos]);
 
     // Check if the post creator is in the user's friends list
     useEffect(() => {
@@ -2366,11 +2378,44 @@ const MapPage = ({ darkMode }: MapPageProps) => {
       checkFriendship();
     }, [currentUser, location.createdBy.uid]);
     
+    // Preload next and previous images for faster navigation
+    const preloadAdjacentImages = useCallback((currentIndex: number) => {
+      if (!location.photos || location.photos.length <= 1) return;
+      
+      const nextIndex = (currentIndex + 1) % location.photos.length;
+      const prevIndex = currentIndex === 0 ? location.photos.length - 1 : currentIndex - 1;
+      
+      // Preload next image
+      if (!loadedImages[nextIndex]) {
+        const nextImg = new Image();
+        nextImg.src = location.photos[nextIndex];
+        nextImg.onload = () => {
+          setLoadedImages(prev => ({ ...prev, [nextIndex]: true }));
+        };
+      }
+      
+      // Preload previous image
+      if (!loadedImages[prevIndex]) {
+        const prevImg = new Image();
+        prevImg.src = location.photos[prevIndex];
+        prevImg.onload = () => {
+          setLoadedImages(prev => ({ ...prev, [prevIndex]: true }));
+        };
+      }
+    }, [location.photos, loadedImages]);
+
     const handleImageLoad = (index: number) => {
       setLoadingImages((prev: Record<number, boolean>) => ({
         ...prev,
         [index]: false
       }));
+      setLoadedImages((prev: Record<number, boolean>) => ({
+        ...prev,
+        [index]: true
+      }));
+      
+      // Preload adjacent images when current image loads
+      preloadAdjacentImages(index);
     };
 
     const handleImageLoadStart = (index: number) => {
@@ -2423,13 +2468,19 @@ const MapPage = ({ darkMode }: MapPageProps) => {
     // Photo navigation
     const nextPhoto = () => {
       if (location.photos && location.photos.length > 0) {
-        setCurrentPhotoIndex((prev) => (prev + 1) % location.photos.length);
+        const newIndex = (currentPhotoIndex + 1) % location.photos.length;
+        setCurrentPhotoIndex(newIndex);
+        // Trigger preloading for the new current image
+        preloadAdjacentImages(newIndex);
       }
     };
 
     const prevPhoto = () => {
       if (location.photos && location.photos.length > 0) {
-        setCurrentPhotoIndex((prev) => (prev === 0 ? location.photos.length - 1 : prev - 1));
+        const newIndex = currentPhotoIndex === 0 ? location.photos.length - 1 : currentPhotoIndex - 1;
+        setCurrentPhotoIndex(newIndex);
+        // Trigger preloading for the new current image
+        preloadAdjacentImages(newIndex);
       }
     };
 
@@ -2641,24 +2692,38 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                     animation="wave"
                     sx={{
                       width: '100%',
-                      height: '100%',
+                      height: '200px',
                       bgcolor: 'rgba(255, 255, 255, 0.1)',
+                      borderRadius: '12px',
                     }}
                   />
                 )}
                 <img
                   src={location.photos[currentPhotoIndex]}
                   alt={`Location photo ${currentPhotoIndex + 1}`}
+                  loading="eager"
+                  decoding="async"
                   style={{
                     width: '100%',
                     height: 'auto',
                     display: 'block',
                     opacity: loadingImages[currentPhotoIndex] ? 0 : 1,
                     transition: 'opacity 0.3s ease-in-out',
-                    cursor: 'zoom-in'
+                    cursor: 'zoom-in',
+                    objectFit: 'cover',
+                    objectPosition: 'center',
+                    willChange: 'opacity',
+                    transform: 'translateZ(0)'
                   }}
                   onLoadStart={() => handleImageLoadStart(currentPhotoIndex)}
                   onLoad={() => handleImageLoad(currentPhotoIndex)}
+                  onError={() => {
+                    // Handle image load errors gracefully
+                    setLoadingImages((prev: Record<number, boolean>) => ({
+                      ...prev,
+                      [currentPhotoIndex]: false
+                    }));
+                  }}
                   onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     setZoomOpen(true);
@@ -2784,13 +2849,14 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                   </>
                 )}
 
-                {/* Overlay content */}
+                {/* Overlay content - only show on desktop */}
                 <Box sx={{
                   position: 'absolute',
                   inset: 0,
                   opacity: showCleanImage ? 0 : 1,
                   visibility: showCleanImage ? 'hidden' : 'visible',
                   transition: 'opacity 0.3s ease-in-out, visibility 0.3s ease-in-out',
+                  display: { xs: 'none', sm: 'block' }, // Hide on mobile
                 }}>
                   {/* Gradients container */}
                   <Box sx={{
@@ -3020,6 +3086,148 @@ const MapPage = ({ darkMode }: MapPageProps) => {
           )}
         </Box>
 
+        {/* Mobile content - title and description below photo */}
+        <Box sx={{ 
+          display: { xs: 'block', sm: 'none' }, // Only show on mobile
+          p: { xs: 0.5, sm: 1.5 },
+          color: '#fff',
+        }}>
+          {/* User info */}
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: 0.75, 
+            mb: 0.75,
+            opacity: showCleanImage ? 0 : 1,
+            transition: 'opacity 0.3s ease-in-out',
+          }}>
+            <Avatar
+              src={location.createdBy.photoURL || undefined}
+              alt={location.createdBy.displayName || 'User'}
+              sx={{ 
+                width: 24,
+                height: 24,
+                border: '2px solid rgba(255, 255, 255, 0.8)',
+                cursor: 'pointer',
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setProfileAnchorEl(e.currentTarget);
+              }}
+            />
+            <Box>
+              <Typography
+                variant="body2"
+                sx={{
+                  fontSize: '0.75rem',
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  lineHeight: 1.2,
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setProfileAnchorEl(e.currentTarget);
+                }}
+              >
+                {location.createdBy.displayName || 'Anonymous'}
+              </Typography>
+              <Typography
+                variant="caption"
+                sx={{
+                  fontSize: '0.65rem',
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  display: 'block',
+                  lineHeight: 1.2,
+                }}
+              >
+                {formatDate(location.createdAt)}
+              </Typography>
+            </Box>
+          </Box>
+
+          {/* Title and description */}
+          <Typography
+            variant="h6"
+            sx={{
+              fontSize: '0.9rem',
+              fontWeight: 600,
+              mb: 0.25,
+              lineHeight: 1.2,
+            }}
+          >
+            {location.name}
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              fontSize: '0.75rem',
+              mb: 0.75,
+              display: '-webkit-box',
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              lineHeight: 1.3,
+            }}
+          >
+            {location.description}
+          </Typography>
+
+          {/* Tags */}
+          <Box sx={{ 
+            display: 'flex', 
+            flexWrap: 'wrap', 
+            gap: 0.5,
+            mb: 0.5,
+          }}>
+            {location.tags.map((tag, index) => {
+              const isSelected = selectedTags.includes(tag);
+              return (
+                <Chip
+                  key={`${location.id}-${tag}-${index}`}
+                  label={tag}
+                  size="small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleTagClick(tag);
+                  }}
+                  sx={{
+                    height: 20,
+                    fontSize: '0.6rem',
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                    backgroundColor: isSelected 
+                      ? alpha(theme.palette.primary.main, 0.2) 
+                      : 'rgba(255, 255, 255, 0.08)',
+                    color: isSelected 
+                      ? theme.palette.primary.main 
+                      : 'rgba(255, 255, 255, 0.9)',
+                    border: isSelected 
+                      ? `1px solid ${alpha(theme.palette.primary.main, 0.3)}`
+                      : '1px solid rgba(255, 255, 255, 0.1)',
+                    '& .MuiChip-label': {
+                      px: 0.5,
+                      py: 0.25,
+                      fontSize: '0.6rem',
+                      fontWeight: 500,
+                    },
+                    '&:hover': {
+                      backgroundColor: isSelected 
+                        ? alpha(theme.palette.primary.main, 0.3)
+                        : alpha(theme.palette.primary.main, 0.15),
+                      transform: 'translateY(-1px)',
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+                    },
+                    transition: 'all 0.2s ease',
+                    transform: 'translateY(0)',
+                    boxShadow: 'none',
+                  }}
+                />
+              );
+            })}
+          </Box>
+        </Box>
+
         {/* Action buttons */}
         <Box sx={{ 
           display: 'flex', 
@@ -3097,6 +3305,28 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                 <BookmarkBorderIcon sx={{ fontSize: '1.2rem' }} />
               )}
             </IconButton>
+            {/* Delete button - only show for post creator */}
+            {isCreator && (
+              <IconButton
+                onClick={() => {
+                  if (window.confirm(`Are you sure you want to delete "${location.name}"? This action cannot be undone.`)) {
+                    handleDeletePin(location.id);
+                  }
+                }}
+                size="small"
+                sx={{
+                  backgroundColor: 'rgba(244, 67, 54, 0.2)',
+                  color: '#fff',
+                  '&:hover': {
+                    backgroundColor: 'rgba(244, 67, 54, 0.4)',
+                  },
+                  width: 32,
+                  height: 32,
+                }}
+              >
+                <DeleteIcon sx={{ fontSize: '1.2rem' }} />
+              </IconButton>
+            )}
           </Box>
 
           {/* Right side - Like button and Next button */}
@@ -3106,14 +3336,15 @@ const MapPage = ({ darkMode }: MapPageProps) => {
                 variant="body2" 
                 sx={{ 
                   color: '#fff',
-                  minWidth: '1.5rem',
+                  width: '1.5rem',
                   textAlign: 'center',
                   fontSize: '0.9rem',
                   fontWeight: 500,
-                  textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                  textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                  visibility: likes.length > 0 ? 'visible' : 'hidden'
                 }}
               >
-                {likes.length > 0 ? likes.length : ''}
+                {likes.length}
               </Typography>
               <IconButton
                 onClick={handleLike}
